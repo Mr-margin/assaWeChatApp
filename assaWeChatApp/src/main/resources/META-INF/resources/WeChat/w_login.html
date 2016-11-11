@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title></title>
+<meta charset="utf-8">
+<meta name="format-detection" content="telephone=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-touch-fullscreen" content="yes">
+<meta http-equiv="Access-Control-Allow-Origin" content="*">
+<link href="css/login.css" type="text/css" rel="stylesheet">
+<link href="css/global.css" type="text/css" rel="stylesheet">
+<script src="js/jquery-1.10.2.min.js"></script>
+<script type="text/javascript" src="js/public.js"></script>
+<script type="text/javascript" src="js/login.js"></script>
+
+</head>
+<body>
+	<div id="login" class="login" style="height:100%; position:absolute;width:100%;display:none;">
+		<div class="login-title">
+			<p>
+				<img src="images/logo.png">
+			</p>
+		</div>
+		<div style="font-size:23px;text-align:center;font-weight:bold;font-style:italic;color:black;">内蒙古自治区精准扶贫<br>帮扶通</div>
+		<div class="login-bar">
+			<ul>
+				<li style="position: relative;">
+					<img src="images/login_user.png" style="margin: auto;position: absolute;top: 0; left: 0; bottom: 0;">
+					<input id="username" type="text" class="text" placeholder="登录账号"  style="font-size:17px;border-radius: 5px;color: black;background: wheat;margin: auto;position: absolute;top: 0; left: 15%; bottom: 0;width:85%;" />
+				</li>
+				<li style="position: relative;">
+					<img src="images/login_pwd.png" style="margin: auto;position: absolute;top: 0; left: 0; bottom: 0;">
+					<input id="password" type="password" class="psd" placeholder="登录密码" style="font-size:17px;border-radius: 5px;color: black;background: wheat;margin: auto;position: absolute;top: 0; left: 15%; bottom: 0;width:85%;" />
+				</li>
+			</ul>
+			<div id="tishi" style="text-align:center;font-size:18px;color:wheat;"></div>
+		</div>
+		
+		<div class="login-btn" style="height:5%;margin-top:5px;">
+			<button class="submit" type="submit" onclick="login()" style="font-size:17px">登录</button>
+		</div>
+		<div style="text-align: center;padding-top: 36px;left:7%">Copyright © 2016 <br>内蒙古自治区扶贫开发(革命老区建设)办公室   版权所有</div>
+	</div>
+	
+</body>
+</html>
