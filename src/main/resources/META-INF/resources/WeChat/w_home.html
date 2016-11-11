@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="description" content="">
+<link rel="stylesheet" type="text/css" href="css/slick.css" />
+<link rel="stylesheet" type="text/css" href="css/base.css" />
+<link rel="stylesheet" type="text/css" href="css/style.css" />
+<link rel="stylesheet" type="text/css" href="css/all.css" />
+<link rel="stylesheet" type="text/css" href="css/swiper.min.css" />
+<link rel="stylesheet" type="text/css" href="css/iconfont/iconfont.css" />
+<title>精准扶贫帮扶通</title>
+</head>
+
+<body>
+	<div class="header">
+		<span>内蒙古自治区精准扶贫帮扶通</span>
+	</div>
+
+	<div id="menu" class="menu"></div>
+	<div class="brief">
+		<h3 class="brief-tit"></h3>
+	</div>
+	<div id="footer" class="footer"></div>
+	<script src="js/jquery.min.js"></script>
+	<script src="js/fastclick.js"></script>
+	<script src="js/slick.min.js"></script>
+	<script src="js/rem.js"></script>
+	<script src="js/basic.js"></script>
+	<script src="js/swiper.jquery.min.js"></script>
+	<script>
+			$(function() {
+				$('.autoplay').slick({
+				  slidesToScroll: 1,
+				  autoplay: true,
+				  autoplaySpeed: 2000,
+				   dots:true,
+				});
+			});
+		</script>
+	<script>
+		    $(function () {
+		        var banner = new Swiper('.banner',{
+		            autoplay: 5000,
+		            pagination : '.swiper-pagination',
+		            paginationClickable: true,
+		            lazyLoading : true,
+		            loop:true
+		        });		
+		    });
+		</script>
+	<script type="text/javascript" src="js/public.js"></script>
+	<script type="text/javascript" src="js/w_home/w_home.js"></script>
+</body>
+</html>
