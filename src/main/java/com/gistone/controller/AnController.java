@@ -55,40 +55,6 @@ public class AnController{
 	String accessToken;//获取AccessToken 
 	String jsapi_ticket;//2、获取Ticket
 	/**
-	 * 激活
-	 * @author 太年轻
-	 * @date 2016年9月6日
-	 * @param request
-	 * @param response
-	 * @throws IOException 
-	 */
-	@RequestMapping("getActivateController.do")
-	public void getActivate_Controller(HttpServletRequest request,HttpServletResponse response) throws IOException{
-		request.setCharacterEncoding("UTF-8");
-		response.setCharacterEncoding("UTF-8");
-		String phone = request.getParameter("phone");//帮扶人电话
-		String name = request.getParameter("name");//帮扶人姓名
-		String password = request.getParameter("password");
-		String cha_p_sql = "SELECT PKID FROM SYS_USER WHERE COL_ACCOUNT='"+phone+"' AND ACCOUNT_TYPE='2'";
-		List<Map> cha_p_list = this.getBySqlMapper.findRecords(cha_p_sql);
-		//判断账号是否存在，是否可以激活
-		if(cha_p_list.size() > 0){
-			response.getWriter().write("{\"result\":\"\",message:\"0\"}");//账户已激活
-		}else{
-			String cha_sql = "select pkid from sys_personal where col_name = '"+name+"' and telephone = '"+phone+"'";
-			List<Map> cha_list = this.getBySqlMapper.findRecords(cha_sql);
-			if(cha_list.size() > 0 && cha_list.get(0) != null){
-				String sql = "insert into sys_user (col_account,col_password,account_type,account_state,sys_personal_id,sys_role_id) "+
-						" values ('"+phone+"',md5('"+password+"'),'2','1','"+cha_list.get(0).get("pkid")+"','7')";//添加账号
-				this.getBySqlMapper.insert(sql);
-				response.getWriter().write("{\"result\":\"\",\"message\":\"1\"}");//激活成功
-			}else{
-				response.getWriter().write("{\"result\":\"\",\"message\":\"2\"}");//尚未检测到该账户，请联系当地扶贫办。
-			}
-		}
-	}
-	
-	/**
 	 * 安卓登录接口 
 	 * @author 太年轻
 	 * @date 2016年9月6日
@@ -102,31 +68,26 @@ public class AnController{
 		response.setCharacterEncoding("UTF-8");
 		String phone = request.getParameter("phone");//电话
 		String password = request.getParameter("password");//密码
-		String cha_sql = "SELECT PKID,SYS_PERSONAL_ID,ACCOUNT_STATE,COL_PASSWORD FROM SYS_USER WHERE COL_ACCOUNT='"+phone+"' AND ACCOUNT_TYPE='2'";
-		List<Map> cha_list = this.getBySqlMapper.findRecords(cha_sql);
-		JSONArray jsonArray =new JSONArray();
-		if(cha_list.size()>0){
-			Map Login_map = cha_list.get(0);
-			HttpSession session = request.getSession();
-			session.setAttribute("Login_map", Login_map);
-			if(Login_map.get("ACCOUNT_STATE").toString().equals("1")){//状态正常
-				if(Tool.md5(password).equals(Login_map.get("COL_PASSWORD"))==true){//密码正确
-					String sid = "".equals(Login_map.get("SYS_PERSONAL_ID")) || Login_map.get("SYS_PERSONAL_ID") == null ?"" : Login_map.get("SYS_PERSONAL_ID").toString();
-					String  pkid =  "".equals(Login_map.get("PKID")) || Login_map.get("PKID") == null ?"" : Login_map.get("PKID").toString();
-					String bfr_sql = "SELECT COL_NAME FROM SYS_PERSONAL WHERE PKID="+sid;
-					List<Map> bfr_list = this.getBySqlMapper.findRecords(bfr_sql);
-					String bfr = "";
-					if(bfr_list.size() > 0){
-						bfr = bfr_list.get(0).get("COL_NAME").toString();
-					}
-					response.getWriter().write("{\"sid\":"+sid+",\"pkid\":"+pkid+",\"message\":\"5\",\"name\":\""+bfr+"\"}");
+		String sql = "select * from SYS_PERSONAL_HOUSEHOLD where PERSONAL_PHONE ='"+phone+"'";
+		List<Map> list = this.getBySqlMapper.findRecords(sql);
+		if ( list.size() > 0 ) {
+			if ( "".equals(list.get(0).get("PASSWORD")) || list.get(0).get("PASSWORD") == null ){
+				if ( password.equals(phone.substring(5,10))){
+					response.getWriter().write("");//登录成功
+				}else {
+					response.getWriter().write("");//登录失败
+				}
+			} else {
+				if (password.equals(list.get(0).get("PASSWORD"))){
+					response.getWriter().write("");//登录成功
 				}else{
-					response.getWriter().write("{\"result\":\"\",\"message\":\"0\"}");//密码错误 
+					response.getWriter().write("");//密码错误
 				}
 			}
-		}else{
-			response.getWriter().write("{\"result\":\"\",\"message\":\"1\"}");//账号尚未激活
+		} else {
+			response.getWriter().write("");//账户不存在
 		}
+		
 	}
 	/**
 	 * 根据帮扶人查看相应的贫困户的详细信息
@@ -139,6 +100,23 @@ public class AnController{
 	@RequestMapping("getSavePoorController.do")
 	public void getSavePoorController (HttpServletRequest request,HttpServletResponse response) throws IOException{
 		
+		String phone = request.getParameter("phone");
+		String sql = " select HOUSEHOLD_NAME ,HOUSEHOLD_CARD from SYS_PERSONAL_HOUSEHOLD where PERSONAL_PHONE ='"+phone+"'";
+		List<Map> list = this.getBySqlMapper.findRecords(sql);
+		JSONArray json = new JSONArray ();
+		if ( list.size() > 0 ) {
+			for ( int i = 0 ; i < list.size() ; i ++ ) {
+				
+				String cha_sql = "select * from AB01 where AAB002 ='"+list.get(i).get("HOUSEHOLD_NAME")+"' and AAB004 ='"+list.get(i).get("HOUSEHOLD_CARD")+"'";
+				List<Map> cha_list = this.getBySqlMapper.findRecords(cha_sql);
+				JSONObject obj = new JSONObject () ;
+				obj.put("", "");
+				
+			}
+		}else {
+			
+		}
+		
 		String  personal_id = request.getParameter("personal_id");//帮扶人的id
 		
 		String cha_sql = "SELECT T2.*,PIC_PATH FROM SYS_PERSONAL_HOUSEHOLD_MANY T1 LEFT JOIN DA_HOUSEHOLD T2 ON T1.DA_HOUSEHOLD_ID=T2.PKID LEFT JOIN "+
@@ -146,7 +124,7 @@ public class AnController{
 		
    		List<Map> cha_list = this.getBySqlMapper.findRecords(cha_sql);
 		
-		JSONArray json = new JSONArray();
+//		JSONArray json = new JSONArray();
 		
 		if (cha_list.size() > 0){
 			
