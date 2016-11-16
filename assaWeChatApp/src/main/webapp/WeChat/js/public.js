@@ -1,5 +1,5 @@
-var sid = '';//帮扶人id
-var pkid = '';//用户表id
+var name = '';//帮扶人
+var phone = '';//帮扶人电话
 function GetRequest() { //截取URL的方法
 	   var url = location.search; //获取url中"?"符后的字串
 	   var theRequest = new Object();
@@ -13,14 +13,14 @@ function GetRequest() { //截取URL的方法
 	   return theRequest;
 	}
 
-function float(sid,pkid){
+function float(phone,name){
 	
 	var html = '<ul class="footer-page clearfix">'+
-			'<li id="shouye" class="page-item"><a href="w_home.html?sid='+sid+'&pkid='+pkid+'" class="active"> <i '+
+			'<li id="shouye" class="page-item"><a href="w_home.html?phone='+phone+'&name='+name+'" class="active"> <i '+
 					'class="iconfont icon-index"></i>'+
 				'	<p>首页</p>'+
 			'</a></li> '+
-			'<li id="geren" class="page-item"><a href="grxx.html?sid='+sid+'&pkid='+pkid+'"> <i '+
+			'<li id="geren" class="page-item"><a href="grxx.html?name='+phone+'&name='+name+'"> <i '+
 				'	class="iconfont icon-person1"></i>'+
 					'<p>个人中心</p>'+
 			'</a></li>'+

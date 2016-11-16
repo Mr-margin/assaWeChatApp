@@ -1,7 +1,6 @@
 var xb;//性别
 var zjhm; //证件号码
 var mz; //民族
-var zzmm;//政治面貌
 var whcd; //文化程度
 var zxs; //在校生情况
 var jkzk; //健康状况
@@ -9,7 +8,6 @@ var ldjn; //劳动技能
 var wgqk; //务工情况
 var sj;//务工时间
 var junr;//现役军人
-var baoxian;//医疗保险
 var v6;//贫困户姓名
 var v10;//与户主关系
 var pic_path;//图片的地址
@@ -20,7 +18,6 @@ $(function (){
 	zjhm = Request['zjhm'];
 	xb = Request['xb'];
 	mz = Request['mz'];
-	zzmm = Request['zzmm'];
 	whcd = Request['whcd'];
 	zxs = Request['zxs'];
 	jkzk = Request['jkzk'];
@@ -34,7 +31,7 @@ $(function (){
 	pic_path = Request['pic_path'];
 	sid = Request['sid'];
 	poor_id = Request['poor_id'];
-	if(v10=='户主'){
+	if(v10=='01'){
 		type = '4';
 	}else{
 		type = '5';
@@ -81,34 +78,6 @@ function jtcyxx(){
 	var html = '<ul class="dorm-book mt3">'+
 			'<li class="basic-tit">'+
 			  '  成员基本信息'+
-			'</li>'+
-//			'<li>'+
-//				'<span class="book-tit"><span class="heade-img" style="height:15px; width:15px;">'+
-//					'<img src="img/gender.png">'+
-//				'</span>'+
-//			   ' <span class="stu-name">性别</span></span>'+
-//		       ' <span class="info-middle">'+xb+'</span>  '+
-//			'</li>'+
-//			'<li>'+
-//				'<span class="book-tit"><span class="heade-img" style="height:15px; width:15px;">'+
-//					'<img src="img/pop.png">'+
-//				'</span>'+
-//			   ' <span class="stu-name">证件号码</span></span>'+
-//		       ' <span class="info-middle">'+zjhm+'</span>  '+
-//			'</li>'+
-//			'<li>'+
-//				'<span class="book-tit"><span class="heade-img" style="height:15px; width:15px;">'+
-//				'	<img src="img/phone.png">'+
-//				'</span>'+
-//			   ' <span class="stu-name">民族</span></span>'+
-//		        '<span class="info-middle">'+mz+'</span>  '+
-//			'</li>'+
-			'<li>'+
-				'<span class="book-tit"><span class="heade-img" style="height:15px; width:15px;">'+
-					'<img src="img/icon_bank.png">'+
-				'</span>'+
-			   ' <span class="stu-name">政治面貌</span></span>'+
-		    '<span class="info-middle">'+zzmm+'</span>  '+
 			'</li>'+
 			'<li>'+
 				'<span class="book-tit"><span class="heade-img" style="height:15px; width:15px;">'+
@@ -160,13 +129,13 @@ function jtcyxx(){
 			'    <span class="stu-name">是否现役军人</span></span>'+
 		    '    <span class="info-middle">'+junr+'</span>  '+
 			'</li>'+
-             '<li>'+
-				'<span class="book-tit"><span class="heade-img" style="height:15px; width:15px;">'+
-				'	<img src="img/before.png">'+
-				'</span>'+
-			    '<span class="stu-name">是否参加重大医疗保险</span></span>'+
-		      '  <span class="info-middle">'+baoxian+'</span>  '+
-			'</li>'+
+//             '<li>'+
+//				'<span class="book-tit"><span class="heade-img" style="height:15px; width:15px;">'+
+//				'	<img src="img/before.png">'+
+//				'</span>'+
+//			    '<span class="stu-name">是否参加重大医疗保险</span></span>'+
+//		      '  <span class="info-middle">'+baoxian+'</span>  '+
+//			'</li>'+
 		'</ul>';
 	
 	$("#jtcyxx").html(html);

@@ -8,7 +8,8 @@ var token ;//token
 $(function(){
 	var Request = new Object();
 	Request = GetRequest();
-	sid = Request['sid'];
+	phone = Request['phone'];
+	name = Request['name'];
 	poor_name();
 	qm();
 });
@@ -16,11 +17,11 @@ $(function(){
 function poor_name(){
 	var html = '<option value="请选择">请选择</option>';
 	$.ajax({  		       
-	    url: '/assa/getPoorName.do',  
+	    url: '/assaWeChatApp/getPoorName.do',  
 	    type: "POST",
 	    async:false,
 	    dataType: 'json',
-	    data: {sid:sid},
+	    data: {phone:phone,name:name},
 	    success: function (data) {
     		$.each(data,function(i,item){
     			html +='<option value="'+item.pkid+'">'+item.v6+'</option>';
@@ -35,7 +36,7 @@ function poor_name(){
 //获取签名
 function qm(){
 	$.ajax({  		       
-	    url: '/assa/getQianming.do',
+	    url: '/assaWeChatApp/getQianming.do',
 	    type: "POST",
 	    async:false,
 	    dataType: 'json',
@@ -201,7 +202,7 @@ function  addzfjl() {
 		return ;
 	}
 	$.ajax({  		       
-	    url: '/assa/addZfjl.do',
+	    url: '/assaWeChatApp/addZfjl.do',
 	    type: "POST",
 	    async:false,
 	    dataType: 'json',
