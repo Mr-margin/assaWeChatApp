@@ -19,7 +19,7 @@ function jtcy(){
 	    	$.each(data.data,function(i,item){
 	    		html += '<ul class="answer-content">'+
 						'<a href="jtcyxx.html?xb='+item.v7+'&zjhm='+item.v8+'&mz='+item.v11+'&whcd='+item.v12+''+
-							'&zxs='+item.v13+'&jkzk='+item.v15+'&ldjn='+item.v15+'&wgqk='+item.v16+'&sj='+item.v17+'&junr='+item.v32+'&v6='+item.v6+'&v10='+item.v10+'&pic_path='+item.pic_path+'">'+
+							'&zxs='+item.v13+'&jkzk='+item.v15+'&ldjn='+item.v15+'&wgqk='+item.v16+'&sj='+item.v17+'&junr='+item.v32+'&v6='+item.v6+'&v10='+item.v10+'&pic_path='+item.pic_path+'&pkrkbh='+item.v1+'">'+
 							'<li class="answer-list">'+
 								'<table width="100%" border="0" cellspacing="0" cellpadding="0">'+
 									'<tbody>'+
@@ -32,12 +32,20 @@ function jtcy(){
 											}
 											
 											html +=	'style="width:120px; margin-right:20px;height:150px; border-radius:10%;"></th>'+
-											'<th scope="col" style="width:70%">'+
-												'<h3 class="list-tit">'+item.v6+'（'+item.v10+'）</h3>'+
-												'<p style="font-size:15px; color:#666666;">'+item.v7+'&nbsp;&nbsp;'+item.v11+'</p>'+
-												'<p style="font-size:15px; color:#666666;">'+item.v8+'</p>'+
-												'<p style="font-size:15px; color:#666666;">健康状况：'+item.v15+'</p>'+
-												'<p style="font-size:15px; color:#666666;">劳动力：'+item.v2+'</p>'+
+											'<th scope="col" style="width:70%">';
+											if ( item.v10 == 99 ) {
+												html +=  '<h3 class="list-tit">'+item.v6+'（其他）</h3>';
+											}else {
+												html +=  '<h3 class="list-tit">'+item.v6+'（'+hzgx_sz[item.v10-1]+'）</h3>';
+											}
+											if ( item.v11 == 99 ) {
+												html +=	'<p style="font-size:15px; color:#666666;">'+xb_sz[item.v7-1]+'&nbsp;&nbsp;其他</p>';
+											} else {
+												html +=	'<p style="font-size:15px; color:#666666;">'+xb_sz[item.v7-1]+'&nbsp;&nbsp;'+minzu_sz[item.v11-1]+'</p>';
+											}
+											html +=	'<p style="font-size:15px; color:#666666;">'+item.v8+'</p>'+
+												'<p style="font-size:15px; color:#666666;">健康状况：'+jkzk_sz[item.v15-1]+'</p>'+
+												'<p style="font-size:15px; color:#666666;">劳动力：'+ldjn_sz[item.v2-1]+'</p>'+
 											'</th>'+
 										'</tr>'+
 									'</tbody>'+

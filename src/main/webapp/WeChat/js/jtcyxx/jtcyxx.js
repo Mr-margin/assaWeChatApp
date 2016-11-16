@@ -12,6 +12,7 @@ var v6;//贫困户姓名
 var v10;//与户主关系
 var pic_path;//图片的地址
 var type;//4、户主5、家庭成员
+var card;//贫困人口编号
 $(function (){
 	var Request = new Object();
 	Request = GetRequest();
@@ -31,6 +32,7 @@ $(function (){
 	pic_path = Request['pic_path'];
 	sid = Request['sid'];
 	poor_id = Request['poor_id'];
+	card = Request['pkrkbh'];
 	if(v10=='01'){
 		type = '4';
 	}else{
@@ -46,7 +48,7 @@ var token ;//token
 //获取签名
 function qm(){
 	$.ajax({  		       
-	    url: '/assa/getQianming.do',
+	    url: '/assaWeChatApp/getQianming.do',
 	    type: "POST",
 	    async:false,
 	    dataType: 'json',
@@ -68,10 +70,10 @@ function jtcyxx(){
 	var title_html = '<div>';
 	if (pic_path == "" || pic_path == null || pic_path == undefined){
 		title_html += '<img src="img/no-person.png" style="width:130px;height:140px;padding-left:5px;padding-top:10px;border-radius:10%;" onclick="add_touxiang()">'+
-						'<span style="padding-left: 17px;padding-top:20px;position: absolute;">'+v6+'（'+v10+'）</span><div style="padding-left: 155px;margin-top: -100px;color: #666666; font-size:15px;"><p>性别：'+xb+'</p><p>民族：'+mz+'</p><p>'+zjhm+'</p></div>';
+						'<span style="padding-left: 17px;padding-top:20px;position: absolute;">'+v6+'（'+hzgx_sz[v10-1]+'）</span><div style="padding-left: 155px;margin-top: -100px;color: #666666; font-size:15px;"><p>性别：'+xb_sz[xb-1]+'</p><p>民族：'+minzu_sz[mz-1]+'</p><p>'+zjhm+'</p></div>';
 	}else{
 		title_html += '<img src="'+pic_path+'" style="width:130px;height:140px;padding-left:5px;padding-top:10px;border-radius:10%;" onclick="add_touxiang()">'+
-						'<span style="padding-left: 17px;padding-top:20px;position: absolute;">'+v6+'（'+v10+'）</span><div style="padding-left: 155px;margin-top: -100px;color: #666666; font-size:15px;"><p>性别：'+xb+'</p><p>民族：'+mz+'</p><p>'+zjhm+'</p></div>';
+						'<span style="padding-left: 17px;padding-top:20px;position: absolute;">'+v6+'（'+hzgx_sz[v10-1]+'）</span><div style="padding-left: 155px;margin-top: -100px;color: #666666; font-size:15px;"><p>性别：'+xb_sz[xb-1]+'</p><p>民族：'+minzu_sz[mz-1]+'</p><p>'+zjhm+'</p></div>';
 	}
 	title_html += '</div>';
 	$("#touxiang").html(title_html);
@@ -84,37 +86,41 @@ function jtcyxx(){
 					'<img src="img/icon_account.png">'+
 				'</span>'+
 			   ' <span class="stu-name">文化程度</span></span>'+
-		        '<span class="info-middle">'+whcd+'</span> '+ 
+		        '<span class="info-middle">'+wenhua_sz[whcd-1]+'</span> '+ 
 			'</li>'+
 			'<li>'+
 				'<span class="book-tit"><span class="heade-img" style="height:15px; width:15px;">'+
 					'<img src="img/standard.png">'+
 				'</span>'+
 			   ' <span class="stu-name">在校生情况</span></span>'+
-		       ' <span class="info-middle">'+zxs+'</span>  '+
+		       ' <span class="info-middle">'+zxszk_sz[zxs-1]+'</span>  '+
 			'</li>'+
 			'<li>'+
 				'<span class="book-tit"><span class="heade-img" style="height:15px; width:15px;">'+
 					'<img src="img/property.png">'+
 				'</span>'+
 			   ' <span class="stu-name">健康状况</span></span>'+
-		       ' <span class="info-middle">'+jkzk+'</span>  '+
+		       ' <span class="info-middle">'+jkzk_sz[jkzk-1]+'</span>  '+
 			'</li>'+
 			'<li>'+
 				'<span class="book-tit"><span class="heade-img" style="height:15px; width:15px;">'+
 					'<img src="img/icon_army.png">'+
 				'</span>'+
 			   ' <span class="stu-name">劳动技能</span></span>'+
-		        '<span class="info-middle">'+ldjn+'</span>  '+
+		        '<span class="info-middle">'+ldjn_sz[ldjn-1]+'</span>  '+
 			'</li>'+
             
            ' <li>'+
 				'<span class="book-tit"><span class="heade-img" style="height:15px; width:15px;">'+
 					'<img src="img/icon_poorreason.png">'+
 				'</span>'+
-			    '<span class="stu-name">务工情况</span></span>'+
-		        '<span class="info-middle">'+wgqk+'</span>  '+
-			'</li>'+
+			    '<span class="stu-name">务工情况</span></span>';
+				if(wgqk==99){
+					html+='<span class="info-middle">其他</span>  ';
+				}else{
+					html+='<span class="info-middle">'+wgzk_sz[wgqk-1]+'</span>  ';
+				}
+			html+='</li>'+
             '<li>'+
 				'<span class="book-tit"><span class="heade-img" style="height:15px; width:15px;">'+
 					'<img src="img/reason.png">'+
@@ -127,7 +133,7 @@ function jtcyxx(){
 			'		<img src="img/before.png">'+
 			'	</span>'+
 			'    <span class="stu-name">是否现役军人</span></span>'+
-		    '    <span class="info-middle">'+junr+'</span>  '+
+		    '    <span class="info-middle">'+xyjr_sz[junr]+'</span>  '+
 			'</li>'+
 //             '<li>'+
 //				'<span class="book-tit"><span class="heade-img" style="height:15px; width:15px;">'+
@@ -216,11 +222,11 @@ function add_touxiang(){
 function add_jtcy(){
 	var html = '';
 	$.ajax({  		       
-	    url: '/assa/getAdd_jttx.do',
+	    url: '/assaWeChatApp/getAdd_jttx.do',
 	    type: "POST",
 	    async:false,
 	    dataType: 'json',
-	    data: {poor_id:poor_id,photo:photo,type:type},
+	    data: {AAB001:card,photo:photo,type:type,household_name:v6,household_card:zjhm},
 	    success: function (data) {
 	    	if(data == '5'){
 	    		alert('上传成功');

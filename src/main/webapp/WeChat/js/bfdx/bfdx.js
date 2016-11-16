@@ -23,14 +23,20 @@ function savePoor(){
 		    				'<li class="notice-list">'+
 		    				'<table width="100%" border="0" cellspacing="0" cellpadding="0">'+
 		    				'<tbody><tr><th scope="col">';
-		    		if(item.v34 == '国家级贫困人口'){
+		    		if(item.v34 == 1){
 		    			html += '<img src="img/country.png" style="width:60px;">'
 		    		}else{
 		    			html += '<img src="img/city.png" style="width:60px;">'
 		    		}
 		    		html += '</th> <th scope="col"><h3 class="list-tit">户主：'+item.v6+'（'+item.v9+'）</h3>'+
-		    				'<p style="color:#5A5A5A; font-weight:normal; font-size:18px;">致贫原因：'+item.v23+'</p></th></tr>'+
-		    				'</tbody></table></li> <span class="goin"><i class="iconfont icon-right"></i></span>';
+		    				'<p style="color:#5A5A5A; font-weight:normal; font-size:18px;">';
+		    				if ( item.v23 == 99 ) {
+		    					html += '致贫原因：其他</p></th></tr>';
+		    				} else {
+		    					html += '致贫原因：'+zyzy_sz[item.v23-1]+'</p></th></tr>';
+		    				}
+		    				
+		    		html +=	'</tbody></table></li> <span class="goin"><i class="iconfont icon-right"></i></span>';
 		    		
 		    	})
 		    	html += '</ul>';
