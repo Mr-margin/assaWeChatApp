@@ -282,6 +282,7 @@ public class AnController{
 		String personal_phone = request.getParameter("personal_phone");//帮扶人电话
 		String household_name = request.getParameter("household_name");//贫困户姓名
 		String household_cord = request.getParameter("household_cord");//贫困人证件号码
+		
 		String sql = "select v1,v2,v3,ADDRESS,wmsys.wm_concat(PIC_PATH) PIC_PATH from ";
 		String  cha_sql = " select personal_name,household_name from DA_HELP_VISIT where";
 		if ("".equals(personal_name) || personal_name == null ) {
@@ -344,30 +345,6 @@ public class AnController{
 		} catch (Exception e) {
 			response.getWriter().write("{\"success\":\"1\",\"message\":\"失败\",\"data\":\"\"}");
 			response.getWriter().close();
-		}
-	}
-	/**
-	 * 根据帮扶人查相应的贫困户
-	 * @param request
-	 * @param response
-	 * @throws IOException 
-	 */
-	@RequestMapping("getPoorName.do")
-	public void getPoorName(HttpServletRequest request, HttpServletResponse response) throws IOException{
-		String sid = request.getParameter("sid");
-		JSONArray json = new JSONArray();
-		String  sql = "SELECT pkid,v6 FROM DA_HOUSEHOLD WHERE PKID IN(select DA_HOUSEHOLD_ID from SYS_PERSONAL_HOUSEHOLD_MANY where SYS_PERSONAL_ID = "+sid+")";
-		List<Map> list = this.getBySqlMapper.findRecords(sql);
-		if(list.size()>0){
-			for ( int i = 0 ; i < list.size() ; i ++){
-				JSONObject obj = new JSONObject();
-				obj.put("pkid",list.get(i).get("PKID").toString());
-				obj.put("v6",list.get(i).get("V6").toString());
-				json.add(obj);
-			}
-			response.getWriter().write(json.toString());
-		}else{
-			response.getWriter().write("0");
 		}
 	}
 	/**
@@ -442,35 +419,20 @@ public class AnController{
 	 * @return
 	 * @throws IOException 
 	 */
-	@RequestMapping("getSaveVersionx.do")
-	public void getSaveVersionx(HttpServletRequest request,HttpServletResponse response) throws IOException{
+	@RequestMapping("getSaveVersion.do")
+	public void getSaveVersion(HttpServletRequest request,HttpServletResponse response) throws IOException{
 		request.setCharacterEncoding("UTF-8");
 		response.setCharacterEncoding("UTF-8");
 		String v=request.getParameter("v");//版本
-		String ipad_v=request.getParameter("version");
-		String sql="";
-		if("".equals(v)||v==null){
-			sql="SELECT * FROM APP_VERSION WHERE PKID=2";
-			List<Map> list=this.getBySqlMapper.findRecords(sql);
-			if(list.size()>0){
-				String version=(String) list.get(0).get("VERSION");
-				if(ipad_v.toString().equals(version)){
-					response.getWriter().write("");
-				}else{
-					response.getWriter().write( list.get(0).get("APP_PATH").toString());
-				}
-			}
-		}else{
-			sql="SELECT * FROM APP_VERSION WHERE PKID=1";
-			List<Map> list=this.getBySqlMapper.findRecords(sql);
-			if(list.size()>0){
-				String version=(String) list.get(0).get("VERSION");
-				if(v.toString().equals(version)){
-					response.getWriter().write("{\"isError\":\"0\",\"result\":\"n\"}");
-				}else{
-					String url=(String) list.get(0).get("APP_PATH");
-					response.getWriter().write("{\"isError\":\"0\",\"result\":\""+url.substring(6)+"\"}");
-				}
+		String sql="SELECT * FROM APP_VERSION WHERE PKID=1";
+		List<Map> list=this.getBySqlMapper.findRecords(sql);
+		if(list.size()>0){
+			String version=(String) list.get(0).get("VERSION");
+			if(v.toString().equals(version)){
+				response.getWriter().write("{\"success\":\"0\",\"message\":\"不需要更新\",\"data\":{\"version\":\""+list.get(0).get("VERSION")+"\"}}");
+			}else{
+				String url=(String) list.get(0).get("APP_PATH");
+				response.getWriter().write("{\"success\":\"0\",\"message\":\"需要更新\",\"data\":{\"version\":\""+list.get(0).get("VERSION")+"\",\"url\":\""+url+"\"}}");
 			}
 		}
 	}
@@ -572,6 +534,31 @@ public class AnController{
 //        	response.getWriter().write(getMessage("1","请选择文件。",""));
         	return ;
         }
+	}
+	/**
+	 * 根据帮扶人查相应的贫困户
+	 * @param request
+	 * @param response
+	 * @throws IOException 
+	 */
+	@RequestMapping("getPoorName.do")
+	public void getPoorName(HttpServletRequest request, HttpServletResponse response) throws IOException{
+		String personal_name = request.getParameter("name");//帮扶人姓名
+		String personal_phone = request.getParameter("phone");//帮扶人电话
+		JSONArray json = new JSONArray();
+		String  sql = "select household_name,household_card from SYS_PERSONAL_HOUSEHOLD_MANY  where PERSONAL_NAME = '"+personal_name+"' AND PERSONAL_PHONE='"+personal_phone+"'";
+		List<Map> list = this.getBySqlMapper.findRecords(sql);
+		if(list.size()>0){
+			for ( int i = 0 ; i < list.size() ; i ++){
+				JSONObject obj = new JSONObject();
+				obj.put("pkid",list.get(i).get("HOUSEHOLD_CARD").toString());
+				obj.put("v6",list.get(i).get("HOUSEHOLD_NAME").toString());
+				json.add(obj);
+			}
+			response.getWriter().write(json.toString());
+		}else{
+			response.getWriter().write("0");
+		}
 	}
 	
 	/**
