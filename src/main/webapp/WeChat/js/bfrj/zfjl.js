@@ -2,11 +2,16 @@ $(document).ready(function() {
 	qm();
 	show_jbqk();
 });
-var poor_id;//贫困户id
-var sid;//帮扶人的id
+//$(function(){
+//	show_jbqk();
+//})
+var personal_name;//帮扶人的姓名
+var personal_phone;//帮扶人的电话
+var household_name;//贫困户姓名
+var zjhm;//证件号码
 function qm(){
 	$.ajax({  		       
-	    url: '/assa/getQianming.do',
+	    url: '/assaWeChatApp/getQianming.do',
 	    type: "POST",
 	    async:false,
 	    dataType: 'json',
@@ -25,17 +30,19 @@ function qm(){
 function show_jbqk(){
 	var Request = new Object();
 	Request = GetRequest();//截取URL的方法
-	sid=Request['sid']; 
-	poor_id = Request['poor_id'];
+	household_name=Request['household_name']; 
+	zjhm = Request['zjhm'];
+	personal_name=Request['name'];
+	personal_phone = Request['phone'];
 	$.ajax({  		       
-	    url: '/assa/getSaveVisit.do',
+	    url: '/assaWeChatApp/getSaveVisit.do',
 	    type: "POST",
 	    async:false,
 	    dataType: 'json',
-	    data: {persion_id:sid,pid:poor_id},
+	    data: {household_name:household_name,household_cord:zjhm,personal_name:personal_name,personal_phone:personal_phone},
 	    success: function (data) {
 	    	var html = ''
-	    	$.each(data.result,function(i,item){
+	    	$.each(data.data,function(i,item){
 	    		html += '<div class="col-sm-12"><div class="panel panel-default" >'
 	    		html += '<div class="panel-heading"><img src="img/day.png" style="margin:0;vertical-align:middle;width:50px;height:29px;"><span style="font-size:17px">时间：'+item.b+'</span></div>';
 	    		html += ' <div class="panel-body"><div class="row">'
@@ -47,13 +54,10 @@ function show_jbqk(){
 					var zf_photo = [];
 					for (var i = 0 ; i < pic.length ; i ++){
 						zf_photo[i] ='http://www.gistone.cn/'+pic[i];
-						
 					}
 					for (var i = 0 ; i < pic.length ; i ++){
 						html += '<div style="width:20%;height:20%;float:left">'+
 						'<img src="'+pic[i]+'"style="width:95%;height:80px" onclick="yulan(\''+pic[i]+'\',\''+zf_photo+'\')"/></div>';
-						
-						
 					}
 				}
 				html += '</div><div class="col-sm-12">&nbsp;</div></div></div></div></div>';

@@ -1,9 +1,9 @@
 $(function(){
 	var Request = new Object();
 	Request = GetRequest();
-	sid = Request['sid'];
-	pkid = Request['pkid'];
-	float(sid,pkid);
+	phone = Request['phone'];
+	name = Request['name'];
+	float(phone,name);
 	document.getElementById("shouye").setAttribute("class","page-item active");
 	menu_html();
 })
@@ -17,19 +17,19 @@ function menu_html(){
 		'</a>'+
 	'</li>'+
 	'<li>'+
-		'<a href="bfdx.html?sid='+sid+'&pkid='+pkid+'" style="background-color:#20bcd2;">'+
+		'<a href="bfdx.html?phone='+phone+'&name='+name+'" style="background-color:#20bcd2;">'+
 			'<img src="img/a2.png">'+
 			'<p class="menu-txt">帮扶对象</p>'+
 		'</a>'+
 	'</li>'+
 	'<li>'+
-		'<a href="tjzf.html?sid='+sid+'&pkid='+pkid+'" style="background-color:#00e1fa;">'+
+		'<a href="tjzf.html?phone='+phone+'&name='+name+'" style="background-color:#00e1fa;">'+
 			'<img src="img/a3.png">'+
 			'<p class="menu-txt">写日记</p>'+
 		'</a>'+
 	'</li>'+
 	'<li>'+
-		'<a href="sm.html?sid='+sid+'&pkid='+pkid+'" style="background-color:#e3c97e;">'+
+		'<a href="sm.html?phone='+phone+'&name='+name+'" style="background-color:#e3c97e;">'+
 			'<img src="img/a4.png">'+
 			'<p class="menu-txt">扫一扫</p>'+
 		'</a>'+
@@ -37,7 +37,7 @@ function menu_html(){
 '</ul>'+
 '<ul class="clearfix">'+
 	'<li>'+
-		'<a href="bfrj.html?sid='+sid+'&pkid='+pkid+'" style="background-color:#00363d;">'+
+		'<a href="bfrj.html?phone='+phone+'&name='+name+'" style="background-color:#00363d;">'+
 			'<img src="img/a5.png">'+
 			'<p class="menu-txt">我的日记</p>'+
 		'</a>'+
