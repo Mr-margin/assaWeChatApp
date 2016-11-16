@@ -196,11 +196,12 @@ function qiandao (){
 function  addzfjl() {
 	var newstr=pp.substring(0,pp.length-1);
 	var w_p = newstr.split(",");
-	var poor_id = $("#poor_name").val();
-	if(poor_id == "请选择" || poor_id == null || poor_id == ""){
+	var household_card = $("#poor_name").val();//贫困户证件号码
+	if(household_card == "请选择" || household_card == null || household_card == ""){
 		alert("请选择扶贫对象")
 		return ;
 	}
+	var household_name = $("#poor_name").find("option:selected").text();//贫困户的姓名
 	$.ajax({  		       
 	    url: '/assaWeChatApp/addZfjl.do',
 	    type: "POST",
@@ -208,12 +209,14 @@ function  addzfjl() {
 	    dataType: 'json',
 	    traditional : true,
 	    data: {
-	    	poor_id:poor_id,
+	    	personal_name:name,
+	    	personal_phone:phone,
+	    	household_name:household_name,
+	    	household_card:household_card,
 	    	zfjl:$("#zfjlwz").val(),
 	    	"photo":w_p,
 	    	latitude: latitude,
 	    	longitude:longitude,
-	    	sid:sid,
 	    },
 	    success: function (data) {
 	    	if(data == "5"){

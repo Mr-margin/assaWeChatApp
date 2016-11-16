@@ -50,9 +50,6 @@ function poor_xinxi(){
 	}
 	title_html += '</div>';
 	$("#touxiang").html(title_html);
-	
-	
-	
 	var html = 	'<ul class="dorm-book mt3">'+
 					'<li class="basic-tit">'+
 				    '帮扶对象基本信息'+
@@ -97,37 +94,45 @@ function poor_xinxi(){
 						'<img src="img/standard.png">'+
 					'</span>'+
 				   ' <span class="stu-name">识别标准</span></span>'+
-				    '<span class="info-middle">'+sbbz+'</span>  '+
+				    '<span class="info-middle">'+sbbz_sz[sbbz-1]+'</span>  '+
 				'</li>'+
 				'<li>'+
 					'<span class="book-tit"><span class="heade-img" style="height:15px; width:15px;">'+
 					'	<img src="img/property.png">'+
 					'</span>'+
 				   ' <span class="stu-name">贫困户属性</span></span>'+
-				   ' <span class="info-middle">'+shuxing+'</span>  '+
+				   ' <span class="info-middle">'+pkhsx_sz[shuxing-1]+'</span>  '+
 				'</li>'+
 				'<li>'+
 					'<span class="book-tit"><span class="heade-img" style="height:15px; width:15px;">'+
 					'	<img src="img/icon_army.png">'+
 					'</span>'+
 				  '  <span class="stu-name">是否军烈属</span></span>'+
-				  '  <span class="info-middle">'+jls+'</span>  '+
+				  '  <span class="info-middle">'+jls_sz[jls]+'</span>  '+
 				'</li>'+
 				
 				'<li>'+
 					'<span class="book-tit"><span class="heade-img" style="height:15px; width:15px;">'+
 						'<img src="img/icon_poorreason.png">'+
 					'</span>'+
-				    '<span class="stu-name">主要致贫原因</span></span>'+
-				   ' <span class="info-middle">'+zpyy+'</span>  '+
-				'</li>'+
+				    '<span class="stu-name">主要致贫原因</span></span>';
+					if ( zpyy == 99 ) {
+						html +=  ' <span class="info-middle">其他</span>';
+					} else {
+						html +=  ' <span class="info-middle">'+zyzy_sz[zpyy-1]+'</span>';
+					}
+				html +='</li>'+
 				'<li>'+
 					'<span class="book-tit"><span class="heade-img" style="height:15px; width:15px;">'+
 					'	<img src="img/reason.png">'+
 					'</span>'+
-				   ' <span class="stu-name">其他致贫原因</span></span>'+
-				  '  <span class="info-middle">'+qtzp+'</span>  '+
-				'</li>'+
+				   ' <span class="stu-name">其他致贫原因</span></span>';
+				if ( qtzp == 99 ) {
+					html+= '  <span class="info-middle">其他</span>  ';
+				} else {
+					html+= '  <span class="info-middle">'+qtzy_sz[qtzp-1]+'</span>  ';
+				}
+				html += '</li>'+
 				'</ul>';
 	$("#poor_xinxi").html(html);
 	

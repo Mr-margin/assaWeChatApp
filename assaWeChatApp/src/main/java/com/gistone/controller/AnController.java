@@ -674,26 +674,34 @@ public class AnController{
 	 */
 	@RequestMapping("addZfjl.do")
 	public void addZfjl(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		String poor_id = request.getParameter("poor_id");
-		String zfjl = request.getParameter("zfjl");
-		String sid = request.getParameter("sid");
-		String latitude = request.getParameter("latitude");
-		String longitude = request.getParameter("longitude");
-		String[] photo = request.getParameterValues("photo");
+		String household_name = request.getParameter("household_name");//贫困户的姓名
+		String household_card = request.getParameter("household_card");//贫困户证件号码
+		String personal_name = request.getParameter("personal_name");//帮扶人姓名
+		String personal_phone = request.getParameter("personal_phone");//帮扶人电话
+		
+		String zfjl = request.getParameter("zfjl");//走访记录
+		String latitude = request.getParameter("latitude");//维度
+		String longitude = request.getParameter("longitude");//经度
+		String[] photo = request.getParameterValues("photo");//图片
+		Date date = new Date();
 		SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy-MM-dd"); 
-		String hql="INSERT INTO DA_HELP_VISIT(DA_HOUSEHOLD_ID,SYS_PERSONAL_ID,V1,V2,V3,LNG,LAT,ADDRESS)"+
-				" VALUES('"+poor_id+"','"+sid+"','"+simpleDate.format(new Date())+"','','"+zfjl+"','"+longitude+"','"+latitude+"','')";
+		SimpleDateFormat sf = new SimpleDateFormat("yyyyMMddhhmmss");
+	    String random_number = sf.format(date)+"_"+new Random().nextInt(1000);//时间戳+随机数
+		String hql="INSERT INTO DA_HELP_VISIT(HOUSEHOLD_NAME,PERSONAL_NAME,V1,V3,LNG,LAT,HOUSEHOLD_CARD,PERSONAL_PHONE,RANDOM_NUMBER)"+
+				" VALUES('"+household_name+"','"+personal_name+"','"+simpleDate.format(new Date())+"','','"+zfjl+"','"+longitude+"','"+latitude+"','"+household_card+"','"+personal_phone+"','"+random_number+"')";
 		
 		int insert_num = this.getBySqlMapper.insert(hql);
 		
-		String cha_sql="SELECT MAX(PKID) PKID FROM DA_HELP_VISIT WHERE V1='"+simpleDate.format(new Date())+"' AND V3= '"+zfjl+"' AND DA_HOUSEHOLD_ID="+poor_id +" AND SYS_PERSONAL_ID ='"+sid+"'";
-		List<Map> list = this.getBySqlMapper.findRecords(cha_sql);
-		String main = "" ;
-		if(list.size()>0){
-			main=list.get(0).get("PKID").toString();    
-		}
-		String saveUrl = request.getContextPath() + "/attached/2/";
-		String savePath = request.getServletContext().getRealPath("/")+ "attached/2/";
+//		String cha_sql="SELECT MAX(PKID) PKID FROM DA_HELP_VISIT WHERE V1='"+simpleDate.format(new Date())+"' AND V3= '"+zfjl+"' AND DA_HOUSEHOLD_ID="+poor_id +" AND SYS_PERSONAL_ID ='"+sid+"'";
+//		List<Map> list = this.getBySqlMapper.findRecords(cha_sql);
+//		String main = "" ;
+//		if(list.size()>0){
+//			main=list.get(0).get("PKID").toString();    
+//		}
+		String saveUrl1 = request.getContextPath() + "/attached/2/";
+		String savePath1 = request.getServletContext().getRealPath("/")+ "attached/2/";
+		String saveUrl = saveUrl1.replaceAll("assaWeChatApp", "assa");
+		String savePath = savePath1.replaceAll("assaWeChatApp", "assa");
 		// 创建文件夹
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 		String ymd = sdf.format(new Date());
@@ -706,14 +714,14 @@ public class AnController{
 		String name = "";
 		for (int i = 0; i < photo.length; i++) {
 			String res = downloadFromUrl(photo[i], savePath,name);
-            String sql="INSERT INTO DA_PIC (PIC_TYPE,PIC_PKID,PIC_FORMAT,PIC_PATH)"+
-    				" VALUES('2','"+main+"','jpg','"+saveUrl+res+"')";
+            String sql="INSERT INTO DA_PIC (RANDOM_NUMBER,PIC_PATH)"+
+    				" VALUES('"+random_number+"','"+saveUrl+res+"')";
             int insert_photo = this.getBySqlMapper.insert(sql);
 		}
 		response.getWriter().write("5");
 	}
 	/**
-	 * 添加走访记录
+	 * 添加户主照片
 	 * @param request
 	 * @param response
 	 * @throws DigestException
@@ -721,14 +729,16 @@ public class AnController{
 	 */
 	@RequestMapping("getAdd_jttx.do")
 	public void getAdd_jttx(HttpServletRequest request, HttpServletResponse response) throws IOException{
-
-		String poor_id = request.getParameter("poor_id");//贫困户id
+		String household_name = request.getParameter("household_name");//贫困户姓名
+		String household_card = request.getParameter("household_card");//贫困户编号
+		String AAB001 = request.getParameter("AAB001");//贫苦户编号
 		String photo = request.getParameter("photo");//照片
 		String type = request.getParameter("type");//类型
-		
 		SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy-MM-dd"); 
-		String saveUrl = request.getContextPath() + "/attached/"+type+"/";
-		String savePath = request.getServletContext().getRealPath("/")+ "attached/"+type+"/";
+		String saveUrl1 = request.getContextPath() + "/attached/"+type+"/";
+		String savePath1 = request.getServletContext().getRealPath("/")+ "attached/"+type+"/";
+		String saveUrl = saveUrl1.replaceAll("assaWeChatApp", "assa");
+		String savePath = savePath1.replaceAll("assaWeChatApp", "assa");
 		// 创建文件夹
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 		String ymd = sdf.format(new Date());
@@ -741,8 +751,8 @@ public class AnController{
 		String name = "";
 
 		String res = downloadFromUrl(photo, savePath,name);
-        String sql="INSERT INTO DA_PIC (PIC_TYPE,PIC_PKID,PIC_FORMAT,PIC_PATH)"+
-				" VALUES('"+type+"','"+poor_id+"','jpg','"+saveUrl+res+"')";
+        String sql="INSERT INTO DA_PIC_HOUSEHOLD (AAB001,HOUSEHOLD_NAME,HOUSEHOLD_CARD,PIC_PATH)"+
+				" VALUES('"+AAB001+"','"+household_name+"','"+household_card+"','"+saveUrl+res+"')";
         int insert_photo = this.getBySqlMapper.insert(sql);
 	
 		response.getWriter().write("5");
