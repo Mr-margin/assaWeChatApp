@@ -116,7 +116,7 @@ public class AnController{
 				String cha_sql1 = "select count(*) num from (select AAB001,max(AAR040) from NM09_AB01 where AAC001='"+cha_list.get(0).get("AAC001")+"' group by AAB001)";
 				List<Map> cha_list1 = this.getBySqlMapper.findRecords(cha_sql1);
 				//贫困户的地址
-				String cha_sql2 = "select sheng,shi,xian,xiang,cun from (select com_name cun,com_f_pkid from SYS_COMPANY where com_code='152221010011')a left join "+
+				String cha_sql2 = "select sheng,shi,xian,xiang,cun from (select com_name cun,com_f_pkid from SYS_COMPANY where com_code='"+cha_list.get(0).get("AAR008")+"')a left join "+
 									"(select pkid,com_f_pkid,com_name xiang from SYS_COMPANY ) b ON a.com_f_pkid=b.pkid left join "+
 									" (select pkid,com_f_pkid,com_name xian from SYS_COMPANY )c ON b.com_f_pkid= c.pkid left join "+
 									" (select pkid,com_f_pkid,com_name shi from SYS_COMPANY )d ON c.com_f_pkid = d.pkid left join "+
@@ -127,6 +127,7 @@ public class AnController{
 				List<Map> cha_list3 = this.getBySqlMapper.findRecords(cha_sql3);
 				JSONObject obj = new JSONObject () ;
 				obj.put("v0", "".equals(cha_list.get(0).get("AAC001")) || cha_list.get(0).get("AAC001") == null ? "" : cha_list.get(0).get("AAC001").toString());//贫困户编号
+				obj.put("d1", "".equals(cha_list.get(0).get("AAR008")) || cha_list.get(0).get("AAR008") == null ? "" : cha_list.get(0).get("AAR008").toString());//村行政区划
 				obj.put("v1", "".equals(cha_list2.get(0).get("SHENG")) || cha_list2.get(0).get("SHENG") == null ? "" : cha_list2.get(0).get("SHENG").toString());//省（自治区、直辖市）
 				obj.put("v2", "".equals(cha_list2.get(0).get("SHI")) || cha_list2.get(0).get("SHI") == null ? "" : cha_list2.get(0).get("SHI").toString());//	市（盟、州）
 				obj.put("v3", "".equals(cha_list2.get(0).get("XIAN")) || cha_list2.get(0).get("XIAN") == null ? "" : cha_list2.get(0).get("XIAN").toString());//	县(市、区、旗)
@@ -212,14 +213,17 @@ public class AnController{
 	 */
 	@RequestMapping("getCha_huController.do")
 	public void getCha_huController (HttpServletRequest request,HttpServletResponse response) throws IOException{
-		String name = request.getParameter("name");
-		String AAC001 = request.getParameter("AAC001");
+		String name = request.getParameter("name");//贫困户姓名
+		String AAC001 = request.getParameter("AAC001");//贫困户的编号
+		String AAB004 = request.getParameter("AAB004");//贫困户的证件号码
 		//贫困户的基本信息
-		String cha_sql = "select * from (select AAB002,AAB001,AAC001,AAB004,max(AAR040) nian from NM09_AB01 where";
-		if ("".equals(name) || name == null) {
+		String cha_sql = "select * from (select AAB002,AAB001,AAC001,AAB004,max(AAR040) nian from NM09_AB01 where ";
+		if (!"".equals(name) && name != null) {
 			cha_sql += "AAB002='"+name+"'";
-		} else {
+		} else if(!"".equals(AAC001) && AAC001!=null){
 			cha_sql += "AAC001='"+AAC001+"'";
+		} else if(!"".equals(AAB004) && AAB004!=null){
+			cha_sql += "AAB004='"+AAB004+"'";
 		}
 		cha_sql += " group by AAB002,AAB001,AAC001,AAB004)a left join (select AAC001,AAR008,AAR012,AAQ002,AAC004,AAC005,AAC006,AAC007,AAC008,AAC012,max(AAR040) nian"+
 					" from NM09_AC01 group BY  AAC001,AAR008,AAR012,AAQ002,AAC004,AAC005,AAC006,AAC007,AAC008,AAC012) b ON a.AAC001 = b.AAC001";
@@ -239,7 +243,7 @@ public class AnController{
 									" (select pkid,com_name sheng from SYS_COMPANY )e ON d.com_f_pkid=e.pkid";
 				List<Map> cha_list2 = this.getBySqlMapper.findRecords(cha_sql2);
 				//户主头像
-				String cha_sql3 = "SELECT PIC_PATH from DA_PIC_HOUSEHOLD where AAB001 ='"+cha_list.get(i).get("AAB001")+"' where HOUSEHOLD_NAME='"+cha_list.get(i).get("AAB002")+"' AND HOUSEHOLD_CARD ='"+cha_list.get(i).get("AAB004")+"' ";
+				String cha_sql3 = "SELECT PIC_PATH from DA_PIC_HOUSEHOLD where AAB001 ='"+cha_list.get(i).get("AAB001")+"' and  HOUSEHOLD_NAME='"+cha_list.get(i).get("AAB002")+"' AND HOUSEHOLD_CARD ='"+cha_list.get(i).get("AAB004")+"' ";
 				List<Map> cha_list3 = this.getBySqlMapper.findRecords(cha_sql3);
 				JSONObject obj = new JSONObject () ;
 				obj.put("v0", "".equals(cha_list.get(i).get("AAC001")) || cha_list.get(i).get("AAC001") == null ? "" : cha_list.get(i).get("AAC001").toString());//贫困户编号
@@ -256,9 +260,15 @@ public class AnController{
 				obj.put("v26", "".equals(cha_list.get(i).get("AAQ002")) || cha_list.get(i).get("AAQ002") == null ? "" : cha_list.get(i).get("AAQ002").toString());//开户银行名称	
 				obj.put("v27", "".equals(cha_list.get(i).get("AAC004")) || cha_list.get(i).get("AAC004") == null ? "" : cha_list.get(i).get("AAC004").toString());//银行卡号	
 				obj.put("v29", "".equals(cha_list.get(i).get("AAC012")) || cha_list.get(i).get("AAC012") == null ? "" : cha_list.get(i).get("AAC012").toString());//是否军烈属	
+				obj.put("v8", "".equals(cha_list.get(i).get("AAB004")) || cha_list.get(i).get("AAB004")==null ? "" : cha_list.get(i).get("AAB004").toString());//证件号码
 				obj.put("v33", "".equals(cha_list.get(i).get("AAC008")) || cha_list.get(i).get("AAC008") == null ? "" : cha_list.get(i).get("AAC008").toString());//其他致贫原因	
 				obj.put("v34", "".equals(cha_list.get(i).get("AAC005")) || cha_list.get(i).get("AAC005") == null ? "" : cha_list.get(i).get("AAC005").toString());//识别标准 国家标准 市级标准	
-				obj.put("pic_path", "".equals(cha_list3.get(i).get("PIC_PATH")) || cha_list3.get(i).get("PIC_PATH") == null ? "" : cha_list3.get(i).get("PIC_PATH").toString());//户主头像
+				if (cha_list3.size() > 0 ) {
+					obj.put("pic_path", "".equals(cha_list3.get(i).get("PIC_PATH")) || cha_list3.get(i).get("PIC_PATH") == null ? "" : cha_list3.get(i).get("PIC_PATH").toString());//户主头像
+				} else {
+					obj.put("pic_path", "");//户主头像
+				}
+
 				json.add(obj);
 			}
 			response.getWriter().write("{\"success\":0,\"message\":\"1\",\"data\":"+json.toString()+"}");
@@ -283,7 +293,7 @@ public class AnController{
 		String household_name = request.getParameter("household_name");//贫困户姓名
 		String household_cord = request.getParameter("household_cord");//贫困人证件号码
 		
-		String sql = "select v1,v2,v3,ADDRESS,wmsys.wm_concat(PIC_PATH) PIC_PATH from ";
+		String sql = "select v1,v3,ADDRESS,wmsys.wm_concat(PIC_PATH) PIC_PATH from ";
 		String  cha_sql = " select personal_name,household_name from DA_HELP_VISIT where";
 		if ("".equals(personal_name) || personal_name == null ) {
 			sql += "(select * from DA_HELP_VISIT where HOUSEHOLD_NAME='"+household_name+"' AND HOUSEHOLD_CARD='"+household_cord+"') a left join ";
@@ -292,7 +302,7 @@ public class AnController{
 			sql += "(select * from DA_HELP_VISIT where PERSONAL_NAME='"+personal_name+"' AND PERSONAL_PHONE='"+personal_phone+"') a left join ";
 			cha_sql += " personal_name='"+personal_name+"' and personal_phone='"+personal_phone+"'";
 		} 
-		sql += "(select * from DA_PIC_VISIT) b on a.RANDOM_NUMBER = b.RANDOM_NUMBER GROUP BY v1,v2,v3,ADDRESS ORDER BY V1 DESC";
+		sql += "(select * from DA_PIC_VISIT) b on a.RANDOM_NUMBER = b.RANDOM_NUMBER GROUP BY v1,v3,ADDRESS ORDER BY V1 DESC";
 		JSONArray jsonArray = new JSONArray();
 		try {
 			List<Map> list = this.getBySqlMapper.findRecords(sql);
@@ -324,7 +334,7 @@ public class AnController{
 	public void getAddVisitController(HttpServletRequest request,HttpServletResponse response) throws IOException{
 		request.setCharacterEncoding("UTF-8");
 		response.setCharacterEncoding("UTF-8");
-		
+		String AAR008 = request.getParameter("AAR008");//村行政编码
 		String personal_name = request.getParameter("personal_name");//帮扶人姓名
 		String personal_phone = request.getParameter("personal_phone");//帮扶人电话
 		String household_name = request.getParameter("household_name");//贫苦户姓名
@@ -337,8 +347,8 @@ public class AnController{
         SimpleDateFormat sf = new SimpleDateFormat("yyyyMMddhhmmss");
         SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy-MM-dd"); 
         String random_number = sf.format(date)+"_"+new Random().nextInt(1000);//时间戳+随机数
-        String insert_sql = "insert into DA_HELP_VISIT (household_name,personal_name,v1,v3,lng,lat,address,household_card,personal_phone,random_number)"+
-        					" values ('"+household_name+"','"+personal_name+"','"+simpleDate.format(new Date())+"','"+v3+"','"+lng+"','"+lat+"','"+address+"','"+household_card+"','"+personal_phone+"','"+random_number+"')";
+        String insert_sql = "insert into DA_HELP_VISIT (household_name,personal_name,v1,v3,lng,lat,address,household_card,personal_phone,random_number,AAR008)"+
+        					" values ('"+household_name+"','"+personal_name+"','"+simpleDate.format(new Date())+"','"+v3+"','"+lng+"','"+lat+"','"+address+"','"+household_card+"','"+personal_phone+"','"+random_number+"','"+AAR008+"')";
 		try {
 			 this.getBySqlMapper.findRecords(insert_sql);
 			 response.getWriter().write("{\"success\":\"0\",\"message\":\"成功\",\"data\":{\"random_number\":\""+random_number+"\"}}");
@@ -674,11 +684,11 @@ public class AnController{
 	 */
 	@RequestMapping("addZfjl.do")
 	public void addZfjl(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		
 		String household_name = request.getParameter("household_name");//贫困户的姓名
 		String household_card = request.getParameter("household_card");//贫困户证件号码
 		String personal_name = request.getParameter("personal_name");//帮扶人姓名
 		String personal_phone = request.getParameter("personal_phone");//帮扶人电话
-		
 		String zfjl = request.getParameter("zfjl");//走访记录
 		String latitude = request.getParameter("latitude");//维度
 		String longitude = request.getParameter("longitude");//经度
@@ -687,8 +697,15 @@ public class AnController{
 		SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy-MM-dd"); 
 		SimpleDateFormat sf = new SimpleDateFormat("yyyyMMddhhmmss");
 	    String random_number = sf.format(date)+"_"+new Random().nextInt(1000);//时间戳+随机数
-		String hql="INSERT INTO DA_HELP_VISIT(HOUSEHOLD_NAME,PERSONAL_NAME,V1,V3,LNG,LAT,HOUSEHOLD_CARD,PERSONAL_PHONE,RANDOM_NUMBER)"+
-				" VALUES('"+household_name+"','"+personal_name+"','"+simpleDate.format(new Date())+"','','"+zfjl+"','"+longitude+"','"+latitude+"','"+household_card+"','"+personal_phone+"','"+random_number+"')";
+	    String AAR008 ="";//村的行政区划代码
+	    String cha_sql = "select AAR008 from (select AAC001,max(AAR040) nian from NM09_AB01 where AAB002='"+household_name+"' AND AAB004='"+household_card+"' group by AAC001) "+
+	    				"  a left join (select AAR008,AAC001,AAR040 from NM09_AC01 ) b on a.AAC001=b.AAC001 and a.nian=b.AAR040";
+	    List<Map> cha_list = this.getBySqlMapper.findRecords(cha_sql);
+	    if ( cha_list.size() > 0 ) {
+	    	AAR008 = cha_list.get(0).get("AAR008").toString();
+	    }
+		String hql="INSERT INTO DA_HELP_VISIT(HOUSEHOLD_NAME,PERSONAL_NAME,V1,V3,LNG,LAT,HOUSEHOLD_CARD,PERSONAL_PHONE,RANDOM_NUMBER,AAR008)"+
+				" VALUES('"+household_name+"','"+personal_name+"','"+simpleDate.format(new Date())+"','','"+zfjl+"','"+longitude+"','"+latitude+"','"+household_card+"','"+personal_phone+"','"+random_number+"','"+AAR008+"')";
 		
 		int insert_num = this.getBySqlMapper.insert(hql);
 		
@@ -790,27 +807,28 @@ public class AnController{
 	 */
 	@RequestMapping("getUpdatePassword.do")
 	public void getUpdatePassword(HttpServletRequest request,HttpServletResponse response) throws NoSuchAlgorithmException,IOException {
-		String old_password = request.getParameter("old_password");
-		old_password = Tool.md5(old_password);
-		String new_password = request.getParameter("new_password");
-		String pkid = request.getParameter("pkid");
-		try {
-			String sql = "select COL_PASSWORD from SYS_USER where pkid ="
-					+ pkid;
-			List<Map> list = this.getBySqlMapper.findRecords(sql);
-
-			if (old_password.equals(list.get(0).get("COL_PASSWORD"))) {
-				String update_sql = "update sys_user set col_password='"
-						+ Tool.md5(new_password) + "' where pkid=" + pkid;
+		String  personal_name = request.getParameter("name");//帮扶人姓名
+		String personal_phone = request.getParameter("phone");//帮扶人电话
+		String old_password = request.getParameter("old_password");//旧密码
+		String new_password = request.getParameter("new_password");//新密码
+		String sql = "select * from SYS_PERSONAL_HOUSEHOLD_MANY where PERSONAL_NAME ='"+personal_name+"' and PERSONAL_PHONE='"+personal_phone+"'";
+		List<Map> list = this.getBySqlMapper.findRecords(sql);
+		if ("".equals(list.get(0).get("PASSWORD")) || list.get(0).get("PASSWORD") == null ) {
+			if (old_password.equals(personal_phone.substring(5,11))) {
+				String  update_sql = "update SYS_PERSONAL_HOUSEHOLD_MANY set PASSWORD = '"+new_password+"' where PERSONAL_NAME='"+personal_name+"' and PERSONAL_PHONE='"+personal_phone+"'";
 				this.getBySqlMapper.update(update_sql);
 				response.getWriter().write("5");
 			} else {
-
 				response.getWriter().write("0");
 			}
-		} catch (Exception e) {
-			
-		  }
-
+		} else if ( !"".equals(list.get(0).get("PASSWORD")) && list.get(0).get("PASSWORD") != null) {
+			if ( old_password.equals(list.get(0).get("PASSWORD"))) {
+				String  update_sql = "update SYS_PERSONAL_HOUSEHOLD_MANY set PASSWORD = '"+new_password+"' where PERSONAL_NAME='"+personal_name+"' and PERSONAL_PHONE='"+personal_phone+"'";
+				this.getBySqlMapper.update(update_sql);
+				response.getWriter().write("5");
+			} else {
+				response.getWriter().write("0");
+			}
+		}
 	}
 }
