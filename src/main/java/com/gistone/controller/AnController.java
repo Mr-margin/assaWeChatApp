@@ -172,7 +172,7 @@ public class AnController{
 		String AAC001 = request.getParameter("pkid");//贫困户编号
 		
 		String sql = "select AAB001,AAB002,AAB003, AAB004,AAB006,AAB007,AAB008,AAB009,AAB010,AAB011,AAB012,AAB017,AAB019,max(AAR040) nian "+
-					"from  NM09_AB01 where AAC001='"+AAC001+"' group by AAB001, AAB002,AAB003, AAB004,AAB006,AAB007,AAB008,AAB009,AAB010,AAB011,AAB012,AAB017,AAB019";
+					"from  NM09_AB01 where AAC001='"+AAC001+"' group by AAB001, AAB002,AAB003, AAB004,AAB006,AAB007,AAB008,AAB009,AAB010,AAB011,AAB012,AAB017,AAB019  ORDER BY AAB003";
 		List<Map> list = this.getBySqlMapper.findRecords(sql);
 		JSONArray json = new JSONArray () ;
 		if ( list.size() > 0 ) {
@@ -371,7 +371,7 @@ public class AnController{
 		if (!file.isEmpty()) {
 			// 文件保存目录路径
 			String savePath1 = request.getServletContext().getRealPath("/")+ "attached/2/";
-	        String savePath = savePath1.replaceAll("assaWeChatApp", "assa");
+	        String savePath = savePath1.replaceAll("assaWeChatApp", "assa Maven Webapp");
 	        // 文件保存目录URL  
 	        String saveUrl1 = request.getContextPath() + "/attached/2/";
 	        String saveUrl = saveUrl1.replaceAll("assaWeChatApp", "assa");
@@ -446,7 +446,6 @@ public class AnController{
 			}
 		}
 	}
-	
 	/**
 	 * 上传用户头像
 	 * @param request
@@ -487,7 +486,7 @@ public class AnController{
 		if (!file.isEmpty()) {
 			// 文件保存目录路径 
 			String savePath1 = request.getServletContext().getRealPath("/")+ "attached/"+type+"/";
-	        String savePath = savePath1.replaceAll("assaWeChatApp", "assa");
+	        String savePath = savePath1.replaceAll("assaWeChatApp", "assa Maven Webapp");
 	        // 文件保存目录URL  
 //	        String saveUrl = request.getContextPath() + "/attached/"+type+"/";
 	        
@@ -718,7 +717,7 @@ public class AnController{
 		String saveUrl1 = request.getContextPath() + "/attached/2/";
 		String savePath1 = request.getServletContext().getRealPath("/")+ "attached/2/";
 		String saveUrl = saveUrl1.replaceAll("assaWeChatApp", "assa");
-		String savePath = savePath1.replaceAll("assaWeChatApp", "assa");
+		String savePath = savePath1.replaceAll("assaWeChatApp", "assa Maven Webapp");
 		// 创建文件夹
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 		String ymd = sdf.format(new Date());
@@ -755,7 +754,7 @@ public class AnController{
 		String saveUrl1 = request.getContextPath() + "/attached/"+type+"/";
 		String savePath1 = request.getServletContext().getRealPath("/")+ "attached/"+type+"/";
 		String saveUrl = saveUrl1.replaceAll("assaWeChatApp", "assa");
-		String savePath = savePath1.replaceAll("assaWeChatApp", "assa");
+		String savePath = savePath1.replaceAll("assaWeChatApp", "assa Maven Webapp");
 		// 创建文件夹
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 		String ymd = sdf.format(new Date());

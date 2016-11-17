@@ -4,7 +4,7 @@ $(function(){
 	Request = GetRequest();
 	name = Request['name'];
 	phone = Request['phone'];
-	float(name,phone);
+	float(phone,name);
 	document.getElementById("geren").setAttribute("class","page-item active");
 	xinxi();
 })

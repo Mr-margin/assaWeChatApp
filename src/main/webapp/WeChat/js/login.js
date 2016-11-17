@@ -32,7 +32,7 @@ function login(){
 	    dataType: 'json',
 	    data: {phone:$("#username").val(),password:$("#password").val()},
 	    success: function (data) {
-	    	if(data.success == '密码错误'){
+	    	if(data.message == '密码错误'){
 	    		$("#tishi").html("密码错误");
 	    	}else if (data.message == '用户不存在') {
 	    		$("#tishi").html("账号不存在");
