@@ -194,6 +194,10 @@ function qiandao (){
 }
 //添加走访记录
 function  addzfjl() {
+	if (latitude=="" || latitude ==null || longitude == "" || longitude == null ){
+		qiandao();
+	}
+	
 	var newstr=pp.substring(0,pp.length-1);
 	var w_p = newstr.split(",");
 	var household_card = $("#poor_name").val();//贫困户证件号码
