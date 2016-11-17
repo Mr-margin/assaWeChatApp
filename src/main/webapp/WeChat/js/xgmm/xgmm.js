@@ -1,20 +1,22 @@
 $(function(){
 	var Request = new Object();
 	Request = GetRequest();
-	pkid = Request['pkid'];
+	name = Request['name'];
+	phone = Request['phone'];
 })
 //更改密碼
 function chage_password(){
+	alert(2)
 	if($("#new_password").val() != $("#new_password").val()){
 		alert("密码与确认密码不一致");
 		return;
 	}
 	$.ajax({  		       
-	    url: '/assa/getUpdatePassword.do',
+	    url: '/assaWeChatApp/getUpdatePassword.do',
 	    type: "POST",
 	    async:false,
 	    dataType: 'json',
-	    data: {pkid : pkid,old_password:$("#old_password").val(),new_password:$("#new_password").val()},
+	    data: {name : name,phone:phone,old_password:$("#old_password").val(),new_password:$("#new_password").val()},
 	    success: function (data) {
 	    	if( data == "5"){
 	    		alert("修改成功");

@@ -20,7 +20,7 @@ function float(phone,name){
 					'class="iconfont icon-index"></i>'+
 				'	<p>首页</p>'+
 			'</a></li> '+
-			'<li id="geren" class="page-item"><a href="grxx.html?name='+phone+'&name='+name+'"> <i '+
+			'<li id="geren" class="page-item"><a href="grxx.html?phone='+phone+'&name='+name+'"> <i '+
 				'	class="iconfont icon-person1"></i>'+
 					'<p>个人中心</p>'+
 			'</a></li>'+

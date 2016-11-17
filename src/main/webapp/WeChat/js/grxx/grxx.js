@@ -2,9 +2,9 @@
 $(function(){
 	var Request = new Object();
 	Request = GetRequest();
-	sid = Request['sid'];
-	pkid = Request['pkid'];
-	float(sid,pkid);
+	name = Request['name'];
+	phone = Request['phone'];
+	float(name,phone);
 	document.getElementById("geren").setAttribute("class","page-item active");
 	xinxi();
 })
@@ -18,7 +18,7 @@ function xinxi(){
 			'</a>'+
 		'</li>'+
 		'<li class="ask-item nobor">'+
-			'<a href="xgmm.html?pkid='+pkid+'"> '+
+			'<a href="xgmm.html?phone='+phone+'&name='+name+'"> '+
 				'<i class="iconfont icon-changpsw"></i> '+
 				'<span class="ask-word">修改密码</span>'+
 				'<span class="goin"><i class="iconfont icon-right"></i></span>'+
