@@ -38,9 +38,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.gistone.MyBatis.config.GetBySqlMapper;
-import com.gistone.util.Tool;
-//import com.google.common.collect.ObjectArrays;
-
 @RestController
 @RequestMapping
 public class AnController{
@@ -370,9 +367,8 @@ public class AnController{
 		String img =  img1.replaceAll("/", "");
 		if (!file.isEmpty()) {
 			// 文件保存目录路径
-			String savePath1 = request.getServletContext().getRealPath("/")+ "attached/2/";
-	        String savePath = savePath1.replaceAll("assaWeChatApp", "assa Maven Webapp");
-	        // 文件保存目录URL  
+			String savePath = "D:/attached/2/";
+	        // 文件保存目录URL 
 	        String saveUrl1 = request.getContextPath() + "/attached/2/";
 	        String saveUrl = saveUrl1.replaceAll("assaWeChatApp", "assa");
 	        
@@ -485,8 +481,8 @@ public class AnController{
 		}
 		if (!file.isEmpty()) {
 			// 文件保存目录路径 
-			String savePath1 = request.getServletContext().getRealPath("/")+ "attached/"+type+"/";
-	        String savePath = savePath1.replaceAll("assaWeChatApp", "assa Maven Webapp");
+			String savePath = "D:/attached/"+type+"/";                                      
+//	        String savePath = savePath1.replaceAll("assaWeChatApp", "assa Maven Webapp");
 	        // 文件保存目录URL  
 //	        String saveUrl = request.getContextPath() + "/attached/"+type+"/";
 	        
@@ -715,9 +711,8 @@ public class AnController{
 //			main=list.get(0).get("PKID").toString();    
 //		}
 		String saveUrl1 = request.getContextPath() + "/attached/2/";
-		String savePath1 = request.getServletContext().getRealPath("/")+ "attached/2/";
+		String savePath = "D:/attached/2/";
 		String saveUrl = saveUrl1.replaceAll("assaWeChatApp", "assa");
-		String savePath = savePath1.replaceAll("assaWeChatApp", "assa Maven Webapp");
 		// 创建文件夹
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 		String ymd = sdf.format(new Date());
@@ -752,9 +747,8 @@ public class AnController{
 		String type = request.getParameter("type");//类型
 		SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy-MM-dd"); 
 		String saveUrl1 = request.getContextPath() + "/attached/"+type+"/";
-		String savePath1 = request.getServletContext().getRealPath("/")+ "attached/"+type+"/";
+		String savePath = "D:/attached/"+type+"/";
 		String saveUrl = saveUrl1.replaceAll("assaWeChatApp", "assa");
-		String savePath = savePath1.replaceAll("assaWeChatApp", "assa Maven Webapp");
 		// 创建文件夹
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 		String ymd = sdf.format(new Date());
