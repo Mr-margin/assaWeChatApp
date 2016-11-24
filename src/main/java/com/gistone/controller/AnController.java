@@ -583,8 +583,6 @@ public class AnController{
 		Map map = (Map)jasonObject;
 		String  str1 = "https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token="+map.get("access_token").toString()+"&type=jsapi";
 		String token = loadJSON(str1); 
-		
-		
 		JSONObject  ticket_obj = JSONObject.fromObject(token);
 		Map ticket_map = (Map)ticket_obj;
 		String ticket = ticket_map.get("ticket").toString();
