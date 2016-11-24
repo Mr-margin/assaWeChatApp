@@ -32,7 +32,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @ServletComponentScan
 @MapperScan("com.gistone.MyBatis.config")
 public class WeChatApp extends SpringBootServletInitializer {
-	public static String token;
 	public static String tokenn;
 	public static String ticket;
 	public static String f_noncestr;
@@ -67,15 +66,15 @@ public class WeChatApp extends SpringBootServletInitializer {
 		Map map = (Map)jasonObject;
 		String  str1 = "https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token="+map.get("access_token").toString()+"&type=jsapi";
 		tokenn = map.get("access_token").toString();
-		token = loadJSON(str1); 
+		String token = loadJSON(str1); 
 		JSONObject  ticket_obj = JSONObject.fromObject(token);
 		Map ticket_map = (Map)ticket_obj;
 		ticket = ticket_map.get("ticket").toString();
 		f_noncestr = UUID.randomUUID().toString().replace("-", "").substring(0, 16);//随机字符串  
 	    f_timestamp = String.valueOf(System.currentTimeMillis() / 1000);//时间戳 
-		System.out.println("每分钟执行一次。开始……");
-		
-		System.out.println("每分钟执行一次。结束。");
+//		System.out.println("每分钟执行一次。开始……");
+//		
+//		System.out.println("每分钟执行一次。结束。");
 	}
 	
 	/**
