@@ -14,9 +14,12 @@ import org.springframework.boot.context.embedded.MultipartConfigFactory;
 import org.springframework.boot.context.web.SpringBootServletInitializer;
 import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.context.annotation.Bean;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @SpringBootApplication
+@EnableScheduling
 @ServletComponentScan
 @MapperScan("com.gistone.MyBatis.config")
 public class WeChatApp extends SpringBootServletInitializer {
@@ -37,6 +40,17 @@ public class WeChatApp extends SpringBootServletInitializer {
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
         return application.sources(WeChatApp.class);
     }
+	
+	/**
+	 * 定时任务
+	 */
+//	@Scheduled(cron="0 0/1 * * * ?") //每分钟执行一次
+	@Scheduled(fixedRate=3600000)
+	public void statusCheck() {
+		System.out.println("每分钟执行一次。开始……");
+		
+		System.out.println("每分钟执行一次。结束。");
+	}
 	
 	/**
 	 * 文件上传临时路径
