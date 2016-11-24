@@ -37,7 +37,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.gistone.WeChatApp;
 import com.gistone.MyBatis.config.GetBySqlMapper;
+
 @RestController
 @RequestMapping
 public class AnController{
@@ -45,12 +47,6 @@ public class AnController{
 	@Autowired
 	private GetBySqlMapper getBySqlMapper;
 	//定义地图中的全局参数
-	String char_name;
-	String char_type;
-	String char_standard;
-	
-	String accessToken;//获取AccessToken 
-	String jsapi_ticket;//2、获取Ticket
 	/**
 	 * 安卓登录接口 
 	 * @author 太年轻
@@ -577,25 +573,17 @@ public class AnController{
 	public void getQianming(HttpServletRequest request, HttpServletResponse response) throws DigestException, IOException{
 		String http_url = request.getParameter("url");
 		
-		String url1 = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=wx4fa9e95d9af2477a&secret=d0fa7c87870507490f4bedc671bcbc14";
-		String json = loadJSON(url1);
-		JSONObject  jasonObject = JSONObject.fromObject(json);
-		Map map = (Map)jasonObject;
-		String  str1 = "https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token="+map.get("access_token").toString()+"&type=jsapi";
-		String token = loadJSON(str1); 
-		JSONObject  ticket_obj = JSONObject.fromObject(token);
-		Map ticket_map = (Map)ticket_obj;
-		String ticket = ticket_map.get("ticket").toString();
+		System.out.println(WeChatApp.tokenn);
 		
 		//1、获取AccessToken  
-	    accessToken = token;  
+	   String  accessToken = WeChatApp.token;  
 	      
 	    //2、获取Ticket  
-	    jsapi_ticket = ticket;  
+	   String  jsapi_ticket = WeChatApp.ticket;  
 	      
 	    //3、时间戳和随机字符串  
-	    String noncestr = UUID.randomUUID().toString().replace("-", "").substring(0, 16);//随机字符串  
-	    String timestamp = String.valueOf(System.currentTimeMillis() / 1000);//时间戳  
+	    String noncestr = WeChatApp.f_noncestr;//随机字符串  
+	    String timestamp = WeChatApp.f_timestamp;//时间戳  
 	      
 //	    System.out.println("accessToken:"+accessToken+"\njsapi_ticket:"+jsapi_ticket+"\n时间戳："+timestamp+"\n随机字符串："+noncestr);  
 	    //4、获取url  
@@ -612,7 +600,8 @@ public class AnController{
 	    obj.put("time", timestamp);//时间戳
 	    obj.put("num", noncestr);//16位的随机数
 	    obj.put("val", signature);//加密后的
-	    obj.put("token", map.get("access_token").toString());//
+	    obj.put("token", accessToken);//
+//	    obj.put("token", map.get("access_token").toString());//
 	    jsonArray.add(obj);
 	    response.getWriter().write(jsonArray.toString());
 	}
