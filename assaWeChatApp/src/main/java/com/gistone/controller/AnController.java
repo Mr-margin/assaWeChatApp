@@ -573,10 +573,9 @@ public class AnController{
 	public void getQianming(HttpServletRequest request, HttpServletResponse response) throws DigestException, IOException{
 		String http_url = request.getParameter("url");
 		
-		System.out.println(WeChatApp.tokenn);
 		
 		//1、获取AccessToken  
-	   String  accessToken = WeChatApp.token;  
+	   String  accessToken = WeChatApp.tokenn;  
 	      
 	    //2、获取Ticket  
 	   String  jsapi_ticket = WeChatApp.ticket;  
