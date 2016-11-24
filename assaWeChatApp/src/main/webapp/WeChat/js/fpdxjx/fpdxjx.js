@@ -46,7 +46,7 @@ function poor_xinxi(){
 	}else{
 		title_html += '<img src="'+url+'" style="width:130px;height:140px;padding-left:10px;padding-top:10px;border-radius:10%"><span style="padding-left: 70px;padding-top:30px;position: absolute;">'+v6+'</span>';
 		title_html += '<div style="padding-left: 160px;margin-top: -50px;"><a href="jtcy.html?pkhbh='+pkhbh+'" style="padding: 1% 8%;font-size: .48rem;background: #00A7EE;border-radius: 4px;margin-right: 2%;color: #fff;width: 100px;">家庭成员</a>';
-		title_html += '<a href="bfrj.html?household_name='+poor_id+'&zjhm='+zjhm+'" style="padding: 1% 8%;font-size: .48rem;background: #00A7EE;border-radius: 4px;margin-right: 2%;color: #fff;width: 100px;">走访记录</a><div>';
+		title_html += '<a href="bfrj.html?household_name='+v6+'&zjhm='+zjhm+'" style="padding: 1% 8%;font-size: .48rem;background: #00A7EE;border-radius: 4px;margin-right: 2%;color: #fff;width: 100px;">走访记录</a><div>';
 	}
 	title_html += '</div>';
 	$("#touxiang").html(title_html);
