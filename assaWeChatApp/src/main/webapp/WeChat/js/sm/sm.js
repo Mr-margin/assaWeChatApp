@@ -7,7 +7,7 @@ $(function(){
 //获取数字签名
 function qianming(){
 	$.ajax({
-	  url: '/assa/getQianming.do',
+	  url: '/assaWeChatApp/getQianming.do',
 	    type: "POST",
 	    async:false,
 	    dataType: 'json',
@@ -26,6 +26,7 @@ function qianming(){
 }
 //扫一扫
 function sm(){
+	alert(1);
 	wx.config({
 	    debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
 			appId: 'wx4fa9e95d9af2477a', // 必填，公众号的唯一标识
