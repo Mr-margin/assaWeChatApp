@@ -95,15 +95,12 @@ public class AnController{
 	public void getSavePoorController (HttpServletRequest request,HttpServletResponse response) throws IOException{
 		String phone = request.getParameter("phone");
 		String name = request.getParameter("name");
-		String sql = "SELECT AAB002,BB.AAC001,BB.AAB001,AAB004,AAR012,AAQ002,AAC004,AAC005,AAC006,AAC007,AAC008,AAC012,NUM,SHENG,SHI,XIAN,XIANG,CUN,PIC_PATH FROM  " +
+		String sql = "SELECT AAB002,BB.AAC001,BB.AAB001,AAB004,AAR012,AAQ002,AAC004,AAC005,AAC006,AAC007,AAC008,AAC012,NUM,V1,V3,V5,V7,V9,PIC_PATH FROM  " +
 					"(SELECT HOUSEHOLD_NAME ,HOUSEHOLD_CARD FROM SYS_PERSONAL_HOUSEHOLD_MANY WHERE PERSONAL_PHONE ='"+phone+"' AND PERSONAL_NAME='"+name+"' GROUP BY HOUSEHOLD_NAME,HOUSEHOLD_CARD )AA "+
 					"LEFT JOIN (SELECT AAB002,AAB001,AAC001,AAB004 FROM NM09_AB01 WHERE AAR040 ='2015')BB ON AA.HOUSEHOLD_NAME=BB.AAB002 AND AA.HOUSEHOLD_CARD=BB.AAB004 LEFT JOIN "+
 					"(SELECT AAC001,AAR008,AAR012,AAQ002,AAC004,AAC005,AAC006,AAC007,AAC008,AAC012 FROM NM09_AC01 WHERE AAR040 ='2015') CC "+
 					"ON BB.AAC001 = CC.AAC001 LEFT JOIN (SELECT AAC001, COUNT(*) NUM FROM NM09_AB01 WHERE AAR040='2015' GROUP BY AAC001  ) DD "+
-					"ON BB.AAC001=DD.AAC001 LEFT JOIN (SELECT SHENG,SHI,XIAN,XIANG,CUN,A.COM_CODE FROM (SELECT COM_CODE,COM_NAME CUN,COM_F_PKID FROM SYS_COMPANY )A LEFT JOIN "+
-					"(SELECT PKID,COM_F_PKID,COM_NAME XIANG FROM SYS_COMPANY ) B ON A.COM_F_PKID=B.PKID LEFT JOIN  (SELECT PKID,COM_F_PKID,COM_NAME XIAN FROM SYS_COMPANY )C "+
-					"ON B.COM_F_PKID= C.PKID LEFT JOIN  (SELECT PKID,COM_F_PKID,COM_NAME SHI FROM SYS_COMPANY )D "+
-					"ON C.COM_F_PKID = D.PKID LEFT JOIN (SELECT PKID,COM_NAME SHENG FROM SYS_COMPANY )E ON D.COM_F_PKID=E.PKID) EE ON CC.AAR008=EE.COM_CODE "+
+					"ON BB.AAC001=DD.AAC001 LEFT JOIN SYS_COM EE ON CC.AAR008=EE.v10  "+
 					"LEFT JOIN	(SELECT AAB001,HOUSEHOLD_NAME,HOUSEHOLD_CARD,PIC_PATH FROM DA_PIC_HOUSEHOLD)FF  "+
 					"ON BB.AAB002=FF.HOUSEHOLD_NAME AND BB.AAB004 =FF.HOUSEHOLD_CARD AND BB.AAB001=FF.AAB001";
 		List<Map> list = this.getBySqlMapper.findRecords(sql);
@@ -113,11 +110,11 @@ public class AnController{
 				JSONObject obj = new JSONObject () ;
 				obj.put("v0", "".equals(list.get(i).get("AAC001")) || list.get(i).get("AAC001") == null ? "" : list.get(i).get("AAC001").toString());//贫困户编号
 				obj.put("d1", "".equals(list.get(i).get("AAR008")) || list.get(i).get("AAR008") == null ? "" : list.get(i).get("AAR008").toString());//村行政区划
-				obj.put("v1", "".equals(list.get(i).get("SHENG")) || list.get(i).get("SHENG") == null ? "" : list.get(i).get("SHENG").toString());//省（自治区、直辖市）
-				obj.put("v2", "".equals(list.get(i).get("SHI")) || list.get(i).get("SHI") == null ? "" : list.get(i).get("SHI").toString());//	市（盟、州）
-				obj.put("v3", "".equals(list.get(i).get("XIAN")) || list.get(i).get("XIAN") == null ? "" : list.get(i).get("XIAN").toString());//	县(市、区、旗)
-				obj.put("v4", "".equals(list.get(i).get("XIANG")) || list.get(i).get("XIANG") == null ? "" : list.get(i).get("XIANG").toString());//镇(乡)
-				obj.put("v5", "".equals(list.get(i).get("CUN")) || list.get(i).get("CUN") == null ? "" : list.get(i).get("CUN").toString());//	行政村
+				obj.put("v1", "".equals(list.get(i).get("V1")) || list.get(i).get("V1") == null ? "" : list.get(i).get("V1").toString());//省（自治区、直辖市）
+				obj.put("v2", "".equals(list.get(i).get("V3")) || list.get(i).get("V3") == null ? "" : list.get(i).get("V3").toString());//	市（盟、州）
+				obj.put("v3", "".equals(list.get(i).get("V5")) || list.get(i).get("V5") == null ? "" : list.get(i).get("V5").toString());//	县(市、区、旗)
+				obj.put("v4", "".equals(list.get(i).get("V7")) || list.get(i).get("V7") == null ? "" : list.get(i).get("V7").toString());//镇(乡)
+				obj.put("v5", "".equals(list.get(i).get("V9")) || list.get(i).get("V9") == null ? "" : list.get(i).get("V9").toString());//	行政村
 				obj.put("v6", "".equals(list.get(i).get("AAB002")) || list.get(i).get("AAB002") == null ? "" : list.get(i).get("AAB002").toString());//	姓名
 				obj.put("v9", "".equals(list.get(i).get("NUM")) || list.get(i).get("NUM") == null ? "" : list.get(i).get("NUM").toString());//人数
 				obj.put("v21", "".equals(list.get(i).get("AAC006")) || list.get(i).get("AAC006") == null ? "" : list.get(i).get("AAC006").toString());//贫困户属性	
