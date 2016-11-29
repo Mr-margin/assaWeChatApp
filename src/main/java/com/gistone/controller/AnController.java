@@ -95,54 +95,41 @@ public class AnController{
 	public void getSavePoorController (HttpServletRequest request,HttpServletResponse response) throws IOException{
 		String phone = request.getParameter("phone");
 		String name = request.getParameter("name");
-		String sql = " select HOUSEHOLD_NAME ,HOUSEHOLD_CARD from SYS_PERSONAL_HOUSEHOLD_MANY where PERSONAL_PHONE ='"+phone+"' and PERSONAL_NAME='"+name+"'";
+		String sql = "SELECT AAB002,BB.AAC001,BB.AAB001,AAB004,AAR012,AAQ002,AAC004,AAC005,AAC006,AAC007,AAC008,AAC012,NUM,SHENG,SHI,XIAN,XIANG,CUN,PIC_PATH FROM  " +
+					"(SELECT HOUSEHOLD_NAME ,HOUSEHOLD_CARD FROM SYS_PERSONAL_HOUSEHOLD_MANY WHERE PERSONAL_PHONE ='"+phone+"' AND PERSONAL_NAME='"+name+"')AA "+
+					"LEFT JOIN (SELECT AAB002,AAB001,AAC001,AAB004 FROM NM09_AB01 WHERE AAR040 ='2015')BB ON AA.HOUSEHOLD_NAME=BB.AAB002 AND AA.HOUSEHOLD_CARD=BB.AAB004 LEFT JOIN "+
+					"(SELECT AAC001,AAR008,AAR012,AAQ002,AAC004,AAC005,AAC006,AAC007,AAC008,AAC012 FROM NM09_AC01 WHERE AAR040 ='2015') CC "+
+					"ON BB.AAC001 = CC.AAC001 LEFT JOIN (SELECT AAC001, COUNT(*) NUM FROM NM09_AB01 WHERE AAR040='2015' GROUP BY AAC001  ) DD "+
+					"ON BB.AAC001=DD.AAC001 LEFT JOIN (SELECT SHENG,SHI,XIAN,XIANG,CUN,A.COM_CODE FROM (SELECT COM_CODE,COM_NAME CUN,COM_F_PKID FROM SYS_COMPANY )A LEFT JOIN "+
+					"(SELECT PKID,COM_F_PKID,COM_NAME XIANG FROM SYS_COMPANY ) B ON A.COM_F_PKID=B.PKID LEFT JOIN  (SELECT PKID,COM_F_PKID,COM_NAME XIAN FROM SYS_COMPANY )C "+
+					"ON B.COM_F_PKID= C.PKID LEFT JOIN  (SELECT PKID,COM_F_PKID,COM_NAME SHI FROM SYS_COMPANY )D "+
+					"ON C.COM_F_PKID = D.PKID LEFT JOIN (SELECT PKID,COM_NAME SHENG FROM SYS_COMPANY )E ON D.COM_F_PKID=E.PKID) EE ON CC.AAR008=EE.COM_CODE "+
+					"LEFT JOIN	(SELECT AAB001,HOUSEHOLD_NAME,HOUSEHOLD_CARD,PIC_PATH FROM DA_PIC_HOUSEHOLD)FF  "+
+					"ON BB.AAB002=FF.HOUSEHOLD_NAME AND BB.AAB004 =FF.HOUSEHOLD_CARD AND BB.AAB001=FF.AAB001";
 		List<Map> list = this.getBySqlMapper.findRecords(sql);
 		JSONArray json = new JSONArray ();
 		if ( list.size() > 0 ) {
 			for ( int i = 0 ; i < list.size() ; i ++ ) {
-				//贫困户的基本信息
-				String cha_sql = "select * from (select AAB002,AAB001,AAC001,AAB004,max(AAR040) nian from NM09_AB01 where AAB002='"+list.get(i).get("HOUSEHOLD_NAME")+"' and AAB004='"+list.get(i).get("HOUSEHOLD_CARD")+"' "+
-								" group by AAB002,AAB001,AAC001,AAB004)a left join (select AAC001,AAR008,AAR012,AAQ002,AAC004,AAC005,AAC006,AAC007,AAC008,AAC012,max(AAR040) nian"+
-								" from NM09_AC01 group BY  AAC001,AAR008,AAR012,AAQ002,AAC004,AAC005,AAC006,AAC007,AAC008,AAC012) b ON a.AAC001 = b.AAC001";
-				List<Map> cha_list = this.getBySqlMapper.findRecords(cha_sql);
-				//贫困户的人口
-				String cha_sql1 = "select count(*) num from (select AAB001,max(AAR040) from NM09_AB01 where AAC001='"+cha_list.get(0).get("AAC001")+"' group by AAB001)";
-				List<Map> cha_list1 = this.getBySqlMapper.findRecords(cha_sql1);
-				//贫困户的地址
-				String cha_sql2 = "select sheng,shi,xian,xiang,cun from (select com_name cun,com_f_pkid from SYS_COMPANY where com_code='"+cha_list.get(0).get("AAR008")+"')a left join "+
-									"(select pkid,com_f_pkid,com_name xiang from SYS_COMPANY ) b ON a.com_f_pkid=b.pkid left join "+
-									" (select pkid,com_f_pkid,com_name xian from SYS_COMPANY )c ON b.com_f_pkid= c.pkid left join "+
-									" (select pkid,com_f_pkid,com_name shi from SYS_COMPANY )d ON c.com_f_pkid = d.pkid left join "+
-									" (select pkid,com_name sheng from SYS_COMPANY )e ON d.com_f_pkid=e.pkid";
-				List<Map> cha_list2 = this.getBySqlMapper.findRecords(cha_sql2);
-				//户主头像
-				String cha_sql3 = "SELECT PIC_PATH from DA_PIC_HOUSEHOLD where AAB001 ='"+cha_list.get(0).get("AAB001")+"' and HOUSEHOLD_NAME='"+cha_list.get(0).get("AAB002")+"' AND HOUSEHOLD_CARD ='"+cha_list.get(0).get("AAB004")+"' ";
-				List<Map> cha_list3 = this.getBySqlMapper.findRecords(cha_sql3);
 				JSONObject obj = new JSONObject () ;
-				obj.put("v0", "".equals(cha_list.get(0).get("AAC001")) || cha_list.get(0).get("AAC001") == null ? "" : cha_list.get(0).get("AAC001").toString());//贫困户编号
-				obj.put("d1", "".equals(cha_list.get(0).get("AAR008")) || cha_list.get(0).get("AAR008") == null ? "" : cha_list.get(0).get("AAR008").toString());//村行政区划
-				obj.put("v1", "".equals(cha_list2.get(0).get("SHENG")) || cha_list2.get(0).get("SHENG") == null ? "" : cha_list2.get(0).get("SHENG").toString());//省（自治区、直辖市）
-				obj.put("v2", "".equals(cha_list2.get(0).get("SHI")) || cha_list2.get(0).get("SHI") == null ? "" : cha_list2.get(0).get("SHI").toString());//	市（盟、州）
-				obj.put("v3", "".equals(cha_list2.get(0).get("XIAN")) || cha_list2.get(0).get("XIAN") == null ? "" : cha_list2.get(0).get("XIAN").toString());//	县(市、区、旗)
-				obj.put("v4", "".equals(cha_list2.get(0).get("XIANG")) || cha_list2.get(0).get("XIANG") == null ? "" : cha_list2.get(0).get("XIANG").toString());//镇(乡)
-				obj.put("v5", "".equals(cha_list2.get(0).get("CUN")) || cha_list2.get(0).get("CUN") == null ? "" : cha_list2.get(0).get("CUN").toString());//	行政村
-				obj.put("v6", "".equals(cha_list.get(0).get("AAB002")) || cha_list.get(0).get("AAB002") == null ? "" : cha_list.get(0).get("AAB002").toString());//	姓名
-				obj.put("v9", "".equals(cha_list1.get(0).get("NUM")) || cha_list1.get(0).get("NUM") == null ? "" : cha_list1.get(0).get("NUM").toString());//人数
-				obj.put("v21", "".equals(cha_list.get(0).get("AAC006")) || cha_list.get(0).get("AAC006") == null ? "" : cha_list.get(0).get("AAC006").toString());//贫困户属性	
-				obj.put("v23", "".equals(cha_list.get(0).get("AAC007")) || cha_list.get(0).get("AAC007") == null ? "" : cha_list.get(0).get("AAC007").toString());//主要致贫原因	
-				obj.put("v25", "".equals(cha_list.get(0).get("AAR012")) || cha_list.get(0).get("AAR012") == null ? "" : cha_list.get(0).get("AAR012").toString());//联系电话	
-				obj.put("v26", "".equals(cha_list.get(0).get("AAQ002")) || cha_list.get(0).get("AAQ002") == null ? "" : cha_list.get(0).get("AAQ002").toString());//开户银行名称	
-				obj.put("v27", "".equals(cha_list.get(0).get("AAC004")) || cha_list.get(0).get("AAC004") == null ? "" : cha_list.get(0).get("AAC004").toString());//银行卡号	
-				obj.put("v29", "".equals(cha_list.get(0).get("AAC012")) || cha_list.get(0).get("AAC012") == null ? "" : cha_list.get(0).get("AAC012").toString());//是否军烈属	
-				obj.put("v8", "".equals(cha_list.get(i).get("AAB004")) || cha_list.get(i).get("AAB004")==null ? "" : cha_list.get(i).get("AAB004").toString());//证件号码
-				obj.put("v33", "".equals(cha_list.get(0).get("AAC008")) || cha_list.get(0).get("AAC008") == null ? "" : cha_list.get(0).get("AAC008").toString());//其他致贫原因	
-				obj.put("v34", "".equals(cha_list.get(0).get("AAC005")) || cha_list.get(0).get("AAC005") == null ? "" : cha_list.get(0).get("AAC005").toString());//识别标准 国家标准 市级标准	
-				
-				if (cha_list3.size()>0){
-					obj.put("pic_path", "".equals(cha_list3.get(0).get("PIC_PATH")) || cha_list3.get(0).get("PIC_PATH") == null ? "" : cha_list3.get(0).get("PIC_PATH").toString());//户主头像
-				} else {
-					obj.put("pic_path", "");//户主头像
-				}
+				obj.put("v0", "".equals(list.get(i).get("AAC001")) || list.get(i).get("AAC001") == null ? "" : list.get(i).get("AAC001").toString());//贫困户编号
+				obj.put("d1", "".equals(list.get(i).get("AAR008")) || list.get(i).get("AAR008") == null ? "" : list.get(i).get("AAR008").toString());//村行政区划
+				obj.put("v1", "".equals(list.get(i).get("SHENG")) || list.get(i).get("SHENG") == null ? "" : list.get(i).get("SHENG").toString());//省（自治区、直辖市）
+				obj.put("v2", "".equals(list.get(i).get("SHI")) || list.get(i).get("SHI") == null ? "" : list.get(i).get("SHI").toString());//	市（盟、州）
+				obj.put("v3", "".equals(list.get(i).get("XIAN")) || list.get(i).get("XIAN") == null ? "" : list.get(i).get("XIAN").toString());//	县(市、区、旗)
+				obj.put("v4", "".equals(list.get(i).get("XIANG")) || list.get(i).get("XIANG") == null ? "" : list.get(i).get("XIANG").toString());//镇(乡)
+				obj.put("v5", "".equals(list.get(i).get("CUN")) || list.get(i).get("CUN") == null ? "" : list.get(i).get("CUN").toString());//	行政村
+				obj.put("v6", "".equals(list.get(i).get("AAB002")) || list.get(i).get("AAB002") == null ? "" : list.get(i).get("AAB002").toString());//	姓名
+				obj.put("v9", "".equals(list.get(i).get("NUM")) || list.get(i).get("NUM") == null ? "" : list.get(i).get("NUM").toString());//人数
+				obj.put("v21", "".equals(list.get(i).get("AAC006")) || list.get(i).get("AAC006") == null ? "" : list.get(i).get("AAC006").toString());//贫困户属性	
+				obj.put("v23", "".equals(list.get(i).get("AAC007")) || list.get(i).get("AAC007") == null ? "" : list.get(i).get("AAC007").toString());//主要致贫原因	
+				obj.put("v25", "".equals(list.get(i).get("AAR012")) || list.get(i).get("AAR012") == null ? "" : list.get(i).get("AAR012").toString());//联系电话	
+				obj.put("v26", "".equals(list.get(i).get("AAQ002")) || list.get(i).get("AAQ002") == null ? "" : list.get(i).get("AAQ002").toString());//开户银行名称	
+				obj.put("v27", "".equals(list.get(i).get("AAC004")) || list.get(i).get("AAC004") == null ? "" : list.get(i).get("AAC004").toString());//银行卡号	
+				obj.put("v29", "".equals(list.get(i).get("AAC012")) || list.get(i).get("AAC012") == null ? "" : list.get(i).get("AAC012").toString());//是否军烈属	
+				obj.put("v8", "".equals(list.get(i).get("AAB004")) || list.get(i).get("AAB004")==null ? "" : list.get(i).get("AAB004").toString());//证件号码
+				obj.put("v33", "".equals(list.get(i).get("AAC008")) || list.get(i).get("AAC008") == null ? "" : list.get(i).get("AAC008").toString());//其他致贫原因	
+				obj.put("v34", "".equals(list.get(i).get("AAC005")) || list.get(i).get("AAC005") == null ? "" : list.get(i).get("AAC005").toString());//识别标准 国家标准 市级标准	
+				obj.put("pic_path", "".equals(list.get(i).get("PIC_PATH")) ||list.get(i).get("PIC_PATH") == null ? "" : list.get(i).get("PIC_PATH").toString());//户主头像
 				
 				json.add(obj);
 			}
