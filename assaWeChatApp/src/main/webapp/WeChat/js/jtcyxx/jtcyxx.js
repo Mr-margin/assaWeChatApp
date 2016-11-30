@@ -33,7 +33,7 @@ $(function (){
 	sid = Request['sid'];
 	poor_id = Request['poor_id'];
 	card = Request['pkrkbh'];
-	if(v10=='01'){
+	if(v10 == 1){
 		type = '4';
 	}else{
 		type = '5';
@@ -149,6 +149,7 @@ function jtcyxx(){
 var photo = '';
 //选择头像
 function add_touxiang(){
+	alert(type);
 	qm();
 	wx.config({
 	    debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
