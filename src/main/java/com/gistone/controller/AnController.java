@@ -695,8 +695,8 @@ public class AnController{
 		String name = "";
 		for (int i = 0; i < photo.length; i++) {
 			String res = downloadFromUrl(photo[i], savePath,name);
-            String sql="INSERT INTO DA_PIC (RANDOM_NUMBER,PIC_PATH)"+
-    				" VALUES('"+random_number+"','"+saveUrl+res+"')";
+            String sql="INSERT INTO DA_PIC_VISIT (RANDOM_NUMBER,PIC_PATH)"+
+    				" VALUES('"+random_number+"','')";
             int insert_photo = this.getBySqlMapper.insert(sql);
 		}
 		response.getWriter().write("5");
