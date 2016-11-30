@@ -194,6 +194,7 @@ function qiandao (){
 }
 //添加走访记录
 function  addzfjl() {
+	
 	if (latitude=="" || latitude ==null || longitude == "" || longitude == null ){
 		qiandao();
 	}
