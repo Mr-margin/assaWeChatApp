@@ -670,7 +670,7 @@ public class AnController{
 	    	AAR008 = cha_list.get(0).get("AAR008").toString();
 	    }
 		String hql="INSERT INTO DA_HELP_VISIT(HOUSEHOLD_NAME,PERSONAL_NAME,V1,V3,LNG,LAT,HOUSEHOLD_CARD,PERSONAL_PHONE,RANDOM_NUMBER,AAR008)"+
-				" VALUES('"+household_name+"','"+personal_name+"','"+simpleDate.format(new Date())+"','','"+zfjl+"','"+longitude+"','"+latitude+"','"+household_card+"','"+personal_phone+"','"+random_number+"','"+AAR008+"')";
+				" VALUES('"+household_name+"','"+personal_name+"','"+simpleDate.format(new Date())+"','"+zfjl+"','"+longitude+"','"+latitude+"','"+household_card+"','"+personal_phone+"','"+random_number+"','"+AAR008+"')";
 		
 		int insert_num = this.getBySqlMapper.insert(hql);
 		
