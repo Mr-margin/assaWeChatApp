@@ -148,8 +148,8 @@ public class AnController{
 		response.setCharacterEncoding("UTF-8");
 		String AAC001 = request.getParameter("pkid");//贫困户编号
 		
-		String sql = "select AAB001,AAB002,AAB003, AAB004,AAB006,AAB007,AAB008,AAB009,AAB010,AAB011,AAB012,AAB017,AAB019,max(AAR040) nian "+
-					"from  NM09_AB01 where AAC001='"+AAC001+"' group by AAB001, AAB002,AAB003, AAB004,AAB006,AAB007,AAB008,AAB009,AAB010,AAB011,AAB012,AAB017,AAB019  ORDER BY AAB003";
+		String sql = "select AAB001,AAB002,AAB003, AAB004,AAB006,AAB007,AAB008,AAB009,AAB010,AAB011,AAB012,AAB017,AAB019 "+
+					"from  NM09_AB01 where AAC001='"+AAC001+"' and AAR040='2015' ORDER BY AAB006";
 		List<Map> list = this.getBySqlMapper.findRecords(sql);
 		JSONArray json = new JSONArray () ;
 		if ( list.size() > 0 ) {
@@ -793,5 +793,45 @@ public class AnController{
 				response.getWriter().write("0");
 			}
 		}
+	}
+	@RequestMapping("getVisit.do")
+	public void getVisit(HttpServletRequest request,HttpServletResponse response ) throws IOException {
+		String  sql = "SELECT DD.PKID,V6,V8,V1,V2,V3,AAC001 FROM (SELECT PKID,V6,V8 FROM DA_HOUSEHOLD_F)AA LEFT JOIN "+
+						" (SELECT AAC001,AAB002,AAB004 FROM NM09_AB01 WHERE AAR040='2015' and AAB006='01') BB ON AA.V6=BB.AAB002 AND AA.V8=BB.AAB004"+
+						" LEFT JOIN (SELECT PKID,HOUSEHOLD_ID,v1,v2,v3 FROM DA_HELP_VISIT_F)DD ON AA.PKID=DD.HOUSEHOLD_ID  WHERE BB.AAC001 IS NOT NULL AND DD.PKID IS NOT NULL";
+		List<Map> list = this.getBySqlMapper.findRecords(sql);
+			for ( int i = 0 ; i < list.size() ; i++ ) {
+				Date date = new Date();
+				SimpleDateFormat sf = new SimpleDateFormat("yyyyMMddhhmmss");
+				String random_number = sf.format(date)+"_"+new Random().nextInt(1000);//时间戳+随机数
+				String cha_sql = " SELECT COL_NAME,TELEPHONE FROM SYS_PERSONAL_F where col_name='"+list.get(i).get("V2")+"'";
+				List<Map> cha_list = this.getBySqlMapper.findRecords(cha_sql);
+				String  phone="";
+				String col_name="";
+				if ( cha_list.size() > 0 ) {
+					phone = "".equals(cha_list.get(0).get("TELEPHONE")) || cha_list.get(0).get("TELEPHONE") == null ? "" : cha_list.get(0).get("TELEPHONE").toString();
+					col_name = "".equals(cha_list.get(0).get("COL_NAME")) || cha_list.get(0).get("COL_NAME") == null ? "" : cha_list.get(0).get("COL_NAME").toString();
+				}
+				String  cha_sql1 = "SELECT AAR008 FROM NM09_AC01 WHERE AAC001='"+list.get(i).get("AAC001")+"' AND AAR040='2015'";
+				List<Map> cha_list1 = this.getBySqlMapper.findRecords(cha_sql1);
+				String AAR008 = "";
+				if ( cha_list1.size() > 0 ) {
+					AAR008=cha_list1.get(0).get("AAR008").toString();
+				}
+				String inset_sql ="INSERT INTO DA_HELP_VISIT(HOUSEHOLD_NAME,PERSONAL_NAME,V1,V3,HOUSEHOLD_CARD,PERSONAL_PHONE,RANDOM_NUMBER,AAR008)"+
+						" VALUES('"+list.get(i).get("V6")+"','"+col_name+"','"+list.get(i).get("V1")+"','"+list.get(i).get("V3")+"','"+list.get(i).get("V8")+"','"+phone+"','"+random_number+"','"+AAR008+"')";
+				this.getBySqlMapper.insert(inset_sql);
+				
+				String  pic_sql = "select pic_path from DA_PIC_F WHERE pic_type='2' and pic_pkid='"+list.get(i).get("PKID")+"'";
+				List<Map> pic_list = this.getBySqlMapper.findRecords(pic_sql);
+				if ( pic_list.size() > 0 ) {
+					for ( int j = 0 ; j < pic_list.size() ; j++ ) {
+						String in_sql = "INSERT INTO DA_PIC_VISIT (RANDOM_NUMBER,PIC_PATH) VALUES ('"+random_number+"','"+pic_list.get(j).get("PIC_PATH")+"')";
+						this.getBySqlMapper.insert(in_sql);
+					}
+				}
+			
+			}
+			response.getWriter().write("111111111111111111111");
 	}
 }
