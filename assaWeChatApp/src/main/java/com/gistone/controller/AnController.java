@@ -343,7 +343,7 @@ public class AnController{
 		String img =  img1.replaceAll("/", "");
 		if (!file.isEmpty()) {
 			// 文件保存目录路径
-			String savePath = "D:/attached/2/";
+			String savePath = "E:/attached/2/";
 	        // 文件保存目录URL 
 	        String saveUrl1 = request.getContextPath() + "/attached/2/";
 	        String saveUrl = saveUrl1.replaceAll("assaWeChatApp", "assa");
@@ -457,7 +457,7 @@ public class AnController{
 		}
 		if (!file.isEmpty()) {
 			// 文件保存目录路径 
-			String savePath = "D:/attached/"+type+"/";                                      
+			String savePath = "E:/attached/"+type+"/";                                      
 //	        String savePath = savePath1.replaceAll("assaWeChatApp", "assa Maven Webapp");
 	        // 文件保存目录URL  
 //	        String saveUrl = request.getContextPath() + "/attached/"+type+"/";
@@ -678,7 +678,7 @@ public class AnController{
 //		}
 		if (photo.length>0 && photo[0]!=""){
 			String saveUrl1 = request.getContextPath() + "/attached/2/";
-			String savePath = "D:/attached/2/";
+			String savePath = "E:/attached/2/";
 			String saveUrl = saveUrl1.replaceAll("assaWeChatApp", "assa");
 			// 创建文件夹
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
@@ -717,7 +717,7 @@ public class AnController{
 		String type = request.getParameter("type");//类型
 		SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy-MM-dd"); 
 		String saveUrl1 = request.getContextPath() + "/attached/"+type+"/";
-		String savePath = "D:/attached/"+type+"/";
+		String savePath = "E:/attached/"+type+"/";
 		String saveUrl = saveUrl1.replaceAll("assaWeChatApp", "assa");
 		// 创建文件夹
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
