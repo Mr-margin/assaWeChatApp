@@ -237,7 +237,7 @@ public class AnController{
 				obj.put("v33", "".equals(cha_list.get(i).get("AAC008")) || cha_list.get(i).get("AAC008") == null ? "" : cha_list.get(i).get("AAC008").toString());//其他致贫原因	
 				obj.put("v34", "".equals(cha_list.get(i).get("AAC005")) || cha_list.get(i).get("AAC005") == null ? "" : cha_list.get(i).get("AAC005").toString());//识别标准 国家标准 市级标准	
 				if (cha_list3.size() > 0 ) {
-					obj.put("pic_path", "".equals(cha_list3.get(i).get("PIC_PATH")) || cha_list3.get(i).get("PIC_PATH") == null ? "" : cha_list3.get(i).get("PIC_PATH").toString());//户主头像
+					obj.put("pic_path", "".equals(cha_list3.get(0).get("PIC_PATH")) || cha_list3.get(0).get("PIC_PATH") == null ? "" : cha_list3.get(0).get("PIC_PATH").toString());//户主头像
 				} else {
 					obj.put("pic_path", "");//户主头像
 				}
@@ -340,7 +340,11 @@ public class AnController{
 	public void getAddZfPhoto(@RequestParam("image") MultipartFile file,HttpServletRequest request,HttpServletResponse response){
 		String random_number = request.getParameter("random_number");//随机数
 		String img1=request.getParameter("imgname");//图片的名称
-		String img =  img1.replaceAll("/", "");
+//		String img =  img1.replaceAll("/", "");
+		Date date = new Date();
+		SimpleDateFormat sf = new SimpleDateFormat("yyyyMMddhhmmss");
+		String pic = sf.format(date)+"_"+new Random().nextInt(1000);//时间戳+随机数
+		
 		if (!file.isEmpty()) {
 			// 文件保存目录路径
 			String savePath = "E:/attached/2/";
@@ -378,15 +382,15 @@ public class AnController{
         
             try {
             	 String sql="INSERT INTO DA_PIC_VISIT (random_number,PIC_PATH) VALUES"+
-     					"('"+random_number+"','"+saveUrl+img+".jpg"+"')";
+     					"('"+random_number+"','"+saveUrl+pic+".jpg"+"')";
             	 
      			int insert_num1 = this.getBySqlMapper.insert(sql);
-            	File uploadedFile = new File(savePath, img+"."+fileExt);
+            	File uploadedFile = new File(savePath, pic+"."+fileExt);
                 byte[] bytes = file.getBytes();  
                 BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(uploadedFile));  
                 stream.write(bytes);  
                 stream.close();
-                response.getWriter().write(img);
+                response.getWriter().write(pic);
             } catch (Exception e) {  
                 return ;
             }
@@ -693,7 +697,7 @@ public class AnController{
 			for (int i = 0; i < photo.length; i++) {
 				String res = downloadFromUrl(photo[i], savePath,name);
 	            String sql="INSERT INTO DA_PIC_VISIT (RANDOM_NUMBER,PIC_PATH)"+
-	    				" VALUES('"+random_number+"','')";
+	    				" VALUES('"+random_number+"','"+saveUrl+res+"')";
 	            int insert_photo = this.getBySqlMapper.insert(sql);
 			}
 		}else{
