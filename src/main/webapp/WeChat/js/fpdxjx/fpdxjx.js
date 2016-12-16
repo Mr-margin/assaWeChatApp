@@ -118,7 +118,9 @@ function poor_xinxi(){
 				    '<span class="stu-name">主要致贫原因</span></span>';
 					if ( zpyy == 99 ) {
 						html +=  ' <span class="info-middle">其他</span>';
-					} else {
+					} else if (zpyy == "" || zpyy == undefined  ) {
+						html +=  ' <span class="info-middle"></span>';
+					}else {
 						html +=  ' <span class="info-middle">'+zyzy_sz[zpyy-1]+'</span>';
 					}
 				html +='</li>'+
@@ -129,7 +131,10 @@ function poor_xinxi(){
 				   ' <span class="stu-name">其他致贫原因</span></span>';
 				if ( qtzp == 99 ) {
 					html+= '  <span class="info-middle">其他</span>  ';
-				} else {
+				} else if (qtzp=="" || qtzp == undefined ){
+					html+= '  <span class="info-middle"></span>  ';
+				}
+				else {
 					html+= '  <span class="info-middle">'+qtzy_sz[qtzp-1]+'</span>  ';
 				}
 				html += '</li>'+
