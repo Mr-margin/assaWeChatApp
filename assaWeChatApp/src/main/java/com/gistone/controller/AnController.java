@@ -316,6 +316,9 @@ public class AnController{
 		String lat = request.getParameter("lat");//维度
 		String address = request.getParameter("address");//地点
 		String v3=request.getParameter("record");//走访情况记录-
+		
+//		System.out.println(AAR008+" "+personal_name+" "+personal_phone+" "+household_name+" "+household_card+" "+lng+" "+lat+" "+address+" "+v3);
+		
 		Date date = new Date();
         SimpleDateFormat sf = new SimpleDateFormat("yyyyMMddhhmmss");
         SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy-MM-dd"); 
