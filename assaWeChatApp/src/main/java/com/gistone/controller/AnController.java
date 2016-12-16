@@ -266,7 +266,7 @@ public class AnController{
 		String household_name = request.getParameter("household_name");//贫困户姓名
 		String household_cord = request.getParameter("household_cord");//贫困人证件号码
 		
-		String sql = "select v1,v3,ADDRESS,wmsys.wm_concat(PIC_PATH) PIC_PATH from ";
+		String sql = "select v1,v3,ADDRESS,wmsys.wm_concat(PIC_PATH) PIC_PATH,a.RANDOM_number from ";
 		String  cha_sql = " select personal_name,household_name from DA_HELP_VISIT where";
 		if ("".equals(personal_name) || personal_name == null ) {
 			sql += "(select * from DA_HELP_VISIT where HOUSEHOLD_NAME='"+household_name+"' AND HOUSEHOLD_CARD='"+household_cord+"') a left join ";
@@ -275,7 +275,7 @@ public class AnController{
 			sql += "(select * from DA_HELP_VISIT where PERSONAL_NAME='"+personal_name+"' AND PERSONAL_PHONE='"+personal_phone+"') a left join ";
 			cha_sql += " personal_name='"+personal_name+"' and personal_phone='"+personal_phone+"'";
 		} 
-		sql += "(select * from DA_PIC_VISIT) b on a.RANDOM_NUMBER = b.RANDOM_NUMBER GROUP BY v1,v3,ADDRESS ORDER BY V1 DESC";
+		sql += "(select * from DA_PIC_VISIT) b on a.RANDOM_NUMBER = b.RANDOM_NUMBER GROUP BY v1,v3,ADDRESS,a.RANDOM_number ORDER BY V1 DESC";
 		JSONArray jsonArray = new JSONArray();
 		try {
 			List<Map> list = this.getBySqlMapper.findRecords(sql);
@@ -914,5 +914,4 @@ public class AnController{
 		}
 		response.getWriter().write("111111111111111111111");
 	}
-	
 }
