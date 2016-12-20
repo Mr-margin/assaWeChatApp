@@ -915,9 +915,19 @@ public class AnController{
 			String  household_card = "".equals(list.get(i).get("A6")) || list.get(i).get("A6") == null ? "" : list.get(i).get("A6").toString();
 			String personal_name = "".equals(list.get(i).get("NAME")) || list.get(i).get("NAME") == null ? "" : list.get(i).get("NAME").toString();
 			String personal_phone = "".equals(list.get(i).get("TEL")) || list.get(i).get("TEL") == null ? "" : list.get(i).get("TEL").toString();
-			String in_sql = " insert into SYS_PERSONAL_HOUSEHOLD_MANY (PERSONAL_NAME,HOUSEHOLD_NAME,PERSONAL_PHONE,HOUSEHOLD_CARD) VALUES"+
-							" ('"+personal_name+"','"+household_name+"','"+personal_phone+"','"+household_card+"')";
-			this.getBySqlMapper.insert(in_sql);
+			
+			String cha_sql = "select * from  SYS_PERSONAL_HOUSEHOLD_MANY where PERSONAL_NAME='"+personal_name+"' and HOUSEHOLD_NAME='"+household_name+"' and "+
+							" PERSONAL_PHONE='"+personal_phone+"' and HOUSEHOLD_CARD='"+household_card+"'";
+			List<Map> cha_list = this.getBySqlMapper.findRecords(cha_sql);
+			if ( cha_list.size() > 0 && cha_list.get(0)!=null ) {
+				
+			}else {
+				String in_sql = " insert into SYS_PERSONAL_HOUSEHOLD_MANY (PERSONAL_NAME,HOUSEHOLD_NAME,PERSONAL_PHONE,HOUSEHOLD_CARD) VALUES"+
+						" ('"+personal_name+"','"+household_name+"','"+personal_phone+"','"+household_card+"')";
+				this.getBySqlMapper.insert(in_sql);
+			}
+			
+			
 		}
 		response.getWriter().write("111111111111111111111");
 	}
