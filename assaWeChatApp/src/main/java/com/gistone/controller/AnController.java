@@ -883,12 +883,19 @@ public class AnController{
 					 lat = lag[0];
 				}
 				String AAR008 = "".equals(list.get(i).get("AAR008")) || list.get(i).get("AAR008") == null ? "" : list.get(i).get("AAR008").toString();//村的编码
-				String inset_sql ="INSERT INTO DA_HELP_VISIT(HOUSEHOLD_NAME,PERSONAL_NAME,V1,LNG,LAT,V3,HOUSEHOLD_CARD,PERSONAL_PHONE,RANDOM_NUMBER,AAR008)"+
-						" VALUES('"+household_name+"','"+personal_name+"','"+time+"','"+lng+"','"+lat+"','"+v3+"','"+household_crad+"','"+personal_phone+"','"+random_number+"','"+AAR008+"')";
-				this.getBySqlMapper.insert(inset_sql);
-				String in_sql = "INSERT INTO DA_PIC_VISIT (RANDOM_NUMBER,PIC_PATH) VALUES ('"+random_number+"','"+pic+"')";
-				this.getBySqlMapper.insert(in_sql);
-			
+				String cha_sql = "select * from DA_HELP_VISIT where HOUSEHOLD_NAME='"+household_name+"' and PERSONAL_NAME='"+personal_name+"' and V1='"+v1+"' and "+
+								" LNG='"+lng+"' and lat='"+lat+"' and v3='"+v3+"' and HOUSEHOLD_CARD='"+household_crad+"' and PERSONAL_PHONE ='"+personal_phone+"' and "+
+								" AAR008='"+AAR008+"'";
+				List<Map> cha_list = this.getBySqlMapper.findRecords(cha_sql);
+				if ( cha_list.size() > 0 ) {
+					
+				} else {
+					String inset_sql ="INSERT INTO DA_HELP_VISIT(HOUSEHOLD_NAME,PERSONAL_NAME,V1,LNG,LAT,V3,HOUSEHOLD_CARD,PERSONAL_PHONE,RANDOM_NUMBER,AAR008)"+
+							" VALUES('"+household_name+"','"+personal_name+"','"+time+"','"+lng+"','"+lat+"','"+v3+"','"+household_crad+"','"+personal_phone+"','"+random_number+"','"+AAR008+"')";
+					this.getBySqlMapper.insert(inset_sql);
+					String in_sql = "INSERT INTO DA_PIC_VISIT (RANDOM_NUMBER,PIC_PATH) VALUES ('"+random_number+"','"+pic+"')";
+					this.getBySqlMapper.insert(in_sql);
+				}
 			}
 			response.getWriter().write("111111111111111111111");
 	}
