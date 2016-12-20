@@ -855,99 +855,48 @@ public class AnController{
 	 */
 	@RequestMapping("gethou.do")
 	public void gethou(HttpServletRequest request,HttpServletResponse response ) throws IOException {
-		for (int j = 0 ; j < 2 ; j ++ ) {
-			if ( j==0 ) {
-				String  sql = "SELECT A4,A6,A37,A41,AAB002,AAB004, GPS,CONTENT,time,pic,BB.AAC001,tel,AAR008 FROM (SELECT NID,A4,A6,A37,A41 FROM AR_DAKL WHERE A7='户主' "+
-						")AA LEFT JOIN   (SELECT AAC001,AAB002,AAB004,AAR008 FROM NM09_AB01 WHERE AAR040='2015' and AAB006='01' and AAB015='1' "+
-						") BB ON AA.A4=BB.AAB002 AND AA.A6=BB.AAB004   LEFT JOIN ("+
-						"SELECT GPS,CONTENT,time,YN,PICTURE pic,KEYWORD FROM AR_KL1 )DD ON AA.NID=DD.YN "+
-						" LEFT JOIN (select name gname,tel ,id from AR_GB_KL1 ) ee on dd.KEYWORD=ee.id WHERE BB.AAC001 IS NOT NULL and CONTENT is not null";
-			List<Map> list = this.getBySqlMapper.findRecords(sql);
-				for ( int i = 1 ; i < list.size() ; i++ ) {
-					Date date = new Date();
-					SimpleDateFormat sf = new SimpleDateFormat("yyyyMMddhhmmss");
-					String random_number = sf.format(date)+"_"+new Random().nextInt(1000);//时间戳+随机数
-					String household_name = "".equals(list.get(i).get("A4")) || list.get(i).get("A4") == null ? "" : list.get(i).get("A4").toString();//贫困户
-					String household_crad = "".equals(list.get(i).get("A6")) || list.get(i).get("A6") == null ? "" : list.get(i).get("A6").toString();//贫困户证件号码
-					String  personal_phone = "".equals(list.get(i).get("TEL")) || list.get(i).get("TEL") == null ? "" : list.get(i).get("TEL").toString();//帮扶人电话
-					String personal_name = "".equals(list.get(i).get("A37")) || list.get(i).get("A37") == null ? "" : list.get(i).get("A37").toString();//帮扶人
-					String v1 = "".equals(list.get(i).get("TIME")) || list.get(i).get("TIME") == null ? "" : list.get(i).get("TIME").toString();//时间
-					String time = v1.replaceAll("/", "-");
-					String v3 = "".equals(list.get(i).get("CONTENT")) || list.get(i).get("CONTENT") == null ? "" : list.get(i).get("CONTENT").toString();//走访记录
-					String pic = "".equals(list.get(i).get("PIC")) || list.get(i).get("PIC") == null ? "" : list.get(i).get("PIC").toString();//照片
-					String gps = "".equals(list.get(i).get("GPS")) || list.get(i).get("GPS") == null ? "" : list.get(i).get("GPS").toString();//位置
-					String lag[] = gps.split(",");
-					String lng = "";
-					String lat = "";
-					if ( lag.length > 0 && lag[0] != "") {
-						 lng = lag[1];
-						 lat = lag[0];
-					}
-					String AAR008 = "".equals(list.get(i).get("AAR008")) || list.get(i).get("AAR008") == null ? "" : list.get(i).get("AAR008").toString();//村的编码
-					String cha_sql = "select * from DA_HELP_VISIT where HOUSEHOLD_NAME='"+household_name+"' and PERSONAL_NAME='"+personal_name+"' and V1='"+v1+"' and "+
-									" LNG='"+lng+"' and lat='"+lat+"' and v3='"+v3+"' and HOUSEHOLD_CARD='"+household_crad+"' and PERSONAL_PHONE ='"+personal_phone+"' and "+
-									" AAR008='"+AAR008+"'";
-					List<Map> cha_list = this.getBySqlMapper.findRecords(cha_sql);
-					if ( cha_list.size() > 0 ) {
-						
-					} else {
-						String inset_sql ="INSERT INTO DA_HELP_VISIT(HOUSEHOLD_NAME,PERSONAL_NAME,V1,LNG,LAT,V3,HOUSEHOLD_CARD,PERSONAL_PHONE,RANDOM_NUMBER,AAR008)"+
-								" VALUES('"+household_name+"','"+personal_name+"','"+time+"','"+lng+"','"+lat+"','"+v3+"','"+household_crad+"','"+personal_phone+"','"+random_number+"','"+AAR008+"')";
-						this.getBySqlMapper.insert(inset_sql);
-						String in_sql = "INSERT INTO DA_PIC_VISIT (RANDOM_NUMBER,PIC_PATH) VALUES ('"+random_number+"','"+pic+"')";
-						this.getBySqlMapper.insert(in_sql);
-					}
-				}
-				
-			}else {
 
-				String  sql = "SELECT A4,A6,A37,A41,AAB002,AAB004, GPS,CONTENT,time,pic,BB.AAC001,tel,AAR008 FROM (SELECT NID,A4,A6,A37,A41 FROM AR_DAKL WHERE A7='户主' "+
+		String  sql = "SELECT A4,A6,A37,A41,AAB002,AAB004, GPS,CONTENT,time,pic,BB.AAC001,tel,AAR008 FROM (SELECT NID,A4,A6,A37,A41 FROM AR_DAKL WHERE A7='户主' "+
 						")AA LEFT JOIN   (SELECT AAC001,AAB002,AAB004,AAR008 FROM NM09_AB01 WHERE AAR040='2015' and AAB006='01' and AAB015='1' "+
 						") BB ON AA.A4=BB.AAB002 AND AA.A6=BB.AAB004   LEFT JOIN ("+
-						"SELECT GPS,CONTENT,time,YN,PICTURE pic,KEYWORD FROM AR_KL2 )DD ON AA.NID=DD.YN "+
-						" LEFT JOIN (select name gname,tel ,id from AR_GB_KL2 ) ee on dd.KEYWORD=ee.id WHERE BB.AAC001 IS NOT NULL and CONTENT is not null";
-				List<Map> list = this.getBySqlMapper.findRecords(sql);
-				for ( int i = 1 ; i < list.size() ; i++ ) {
-					Date date = new Date();
-					SimpleDateFormat sf = new SimpleDateFormat("yyyyMMddhhmmss");
-					String random_number = sf.format(date)+"_"+new Random().nextInt(1000);//时间戳+随机数
-					String household_name = "".equals(list.get(i).get("A4")) || list.get(i).get("A4") == null ? "" : list.get(i).get("A4").toString();//贫困户
-					String household_crad = "".equals(list.get(i).get("A6")) || list.get(i).get("A6") == null ? "" : list.get(i).get("A6").toString();//贫困户证件号码
-					String  personal_phone = "".equals(list.get(i).get("TEL")) || list.get(i).get("TEL") == null ? "" : list.get(i).get("TEL").toString();//帮扶人电话
-					String personal_name = "".equals(list.get(i).get("A37")) || list.get(i).get("A37") == null ? "" : list.get(i).get("A37").toString();//帮扶人
-					String v1 = "".equals(list.get(i).get("TIME")) || list.get(i).get("TIME") == null ? "" : list.get(i).get("TIME").toString();//时间
-					String time = v1.replaceAll("/", "-");
-					String v3 = "".equals(list.get(i).get("CONTENT")) || list.get(i).get("CONTENT") == null ? "" : list.get(i).get("CONTENT").toString();//走访记录
-					String pic = "".equals(list.get(i).get("PIC")) || list.get(i).get("PIC") == null ? "" : list.get(i).get("PIC").toString();//照片
-					String gps = "".equals(list.get(i).get("GPS")) || list.get(i).get("GPS") == null ? "" : list.get(i).get("GPS").toString();//位置
-					String lag[] = gps.split(",");
-					String lng = "";
-					String lat = "";
-					if ( lag.length > 0 && lag[0] != "") {
-						 lng = lag[1];
-						 lat = lag[0];
-					}
-					String AAR008 = "".equals(list.get(i).get("AAR008")) || list.get(i).get("AAR008") == null ? "" : list.get(i).get("AAR008").toString();//村的编码
-					String cha_sql = "select * from DA_HELP_VISIT where HOUSEHOLD_NAME='"+household_name+"' and PERSONAL_NAME='"+personal_name+"' and V1='"+v1+"' and "+
-									" LNG='"+lng+"' and lat='"+lat+"' and v3='"+v3+"' and HOUSEHOLD_CARD='"+household_crad+"' and PERSONAL_PHONE ='"+personal_phone+"' and "+
-									" AAR008='"+AAR008+"'";
-					List<Map> cha_list = this.getBySqlMapper.findRecords(cha_sql);
-					if ( cha_list.size() > 0 ) {
-						
-					} else {
-						String inset_sql ="INSERT INTO DA_HELP_VISIT(HOUSEHOLD_NAME,PERSONAL_NAME,V1,LNG,LAT,V3,HOUSEHOLD_CARD,PERSONAL_PHONE,RANDOM_NUMBER,AAR008)"+
-								" VALUES('"+household_name+"','"+personal_name+"','"+time+"','"+lng+"','"+lat+"','"+v3+"','"+household_crad+"','"+personal_phone+"','"+random_number+"','"+AAR008+"')";
-						this.getBySqlMapper.insert(inset_sql);
-						String in_sql = "INSERT INTO DA_PIC_VISIT (RANDOM_NUMBER,PIC_PATH) VALUES ('"+random_number+"','"+pic+"')";
-						this.getBySqlMapper.insert(in_sql);
-					}
+						"SELECT GPS,CONTENT,time,YN,PICTURE pic,KEYWORD FROM AR_KL )DD ON AA.NID=DD.YN "+
+						" LEFT JOIN (select name gname,tel ,id from AR_GB_KL ) ee on dd.KEYWORD=ee.id WHERE BB.AAC001 IS NOT NULL and CONTENT is not null";
+		List<Map> list = this.getBySqlMapper.findRecords(sql);
+			for ( int i = 1 ; i < list.size() ; i++ ) {
+				Date date = new Date();
+				SimpleDateFormat sf = new SimpleDateFormat("yyyyMMddhhmmss");
+				String random_number = sf.format(date)+"_"+new Random().nextInt(1000);//时间戳+随机数
+				String household_name = "".equals(list.get(i).get("A4")) || list.get(i).get("A4") == null ? "" : list.get(i).get("A4").toString();//贫困户
+				String household_crad = "".equals(list.get(i).get("A6")) || list.get(i).get("A6") == null ? "" : list.get(i).get("A6").toString();//贫困户证件号码
+				String  personal_phone = "".equals(list.get(i).get("TEL")) || list.get(i).get("TEL") == null ? "" : list.get(i).get("TEL").toString();//帮扶人电话
+				String personal_name = "".equals(list.get(i).get("A37")) || list.get(i).get("A37") == null ? "" : list.get(i).get("A37").toString();//帮扶人
+				String v1 = "".equals(list.get(i).get("TIME")) || list.get(i).get("TIME") == null ? "" : list.get(i).get("TIME").toString();//时间
+				String time = v1.replaceAll("/", "-");
+				String v3 = "".equals(list.get(i).get("CONTENT")) || list.get(i).get("CONTENT") == null ? "" : list.get(i).get("CONTENT").toString();//走访记录
+				String pic = "".equals(list.get(i).get("PIC")) || list.get(i).get("PIC") == null ? "" : list.get(i).get("PIC").toString();//照片
+				String gps = "".equals(list.get(i).get("GPS")) || list.get(i).get("GPS") == null ? "" : list.get(i).get("GPS").toString();//位置
+				String lag[] = gps.split(",");
+				String lng = "";
+				String lat = "";
+				if ( lag.length > 0 && lag[0] != "") {
+					 lng = lag[1];
+					 lat = lag[0];
 				}
-				
-			
+				String AAR008 = "".equals(list.get(i).get("AAR008")) || list.get(i).get("AAR008") == null ? "" : list.get(i).get("AAR008").toString();//村的编码
+				String cha_sql = "select * from DA_HELP_VISIT where HOUSEHOLD_NAME='"+household_name+"' and PERSONAL_NAME='"+personal_name+"' and V1='"+v1+"' and "+
+								" LNG='"+lng+"' and lat='"+lat+"' and v3='"+v3+"' and HOUSEHOLD_CARD='"+household_crad+"' and PERSONAL_PHONE ='"+personal_phone+"' and "+
+								" AAR008='"+AAR008+"'";
+				List<Map> cha_list = this.getBySqlMapper.findRecords(cha_sql);
+				if ( cha_list.size() > 0 ) {
+					
+				} else {
+					String inset_sql ="INSERT INTO DA_HELP_VISIT(HOUSEHOLD_NAME,PERSONAL_NAME,V1,LNG,LAT,V3,HOUSEHOLD_CARD,PERSONAL_PHONE,RANDOM_NUMBER,AAR008)"+
+							" VALUES('"+household_name+"','"+personal_name+"','"+time+"','"+lng+"','"+lat+"','"+v3+"','"+household_crad+"','"+personal_phone+"','"+random_number+"','"+AAR008+"')";
+					this.getBySqlMapper.insert(inset_sql);
+					String in_sql = "INSERT INTO DA_PIC_VISIT (RANDOM_NUMBER,PIC_PATH) VALUES ('"+random_number+"','"+pic+"')";
+					this.getBySqlMapper.insert(in_sql);
+				}
 			}
-		}
-
-		
 			response.getWriter().write("111111111111111111111");
 	}
 	/**
@@ -958,62 +907,111 @@ public class AnController{
 	 */
 	@RequestMapping("perspnalHouserhold.do")
 	public void perspnalHouserhold(HttpServletRequest request,HttpServletResponse response ) throws IOException {
-		for (int j = 0 ; j <2; j++ ){
-			if ( j == 0 ) {
-				String sql = "select NAME,TEL,A4,A6 from (SELECT NAME,tel,id  from AR_GB_KL1 ) a left join  (select KEYWORD,YN from AR_KL1 ) b on  a.id= b.keyword LEFT JOIN("+
-						" select nid,A4,A6 from AR_DAKL1)c on  b.yn=c.nid where KEYWORD is not null GROUP BY NAME,TEL,A4,A6 ";
-				List<Map> list = this.getBySqlMapper.findRecords(sql);
-				for ( int i = 0 ; i < list.size() ; i++) {
-					String  household_name = "".equals(list.get(i).get("A4")) || list.get(i).get("A4") == null ? "" : list.get(i).get("A4").toString();
-					String  household_card = "".equals(list.get(i).get("A6")) || list.get(i).get("A6") == null ? "" : list.get(i).get("A6").toString();
-					String personal_name = "".equals(list.get(i).get("NAME")) || list.get(i).get("NAME") == null ? "" : list.get(i).get("NAME").toString();
-					String personal_phone = "".equals(list.get(i).get("TEL")) || list.get(i).get("TEL") == null ? "" : list.get(i).get("TEL").toString();
-					
-					String cha_sql = "select * from  SYS_PERSONAL_HOUSEHOLD_MANY where PERSONAL_NAME='"+personal_name+"' and HOUSEHOLD_NAME='"+household_name+"' and "+
-									" PERSONAL_PHONE='"+personal_phone+"' and HOUSEHOLD_CARD='"+household_card+"'";
-					List<Map> cha_list = this.getBySqlMapper.findRecords(cha_sql);
-					if ( cha_list.size() > 0 && cha_list.get(0)!=null ) {
-						
-					}else {
-						String in_sql = " insert into SYS_PERSONAL_HOUSEHOLD_MANY (PERSONAL_NAME,HOUSEHOLD_NAME,PERSONAL_PHONE,HOUSEHOLD_CARD) VALUES"+
-								" ('"+personal_name+"','"+household_name+"','"+personal_phone+"','"+household_card+"')";
-						this.getBySqlMapper.insert(in_sql);
-					}
-					
-					
-				}
-				
-			}else{
-				
-
-				String sql = "select NAME,TEL,A4,A6 from (SELECT NAME,tel,id  from AR_GB_KL2 ) a left join  (select KEYWORD,YN from AR_KL2 ) b on  a.id= b.keyword LEFT JOIN("+
-						" select nid,A4,A6 from AR_DAKL2)c on  b.yn=c.nid where KEYWORD is not null GROUP BY NAME,TEL,A4,A6 ";
-				List<Map> list = this.getBySqlMapper.findRecords(sql);
-				for ( int i = 0 ; i < list.size() ; i++) {
-					String  household_name = "".equals(list.get(i).get("A4")) || list.get(i).get("A4") == null ? "" : list.get(i).get("A4").toString();
-					String  household_card = "".equals(list.get(i).get("A6")) || list.get(i).get("A6") == null ? "" : list.get(i).get("A6").toString();
-					String personal_name = "".equals(list.get(i).get("NAME")) || list.get(i).get("NAME") == null ? "" : list.get(i).get("NAME").toString();
-					String personal_phone = "".equals(list.get(i).get("TEL")) || list.get(i).get("TEL") == null ? "" : list.get(i).get("TEL").toString();
-					
-					String cha_sql = "select * from  SYS_PERSONAL_HOUSEHOLD_MANY where PERSONAL_NAME='"+personal_name+"' and HOUSEHOLD_NAME='"+household_name+"' and "+
-									" PERSONAL_PHONE='"+personal_phone+"' and HOUSEHOLD_CARD='"+household_card+"'";
-					List<Map> cha_list = this.getBySqlMapper.findRecords(cha_sql);
-					if ( cha_list.size() > 0 && cha_list.get(0)!=null ) {
-						
-					}else {
-						String in_sql = " insert into SYS_PERSONAL_HOUSEHOLD_MANY (PERSONAL_NAME,HOUSEHOLD_NAME,PERSONAL_PHONE,HOUSEHOLD_CARD) VALUES"+
-								" ('"+personal_name+"','"+household_name+"','"+personal_phone+"','"+household_card+"')";
-						this.getBySqlMapper.insert(in_sql);
-					}
-					
-					
-				}
-				
+		String sql = "select NAME,TEL,A4,A6 from (SELECT NAME,tel,id  from AR_GB_KL ) a left join  (select KEYWORD,YN from AR_KL ) b on  a.id= b.keyword LEFT JOIN("+
+					" select nid,A4,A6 from AR_DAKL)c on  b.yn=c.nid where KEYWORD is not null GROUP BY NAME,TEL,A4,A6 ";
+		List<Map> list = this.getBySqlMapper.findRecords(sql);
+		for ( int i = 0 ; i < list.size() ; i++) {
+			String  household_name = "".equals(list.get(i).get("A4")) || list.get(i).get("A4") == null ? "" : list.get(i).get("A4").toString();
+			String  household_card = "".equals(list.get(i).get("A6")) || list.get(i).get("A6") == null ? "" : list.get(i).get("A6").toString();
+			String personal_name = "".equals(list.get(i).get("NAME")) || list.get(i).get("NAME") == null ? "" : list.get(i).get("NAME").toString();
+			String personal_phone = "".equals(list.get(i).get("TEL")) || list.get(i).get("TEL") == null ? "" : list.get(i).get("TEL").toString();
 			
+			String cha_sql = "select * from  SYS_PERSONAL_HOUSEHOLD_MANY where PERSONAL_NAME='"+personal_name+"' and HOUSEHOLD_NAME='"+household_name+"' and "+
+							" PERSONAL_PHONE='"+personal_phone+"' and HOUSEHOLD_CARD='"+household_card+"'";
+			List<Map> cha_list = this.getBySqlMapper.findRecords(cha_sql);
+			if ( cha_list.size() > 0 && cha_list.get(0)!=null ) {
+				
+			}else {
+				String in_sql = " insert into SYS_PERSONAL_HOUSEHOLD_MANY (PERSONAL_NAME,HOUSEHOLD_NAME,PERSONAL_PHONE,HOUSEHOLD_CARD) VALUES"+
+						" ('"+personal_name+"','"+household_name+"','"+personal_phone+"','"+household_card+"')";
+				this.getBySqlMapper.insert(in_sql);
 			}
 			
+			
 		}
-		
+		response.getWriter().write("111111111111111111111");
+	}
+	/**
+	 * 导入阿荣旗的走访记录以及走访记录照片1
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 */
+	@RequestMapping("gethou1.do")
+	public void gethou1(HttpServletRequest request,HttpServletResponse response ) throws IOException {
+
+		String  sql = "SELECT A4,A6,A37,A41,AAB002,AAB004, GPS,CONTENT,time,pic,BB.AAC001,A41 tel,AAR008 FROM (SELECT NID,A4,A6,A37,A41 FROM AR_DAKL1 WHERE A7='户主'"+
+						" )AA LEFT JOIN   (SELECT AAC001,AAB002,AAB004,AAR008 FROM NM09_AB01 WHERE AAR040='2015' and AAB006='01' and AAB015='1' "+
+						"	) BB ON AA.A4=BB.AAB002 AND AA.A6=BB.AAB004   LEFT JOIN ("+
+						"		SELECT GPS,CONTENT,time,YN,PICTURE pic,KEYWORD FROM AR_KL1 )DD ON AA.NID=DD.YN "+
+						"  WHERE BB.AAC001 IS NOT NULL and CONTENT is not null";
+		List<Map> list = this.getBySqlMapper.findRecords(sql);
+			for ( int i = 1 ; i < list.size() ; i++ ) {
+				Date date = new Date();
+				SimpleDateFormat sf = new SimpleDateFormat("yyyyMMddhhmmss");
+				String random_number = sf.format(date)+"_"+new Random().nextInt(1000);//时间戳+随机数
+				String household_name = "".equals(list.get(i).get("A4")) || list.get(i).get("A4") == null ? "" : list.get(i).get("A4").toString();//贫困户
+				String household_crad = "".equals(list.get(i).get("A6")) || list.get(i).get("A6") == null ? "" : list.get(i).get("A6").toString();//贫困户证件号码
+				String  personal_phone = "".equals(list.get(i).get("TEL")) || list.get(i).get("TEL") == null ? "" : list.get(i).get("TEL").toString();//帮扶人电话
+				String personal_name = "".equals(list.get(i).get("A37")) || list.get(i).get("A37") == null ? "" : list.get(i).get("A37").toString();//帮扶人
+				String v1 = "".equals(list.get(i).get("TIME")) || list.get(i).get("TIME") == null ? "" : list.get(i).get("TIME").toString();//时间
+				String time = v1.replaceAll("/", "-");
+				String v3 = "".equals(list.get(i).get("CONTENT")) || list.get(i).get("CONTENT") == null ? "" : list.get(i).get("CONTENT").toString();//走访记录
+				String pic = "".equals(list.get(i).get("PIC")) || list.get(i).get("PIC") == null ? "" : list.get(i).get("PIC").toString();//照片
+				String gps = "".equals(list.get(i).get("GPS")) || list.get(i).get("GPS") == null ? "" : list.get(i).get("GPS").toString();//位置
+				String lag[] = gps.split(",");
+				String lng = "";
+				String lat = "";
+				if ( lag.length > 0 && lag[0] != "") {
+					 lng = lag[1];
+					 lat = lag[0];
+				}
+				String AAR008 = "".equals(list.get(i).get("AAR008")) || list.get(i).get("AAR008") == null ? "" : list.get(i).get("AAR008").toString();//村的编码
+				String cha_sql = "select * from DA_HELP_VISIT where HOUSEHOLD_NAME='"+household_name+"' and PERSONAL_NAME='"+personal_name+"' and V1='"+v1+"' and "+
+								" LNG='"+lng+"' and lat='"+lat+"' and v3='"+v3+"' and HOUSEHOLD_CARD='"+household_crad+"' and PERSONAL_PHONE ='"+personal_phone+"' and "+
+								" AAR008='"+AAR008+"'";
+				List<Map> cha_list = this.getBySqlMapper.findRecords(cha_sql);
+				if ( cha_list.size() > 0 ) {
+					
+				} else {
+					String inset_sql ="INSERT INTO DA_HELP_VISIT(HOUSEHOLD_NAME,PERSONAL_NAME,V1,LNG,LAT,V3,HOUSEHOLD_CARD,PERSONAL_PHONE,RANDOM_NUMBER,AAR008)"+
+							" VALUES('"+household_name+"','"+personal_name+"','"+time+"','"+lng+"','"+lat+"','"+v3+"','"+household_crad+"','"+personal_phone+"','"+random_number+"','"+AAR008+"')";
+					this.getBySqlMapper.insert(inset_sql);
+					String in_sql = "INSERT INTO DA_PIC_VISIT (RANDOM_NUMBER,PIC_PATH) VALUES ('"+random_number+"','"+pic+"')";
+					this.getBySqlMapper.insert(in_sql);
+				}
+			}
+			response.getWriter().write("111111111111111111111");
+	}
+	/**
+	 * 导入帮扶人1
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 */
+	@RequestMapping("perspnalHouserhold1.do")
+	public void perspnalHouserhold1(HttpServletRequest request,HttpServletResponse response ) throws IOException {
+		String sql ="SELECT A4,A6,A37 name ,A41 tel FROM AR_DAKL1 WHERE A7='户主' ";
+		List<Map> list = this.getBySqlMapper.findRecords(sql);
+		for ( int i = 0 ; i < list.size() ; i++) {
+			String  household_name = "".equals(list.get(i).get("A4")) || list.get(i).get("A4") == null ? "" : list.get(i).get("A4").toString();
+			String  household_card = "".equals(list.get(i).get("A6")) || list.get(i).get("A6") == null ? "" : list.get(i).get("A6").toString();
+			String personal_name = "".equals(list.get(i).get("NAME")) || list.get(i).get("NAME") == null ? "" : list.get(i).get("NAME").toString();
+			String personal_phone = "".equals(list.get(i).get("TEL")) || list.get(i).get("TEL") == null ? "" : list.get(i).get("TEL").toString();
+			
+			String cha_sql = "select * from  SYS_PERSONAL_HOUSEHOLD_MANY where PERSONAL_NAME='"+personal_name+"' and HOUSEHOLD_NAME='"+household_name+"' and "+
+							" PERSONAL_PHONE='"+personal_phone+"' and HOUSEHOLD_CARD='"+household_card+"'";
+			List<Map> cha_list = this.getBySqlMapper.findRecords(cha_sql);
+			if ( cha_list.size() > 0 && cha_list.get(0)!=null ) {
+				
+			}else {
+				String in_sql = " insert into SYS_PERSONAL_HOUSEHOLD_MANY (PERSONAL_NAME,HOUSEHOLD_NAME,PERSONAL_PHONE,HOUSEHOLD_CARD) VALUES"+
+						" ('"+personal_name+"','"+household_name+"','"+personal_phone+"','"+household_card+"')";
+				this.getBySqlMapper.insert(in_sql);
+			}
+			
+			
+		}
 		response.getWriter().write("111111111111111111111");
 	}
 }
