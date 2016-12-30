@@ -534,7 +534,8 @@ public class AnController{
 		String personal_name = request.getParameter("name");//帮扶人姓名
 		String personal_phone = request.getParameter("phone");//帮扶人电话
 		JSONArray json = new JSONArray();
-		String  sql = "select household_name,household_card from SYS_PERSONAL_HOUSEHOLD_MANY  where PERSONAL_NAME = '"+personal_name+"' AND PERSONAL_PHONE='"+personal_phone+"'";
+		String  sql = "select household_name,household_card from SYS_PERSONAL_HOUSEHOLD_MANY  where PERSONAL_NAME = '"+personal_name+"' "+
+						"AND PERSONAL_PHONE='"+personal_phone+"' and HOUSEHOLD_CARD is NOT null GROUP BY household_name,household_card ";
 		List<Map> list = this.getBySqlMapper.findRecords(sql);
 		if(list.size()>0){
 			for ( int i = 0 ; i < list.size() ; i ++){
