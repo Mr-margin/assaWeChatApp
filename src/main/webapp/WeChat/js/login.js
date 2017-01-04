@@ -1,7 +1,10 @@
 window.onload=function(){
     var aInput=document.getElementsByTagName('input');
     var oUser=aInput[0];
-    var oPwd=aInput[1]
+	if (localStorage.bftusername!=null && localStorage.bftusername != undefined){
+		aInput[0].value = localStorage.bftusername;
+	}
+    var oPwd=aInput[1];
     var aI=document.getElementsByTagName('i')[0];
 }
 
@@ -23,6 +26,8 @@ $(function(){
 //    }
 	
 })
+
+
 //手机登录
 function login(){
 	$.ajax({  		       
@@ -37,6 +42,7 @@ function login(){
 	    	}else if (data.message == '用户不存在') {
 	    		$("#tishi").html("账号不存在");
 	    	}else if(data.message == '登录成功'){
+				localStorage.bftusername = $("#username").val();
 	    		window.location.href = "w_home.html?phone="+data.data.phone+"&name="+data.data.name;
 	    	}
 	    },

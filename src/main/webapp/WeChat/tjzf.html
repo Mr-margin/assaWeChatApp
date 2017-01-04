@@ -8,6 +8,8 @@
 <link rel="stylesheet" type="text/css" href="css/base.css" />
 <link rel="stylesheet" type="text/css" href="css/style.css" />
 <link rel="stylesheet" type="text/css" href="css/iconfont/iconfont.css" />
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=IcxXzXjl4NEuP70L4lAUnx6DOdDaw5C2">
+</script>
 <title>精准扶贫帮扶通</title>
 <body>
 	<div class="header">
@@ -26,8 +28,10 @@
 			<span class="goin"><i class="iconfont icon-right">必填</i></span>
 		</li>
 		<div class="reportcard">
-			<a id="print" href="#" class="db ta-center print" onclick="qiandao()">走&nbsp;访&nbsp;签&nbsp;到&nbsp;</a>
+			<a id="print" href="#" class="db ta-center print" onclick="qiandao()">现&nbsp;场&nbsp;签&nbsp;到&nbsp;</a>
 			<a id="print1" class="db ta-center print1" style="display:none">签&nbsp;到&nbsp;成&nbsp;功&nbsp;</a>
+			<a id="print3" href="#" class="db ta-center print3" onclick="fqiandao()">非&nbsp;现&nbsp;场&nbsp;签&nbsp;到&nbsp;</a>
+			<a id="print4" class="db ta-center print4" style="display:none">签&nbsp;到&nbsp;成&nbsp;功&nbsp;</a>
 		</div>
 		<HR style="FILTER: alpha(opacity=100,finishopacity=0,style=3)" width="100%" color=#dddddd SIZE=1>
 		<li><span class="book-tit" style="width: 20%;">走访照片</span></li>
@@ -45,10 +49,12 @@
 		</div>
 	</ul>
 	<div class="step-btn">
-		<a id="save" onclick="addzfjl()">保&nbsp;&nbsp;存</a> 
+		<!--此处做过修改 将取消修改为了提交按钮 原来的保存执行缓存走访记录 提交按钮直接提交到服务器-->
+		<a id="save" onclick="savezfjl()">保&nbsp;&nbsp;存</a>
 		<a id="deng" style="display:none;background: #666;">请&nbsp;稍&nbsp;后</a>
-		<a onclick="history.go(-1)">取&nbsp;&nbsp;消</a>
+		<a id="tijiao" onclick="addzfjl()">提&nbsp;&nbsp;交</a>
 	</div>
+	<div id="allmap" style="display:none;"></div>
 	<script src="js/jquery-1.10.2.min.js"></script>
 	<script type="text/javascript" src="js/basic.js"></script>
 	<script type="text/javascript" src="js/rem.js"></script>
