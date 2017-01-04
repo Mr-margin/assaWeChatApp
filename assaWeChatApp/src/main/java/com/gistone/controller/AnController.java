@@ -267,42 +267,39 @@ public class AnController{
 		String household_cord = request.getParameter("household_cord");//贫困人证件号码
 		
 		String sql = "";
-		String  cha_sql = " select personal_name,household_name from DA_HELP_VISIT where";
 		
 		if ("".equals(personal_name) || personal_name == null ) {
 			
 			sql = " select REGISTERTIME,v3,address,pic_path,random_number,aa.household_name,aa.household_card,personal_name,REGISTERTYPE　from "+
-					"(select personal_name,household_name,household_card,personal_phone from DA_HELP_VISIT where "+
+					"(select RANDOM_NUMBER nn, personal_name,household_name,household_card,personal_phone from DA_HELP_VISIT where "+
 					" household_name='"+household_name+"' and household_card='"+household_cord+"')aa LEFT JOIN ( "+
 					"select REGISTERTIME,v3,ADDRESS,wmsys.wm_concat(PIC_PATH) PIC_PATH,a.RANDOM_number,household_name,household_card,REGISTERTYPE from "+
 					"  (select * from DA_HELP_VISIT where household_name='"+household_name+"' AND household_card='"+household_cord+"') a left join "+
 					" (select * from DA_PIC_VISIT) b on a.RANDOM_NUMBER = b.RANDOM_NUMBER GROUP BY REGISTERTIME,v3,ADDRESS,a.RANDOM_number, "+
-					" household_name,household_card,REGISTERTYPE  )bb on aa.household_name=bb.household_name and aa.household_card=bb.household_card ORDER BY REGISTERTIME DESC";
+					" household_name,household_card,REGISTERTYPE  )bb on aa.nn=bb.RANDOM_NUMBER ORDER BY REGISTERTIME DESC";
 			
-//			sql += "(select * from DA_HELP_VISIT where HOUSEHOLD_NAME='"+household_name+"' AND HOUSEHOLD_CARD='"+household_cord+"') a left join ";
-//			cha_sql += " household_name='"+household_name+"' and household_card='"+household_cord+"'";
 		} else if ("".equals(household_name) || household_name == null ) {
 			
 			sql = "select REGISTERTIME,v3,address,pic_path,random_number,aa.household_name,aa.household_card,personal_name,REGISTERTYPE　from "+
-					"(select personal_name,household_name,household_card,personal_phone from DA_HELP_VISIT where "+
+					"(select RANDOM_NUMBER nn,  personal_name,household_name,household_card,personal_phone from DA_HELP_VISIT where "+
 					"  personal_name='"+personal_name+"' and personal_phone='"+personal_phone+"')aa LEFT JOIN ( "+
 					"select REGISTERTIME,v3,ADDRESS,wmsys.wm_concat(PIC_PATH) PIC_PATH,a.RANDOM_number,household_name,household_card,REGISTERTYPE from "+
 					"  (select * from DA_HELP_VISIT where PERSONAL_NAME='"+personal_name+"' AND PERSONAL_PHONE='"+personal_phone+"') a left join "+
 					" (select * from DA_PIC_VISIT) b on a.RANDOM_NUMBER = b.RANDOM_NUMBER GROUP BY REGISTERTIME,v3,ADDRESS,a.RANDOM_number, "+
-					" household_name,household_card,REGISTERTYPE  )bb on aa.household_name=bb.household_name and aa.household_card=bb.household_card ORDER BY REGISTERTIME DESC";
+					" household_name,household_card,REGISTERTYPE  )bb on aa.nn=bb.RANDOM_NUMBER ORDER BY REGISTERTIME DESC";
 		} 
 		JSONArray jsonArray = new JSONArray();
 		try {
 			List<Map> list = this.getBySqlMapper.findRecords(sql);
-			for ( int i = 0 ; i <list.size() ; i ++ ) {
+			for ( int i = 0 ; i < list.size() ; i ++ ) {
 				System.out.println(list.get(i).get("REGISTERTIME")+"---"+list.get(i).get("V3")+"---"+list.get(i).get("PIC_PATH")+"---"+list.get(i).get("ADDRESS")+"---"+list.get(i).get("PERSONAL_NAME")+"---"+list.get(i).get("HOUSEHOLD_NAME"));
 				JSONObject obj = new JSONObject ();
 				obj.put("b", "".equals(list.get(i).get("REGISTERTIME")) || list.get(i).get("REGISTERTIME") == null ? "" : list.get(i).get("REGISTERTIME").toString());//走访时间
 				obj.put("c","".equals(list.get(i).get("V3")) || list.get(i).get("V3") == null ? "" : list.get(i).get("V3").toString());//走访情况记录
 				obj.put("d","".equals(list.get(i).get("PIC_PATH")) || list.get(i).get("PIC_PATH") == null ? "" : list.get(i).get("PIC_PATH").toString());//走访情况图片
 				obj.put("f", "".equals(list.get(i).get("ADDRESS")) || list.get(i).get("ADDRESS") == null ? "" : list.get(i).get("ADDRESS").toString());//地址
-				obj.put("e", "".equals(list.get(i).get("PERSONAL_NAME")) || list.get(i).get("PERSONAL_NAME") == null ? "" : list.get(i).get("PERSONAL_NAME"));//帮扶干部名称
-				obj.put("v6", "".equals(list.get(i).get("HOUSEHOLD_NAME")) || list.get(i).get("HOUSEHOLD_NAME") == null ? "" : list.get(i).get("HOUSEHOLD_NAME"));
+				obj.put("e", "".equals(list.get(i).get("PERSONAL_NAME")) || list.get(i).get("PERSONAL_NAME") == null ? "" : list.get(i).get("PERSONAL_NAME").toString());//帮扶干部名称
+				obj.put("v6", "".equals(list.get(i).get("HOUSEHOLD_NAME")) || list.get(i).get("HOUSEHOLD_NAME") == null ? "" : list.get(i).get("HOUSEHOLD_NAME").toString());
 				jsonArray.add(obj);
 			}
 			response.getWriter().write("{\"success\":\"0\",\"message\":\"成功\",\"data\":"+jsonArray.toString()+"}");
@@ -323,10 +320,10 @@ public class AnController{
 		request.setCharacterEncoding("UTF-8");
 		response.setCharacterEncoding("UTF-8");
 		
-		String registerTime = request.getParameter("registerTime ");//签到时间
-		String sendLat = request.getParameter("sendLat ");//上传维度
-		String sendLng = request.getParameter("sendLng ");//上传经度
-		String registerType  = request.getParameter("registerType ");//签到类型
+		String registerTime = request.getParameter("registerTime");//签到时间
+		String sendLat = request.getParameter("sendLat");//上传维度
+		String sendLng = request.getParameter("sendLng");//上传经度
+		String registerType  = request.getParameter("registerType");//签到类型
 		
 		String AAR008 = request.getParameter("AAR008");//村行政编码
 		String personal_name = request.getParameter("personal_name");//帮扶人姓名
