@@ -5,12 +5,26 @@ var sj_num ;//随机数
 var latitude ;// 纬度，浮点数，范围为90 ~ -90
 var longitude ;// 经度，浮点数，范围为180 ~ -180。
 var token ;//token
+
+//*****缓存变量
+var lsdate;//缓存记录的日期
+var potion;//缓存记录的索引
+
+//非现场签到所需的地址
+var pkhadd = "内蒙古自治区鄂尔多斯市东胜区泊尔江海子镇漫赖村委会";//贫困户家庭地址，用于解析坐标
+var qdtype = 1;//标记签到类型
+
 $(function(){
 	var Request = new Object();
 	Request = GetRequest();
 	phone = Request['phone'];
 	name = Request['name'];
-	poor_name();
+	lsdate = Request['lsdate'];//如果是新增走访记录为0 如果是来至我的日志的编辑则带日期参数
+	if (lsdate != 0){
+		initData();//网页来至我的日志缓存记录的编辑携带了缓存记录的时间 根据缓存初始编辑页面的显示信息
+	}else {
+		poor_name();
+	}
 	qm();
 });
 //帮扶人名下的贫困户
@@ -107,10 +121,6 @@ function photo(){
 //	    	var html = '<tr class="row">';
 	    	var html = '';
 	    	localIds = res.localIds; //返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
-	       
-	    	
-	    	
-	    	
 	        for ( var i = 0 ; i < localIds.length; i ++ ){
 	        	html += '<div style="width:20%;height:20%;float:left"><img src="'+localIds[i]+'" border=0 style="width:95%;height:80%;" ></div>'
 	        	
@@ -185,29 +195,38 @@ function qiandao (){
 	        longitude = res.longitude; // 经度，浮点数，范围为180 ~ -180。
 	        var speed = res.speed; // 速度，以米/每秒计
 	        var accuracy = res.accuracy; // 位置精度
+
+			$("#print").hide();
+			$("#print1").show();
+
 	    }
 	});
-	if(latitude != "" || latitude != null){
+	/*if(latitude != "" && latitude != null && latitude != undefined){
 		$("#print").hide();
 		$("#print1").show();
-	}
+	}*/
 }
-//添加走访记录
+//添加走访记录 --提交到服务器
 function  addzfjl() {
-	$("#deng").show();
-	$("#save").hide() ;
-	if (latitude=="" || latitude ==null || longitude == "" || longitude == null ){
+
+	if (latitude=="" || latitude ==null ||  latitude == undefined ){
 		qiandao();
+		alert("必须签到成功才可以提交！");
+		return;
 	}
-	
+	$("#deng").show();
+	$("#tijiao").hide();
 	var newstr=pp.substring(0,pp.length-1);
 	var w_p = newstr.split(",");
+
 	var household_card = $("#poor_name").val();//贫困户证件号码
+
 	if(household_card == "请选择" || household_card == null || household_card == ""){
 		alert("请选择扶贫对象")
 		return ;
 	}
 	var household_name = $("#poor_name").find("option:selected").text();//贫困户的姓名
+
 	$.ajax({  		       
 	    url: '/assaWeChatApp/addZfjl.do',
 	    type: "POST",
@@ -227,13 +246,200 @@ function  addzfjl() {
 	    success: function (data) {
 	    	if(data == "5"){
 	    		alert('添加成功');
-	    		location.reload(window.location.href) 
+	    		location.reload(window.location.href);
+				if (lsdate != 0){
+					dellsdata(lsdate);
+				}
 	    	}
 	    	
 	    },
 	    error: function (data) {
-	    	
+			alert('添加失败');
 	    }  
 	})
 
+}
+
+/**
+ * 走访记录保存为缓存
+ * @returns {boolean}
+ */
+function savezfjl(){
+    if(!window.localStorage){
+        alert("浏览器不支持缓存请直接提交！");
+        return false;
+    }else{
+		 if (latitude=="" || latitude ==null || latitude == undefined ){
+		 qiandao();
+			 alert("必须签到成功才可以保存！");
+			 return;
+		 }
+		var household_card = $("#poor_name").val();//贫困户证件号码
+		var zfinfo = $("#zfjlwz").val();
+		var household_name = $("#poor_name").find("option:selected").text();//贫困户的姓名
+		var photopath = pp.substring(0, pp.length -1);
+		if(lsdate == 0){//添加新的走访记录
+			var currentdate = getNowFormatDate();
+			var mzfjl = new myzfjl(currentdate,household_name,household_card,zfinfo,photopath,latitude,longitude);
+			if(localStorage.mzfjl == null){
+				var arra=[];
+				arra.push(mzfjl);
+				var objStr=JSON.stringify(arra);
+				localStorage.mzfjl = objStr;
+				alert("保存成功！");
+				location.reload(window.location.href)
+			}else {
+				var arra= JSON.parse(localStorage.mzfjl);
+				arra.push(mzfjl);
+				var objStr=JSON.stringify(arra);
+				localStorage.mzfjl = objStr;
+				alert("保存成功！");
+				location.reload(window.location.href)
+			}
+		}else {//修改保存过的走访记录
+			var arra= JSON.parse(localStorage.mzfjl);
+			var mzfjl = new myzfjl(lsdate,household_name,household_card,zfinfo,photopath,latitude,longitude);
+			arra[potion] = mzfjl;
+			var objStr=JSON.stringify(arra);
+			localStorage.mzfjl = objStr;
+			alert("保存成功！");
+			location.reload(window.location.href)
+		}
+
+    }
+}
+/**
+ * 缓存保存的对象
+ * @param zftime 走访时间 年月日 时分秒
+ * @param p_name 帮扶对象姓名
+ * @param p_card 帮扶对象编码
+ * @param zfinfo 走访记录
+ * @param photo  图片
+ * @param lat    坐标lat
+ * @param lng	  坐标lng
+ */
+function myzfjl(zftime,p_name,p_card,zfinfo,photo,lat,lng){
+    this.zftime=zftime;
+    this.p_name=p_name;
+    this.p_card=p_card;
+    this.zfinfo=zfinfo;
+    this.photo=photo;
+    this.lat = lat;
+    this.lng = lng;
+}
+/**
+ * 获取当前时间
+ * @returns {string}
+ */
+function getNowFormatDate() {
+    var date = new Date();
+    var seperator1 = "-";
+    var seperator2 = ":";
+    var month = date.getMonth() + 1;
+    var strDate = date.getDate();
+    if (month >= 1 && month <= 9) {
+        month = "0" + month;
+    }
+    if (strDate >= 0 && strDate <= 9) {
+        strDate = "0" + strDate;
+    }
+    var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate
+        + " " + date.getHours() + seperator2 + date.getMinutes()
+        + seperator2 + date.getSeconds();
+    return currentdate;
+}
+/**
+ * 页面来至历史记录，初始保存的数据
+ */
+function initData(){
+	var lsdata = JSON.parse(localStorage.mzfjl);
+	$.each(lsdata,function(i,item){
+		if (lsdate == lsdata[i].zftime){
+			potion = i;
+		}
+	})
+
+	latitude = lsdata[potion].lat;
+	longitude = lsdata[potion].lng;
+
+	if(lsdata[potion].lat != "" && lsdata[potion].lat != null && lsdata[potion].lat != undefined  ){
+		latitude = lsdata[potion].lat;
+		longitude = lsdata[potion].lng;
+		$("#print").hide();
+		$("#print1").show();
+	}
+	var html = '<option value="'+lsdata[potion].p_card+'">'+lsdata[potion].p_name+'</option>';
+	$("#poor_name").html(html);
+	$("#zfjlwz").html(lsdata[potion].zfinfo);
+
+	var photohtml = '';
+	var photos = lsdata[potion].photo;
+	var photourl = photos.split(",");
+	pp = photos+",";
+	for (var i = 0;i<photourl.length;i++){
+		photohtml += '<div style="width:20%;height:20%;float:left"><img src="'+photourl[i]+'" border=0 style="width:95%;height:80%;" ></div>'
+	}
+	photohtml += '<div style="width:20%;height:20%;float:left;padding-top:15px;"><img src="img/add1.png" border=0 style="width:95%;height:80%;" onclick="photo()" ></div>'
+	$("#yulan").html(photohtml);
+}
+
+//非现场签到，通过贫困户地址信息解析坐标
+function fqiandao(){
+
+	var household_card = $("#poor_name").val();//贫困户证件号码
+	if(household_card == "请选择" || household_card == null || household_card == ""){
+		alert("请选择扶贫对象")
+		return ;
+	}
+
+	pkhadd =qwhstr(pkhadd);
+// 百度地图API功能
+	var map = new BMap.Map("allmap");
+	// 创建地址解析器实例
+	var myGeo = new BMap.Geocoder();
+	// 将地址解析结果显示在地图上,并调整地图视野
+	myGeo.getPoint(pkhadd, function(point){
+		if (point) {
+			var local = new BMap.LocalSearch(point, {
+				renderOptions:{map: map}
+			});
+			local.search(pkhadd);
+			local.setSearchCompleteCallback(function (results){
+				console.log("检索到的结果"+results.getPoi(0).point.lng+""+results.getPoi(0).point.lat);
+				latitude = results.getPoi(0).point.lat;
+				longitude = results.getPoi(0).point.lng;
+
+				$("#print3").hide();
+				$("#print4").show();
+			});
+		}else{
+			alert("您选择地址没有解析到结果!");
+		}
+	}, "北京市");
+}
+/**
+ * 去除地址所带的委会两字
+ * @param str
+ * @returns {*}
+ */
+function qwhstr(str){
+	if("会" == str.charAt(str.length-1)){
+		var newstr = str.substring(0,str.length-2)
+		return newstr;
+	}else{
+		return str;
+	}
+}
+//提交完成删除对应记录
+function dellsdata(lsdate){
+		var lsdata = JSON.parse(localStorage.mzfjl);
+		var potion;
+		$.each(lsdata,function(i,item){
+			if (lsdate == lsdata[i].zftime){
+				potion = i;
+			}
+		})
+		lsdata.splice(potion,1);
+		var objStr=JSON.stringify(lsdata);
+		localStorage.mzfjl = objStr;
 }

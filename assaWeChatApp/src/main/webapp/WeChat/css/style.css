@@ -597,16 +597,32 @@ body{
 	color: #45c0f8!important;
 	background: none!important;
 	margin-bottom: .5rem;
+	float: left;
 }
 .print1{
 	border: 2px solid #708090;
 	color: #708090!important;
 	background: none!important;
 	margin-bottom: .5rem;
+	float: left;
+}
+.print3{
+	border: 2px solid #45c0f8;
+	color: #45c0f8!important;
+	background: none!important;
+	margin-bottom: .5rem;
+	float: right;
+}
+.print4{
+	border: 2px solid #708090;
+	color: #708090!important;
+	background: none!important;
+	margin-bottom: .5rem;
+	float: right;
 }
 .reportcard{
 	background: #fff;
-	padding: 1.5rem 4%;
+	padding: 0.5rem 4%;
 }
 /********绿色通道*******/
 .state-box{

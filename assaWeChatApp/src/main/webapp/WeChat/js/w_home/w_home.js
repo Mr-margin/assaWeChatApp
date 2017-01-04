@@ -23,7 +23,7 @@ function menu_html(){
 		'</a>'+
 	'</li>'+
 	'<li>'+
-		'<a href="tjzf.html?phone='+phone+'&name='+name+'" style="background-color:#00e1fa;">'+
+		'<a href="tjzf.html?phone='+phone+'&name='+name+'&lsdate='+'0'+'" style="background-color:#00e1fa;">'+
 			'<img src="img/a3.png">'+
 			'<p class="menu-txt">写日记</p>'+
 		'</a>'+
