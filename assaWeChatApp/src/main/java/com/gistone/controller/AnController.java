@@ -290,17 +290,12 @@ public class AnController{
 					"  (select * from DA_HELP_VISIT where PERSONAL_NAME='"+personal_name+"' AND PERSONAL_PHONE='"+personal_phone+"') a left join "+
 					" (select * from DA_PIC_VISIT) b on a.RANDOM_NUMBER = b.RANDOM_NUMBER GROUP BY REGISTERTIME,v3,ADDRESS,a.RANDOM_number, "+
 					" household_name,household_card,REGISTERTYPE  )bb on aa.household_name=bb.household_name and aa.household_card=bb.household_card ORDER BY REGISTERTIME DESC";
-			
-			
-//			sql += "(select * from DA_HELP_VISIT where PERSONAL_NAME='"+personal_name+"' AND PERSONAL_PHONE='"+personal_phone+"') a left join ";
-//			cha_sql += " personal_name='"+personal_name+"' and personal_phone='"+personal_phone+"'";
 		} 
-//		sql += "(select * from DA_PIC_VISIT) b on a.RANDOM_NUMBER = b.RANDOM_NUMBER GROUP BY v1,v3,ADDRESS,a.RANDOM_number ORDER BY V1 DESC";
 		JSONArray jsonArray = new JSONArray();
 		try {
 			List<Map> list = this.getBySqlMapper.findRecords(sql);
-			List<Map> cha_list = this.getBySqlMapper.findRecords(cha_sql);
 			for ( int i = 0 ; i <list.size() ; i ++ ) {
+				System.out.println(list.get(i).get("REGISTERTIME")+"---"+list.get(i).get("V3")+"---"+list.get(i).get("PIC_PATH")+"---"+list.get(i).get("ADDRESS")+"---"+list.get(i).get("PERSONAL_NAME")+"---"+list.get(i).get("HOUSEHOLD_NAME"));
 				JSONObject obj = new JSONObject ();
 				obj.put("b", "".equals(list.get(i).get("REGISTERTIME")) || list.get(i).get("REGISTERTIME") == null ? "" : list.get(i).get("REGISTERTIME").toString());//走访时间
 				obj.put("c","".equals(list.get(i).get("V3")) || list.get(i).get("V3") == null ? "" : list.get(i).get("V3").toString());//走访情况记录
@@ -310,16 +305,6 @@ public class AnController{
 				obj.put("v6", "".equals(list.get(i).get("HOUSEHOLD_NAME")) || list.get(i).get("HOUSEHOLD_NAME") == null ? "" : list.get(i).get("HOUSEHOLD_NAME"));
 				jsonArray.add(obj);
 			}
-//			for(Map val:list){
-//				JSONObject obj = new JSONObject ();
-//				obj.put("b", "".equals(val.get("V1")) || val.get("V1") == null ? "" : val.get("V1").toString());//走访时间
-//				obj.put("c","".equals(val.get("V3")) || val.get("V3") == null ? "" : val.get("V3").toString());//走访情况记录
-//				obj.put("d","".equals(val.get("PIC_PATH")) || val.get("PIC_PATH") == null ? "" : val.get("PIC_PATH").toString());//走访情况图片
-//				obj.put("f", "".equals(val.get("ADDRESS")) || val.get("ADDRESS") == null ? "" : val.get("ADDRESS").toString());//地址
-//				obj.put("e", "".equals(cha_list.get(0).get("PERSONAL_NAME")) || cha_list.get(0).get("PERSONAL_NAME") == null ? "" : cha_list.get(0).get("PERSONAL_NAME"));//帮扶干部名称
-//				obj.put("v6", "".equals(cha_list.get(0).get("HOUSEHOLD_NAME")) || cha_list.get(0).get("HOUSEHOLD_NAME") == null ? "" : cha_list.get(0).get("HOUSEHOLD_NAME"));
-//				jsonArray.add(obj);
-//			}
 			response.getWriter().write("{\"success\":\"0\",\"message\":\"成功\",\"data\":"+jsonArray.toString()+"}");
 		} catch (Exception e) {
 			response.getWriter().write("{\"success\":\"1\",\"message\":\"失败\",\"data\":\"\"}");
