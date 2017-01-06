@@ -672,6 +672,11 @@ public class AnController{
 	@RequestMapping("addZfjl.do")
 	public void addZfjl(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		
+		String registerTime = request.getParameter("registerTime");//签到时间
+		String sendLat = request.getParameter("sendLat");//上传维度
+		String sendLng = request.getParameter("sendLng");//上传经度
+		String registerType  = request.getParameter("registerType");//签到类型
+		
 		String household_name = request.getParameter("household_name");//贫困户的姓名
 		String household_card = request.getParameter("household_card");//贫困户证件号码
 		String personal_name = request.getParameter("personal_name");//帮扶人姓名
@@ -691,8 +696,8 @@ public class AnController{
 	    if ( cha_list.size() > 0 ) {
 	    	AAR008 = cha_list.get(0).get("AAR008").toString();
 	    }
-		String hql="INSERT INTO DA_HELP_VISIT(HOUSEHOLD_NAME,PERSONAL_NAME,V1,V3,LNG,LAT,HOUSEHOLD_CARD,PERSONAL_PHONE,RANDOM_NUMBER,AAR008)"+
-				" VALUES('"+household_name+"','"+personal_name+"','"+simpleDate.format(new Date())+"','"+zfjl+"','"+longitude+"','"+latitude+"','"+household_card+"','"+personal_phone+"','"+random_number+"','"+AAR008+"')";
+		String hql = "INSERT INTO DA_HELP_VISIT(HOUSEHOLD_NAME,PERSONAL_NAME,V1,V3,LNG,LAT,HOUSEHOLD_CARD,PERSONAL_PHONE,RANDOM_NUMBER,AAR008,REGISTERTIME,SENDLAT,SENDLNG,REGISTERTYPE)"+
+				" VALUES('"+household_name+"','"+personal_name+"','"+simpleDate.format(new Date())+"','"+zfjl+"','"+longitude+"','"+latitude+"','"+household_card+"','"+personal_phone+"','"+random_number+"','"+AAR008+"','"+registerTime+"','"+sendLat+"','"+sendLng+"','"+registerType+"')";
 		
 		int insert_num = this.getBySqlMapper.insert(hql);
 		
