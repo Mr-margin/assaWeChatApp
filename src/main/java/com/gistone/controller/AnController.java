@@ -555,11 +555,11 @@ public class AnController{
 		String  sql = "select household_name,household_card from SYS_PERSONAL_HOUSEHOLD_MANY  where PERSONAL_NAME = '"+personal_name+"' "+
 						"AND PERSONAL_PHONE='"+personal_phone+"' and HOUSEHOLD_CARD is NOT null GROUP BY household_name,household_card ";
 		List<Map> list = this.getBySqlMapper.findRecords(sql);
-		if(list.size()>0){
+		if( list.size() > 0){
 			for ( int i = 0 ; i < list.size() ; i ++){
 				JSONObject obj = new JSONObject();
-				obj.put("pkid",list.get(i).get("HOUSEHOLD_CARD").toString());
-				obj.put("v6",list.get(i).get("HOUSEHOLD_NAME").toString());
+				obj.put("pkid","".equals(list.get(i).get("HOUSEHOLD_CARD")) || list.get(i).get("HOUSEHOLD_CARD")==null?"": list.get(i).get("HOUSEHOLD_CARD").toString());
+				obj.put("v6","".equals(list.get(i).get("HOUSEHOLD_NAME")) || list.get(i).get("HOUSEHOLD_NAME")==null?"": list.get(i).get("HOUSEHOLD_NAME").toString());
 				json.add(obj);
 			}
 			response.getWriter().write(json.toString());
