@@ -13,6 +13,13 @@ var potion;//缓存记录的索引
 //非现场签到所需的地址
 var pkhadd = "内蒙古自治区鄂尔多斯市东胜区泊尔江海子镇漫赖村委会";//贫困户家庭地址，用于解析坐标
 var qdtype = 1;//标记签到类型
+var poordata;
+$("#zftimediv").hide();//默认不让选择时间
+var zftime = getNowFormatDate();
+
+var iszztj = false;
+var countdown = 10;//签到倒计时
+var isxcqd = false;//是否正在定位
 
 $(function(){
 	var Request = new Object();
@@ -31,19 +38,20 @@ $(function(){
 function poor_name(){
 	var html = '<option value="请选择">请选择</option>';
 	$.ajax({  		       
-	    url: '/assaWeChatApp/getPoorName.do',  
+	    url: '/assaWeChatApp/getSavePoorController.do',
 	    type: "POST",
 	    async:false,
 	    dataType: 'json',
 	    data: {phone:phone,name:name},
 	    success: function (data) {
-    		$.each(data,function(i,item){
-    			html +='<option value="'+item.pkid+'">'+item.v6+'</option>';
+			poordata = data.data;
+    		$.each(data.data,function(i,item){
+    			html +='<option value="'+item.v8+'">'+item.v6+'</option>';
     		})
     		$("#poor_name").html(html);
 	    },
 	    error: function (ret) { 
-	    	alert('失败')
+
 	    }  
 	})
 }
@@ -75,40 +83,13 @@ function photo(){
 			timestamp: c_time, // 必填，生成签名的时间戳
 			nonceStr: sj_num, // 必填，生成签名的随机串
 			signature: qianming,// 必填，签名，见附录1
-			jsApiList: ['checkJsApi',
-	        'onMenuShareTimeline',
-	        'onMenuShareAppMessage',
-	        'onMenuShareQQ',
-	        'onMenuShareWeibo',
-	        'hideMenuItems',
-	        'showMenuItems',
-	        'hideAllNonBaseMenuItem',
-	        'showAllNonBaseMenuItem',
-	        'translateVoice',
-	        'startRecord',
-	        'stopRecord',
-	        'onRecordEnd',
-	        'playVoice',
-	        'pauseVoice',
-	        'stopVoice',
-	        'uploadVoice',
-	        'downloadVoice',
+			jsApiList: [
 	        'chooseImage',
 	        'previewImage',
 	        'uploadImage',
 	        'downloadImage',
-	        'getNetworkType',
-	        'openLocation',
-	        'getLocation',
-	        'hideOptionMenu',
-	        'showOptionMenu',
-	        'closeWindow',
-	        'scanQRCode',
-	        'chooseWXPay',
-	        'openProductSpecificView',
-	        'addCard',
-	        'chooseCard',
-	        'openCard'] // 必填，需要
+	        'getNetworkType'
+			] // 必填，需要
 		
 			});
 	wx.ready(function(){
@@ -144,61 +125,75 @@ function photo(){
 	    // config信息验证失败会执行error函数，如签名过期导致验证失败，具体错误信息可以打开config的debug模式查看，也可以在返回的res参数中查看，对于SPA可以在这里更新签名。
 	});
 }
+
+var timeout;
+function settime(val) {
+	if (countdown == 0) {
+		val.innerHTML="重&nbsp;新&nbsp;签&nbsp;到";
+		countdown = 10;
+		clearTimeout(timeout);
+		isxcqd = true;
+		$("#print3").show();
+		$("#print5").hide();
+		return;
+	} else {
+		val.innerHTML="定&nbsp;位&nbsp;中(" + countdown + "s)";
+		countdown--;
+	}
+	timeout = setTimeout(function() {
+		settime(val)
+	},1000)
+}
+
 //签到获取经纬度
 function qiandao (){
-	wx.config({
+
+	if (countdown != 0 && countdown != 10){
+		return;
+	}
+	isxcqd = false;
+	var household_card = $("#poor_name").val();//贫困户证件号码
+	if(household_card == "请选择" || household_card == null || household_card == ""){
+		alert("请选择扶贫对象");
+		return ;
+	}
+	$("#print3").hide();
+	$("#print5").show();
+	settime(document.getElementById("print"));
+wx.config({
 	    debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
 			appId: 'wx4fa9e95d9af2477a', // 必填，公众号的唯一标识
 			timestamp: c_time, // 必填，生成签名的时间戳
 			nonceStr: sj_num, // 必填，生成签名的随机串
 			signature: qianming,// 必填，签名，见附录1
-			jsApiList: ['checkJsApi',
-	        'onMenuShareTimeline',
-	        'onMenuShareAppMessage',
-	        'onMenuShareQQ',
-	        'onMenuShareWeibo',
-	        'hideMenuItems',
-	        'showMenuItems',
-	        'hideAllNonBaseMenuItem',
-	        'showAllNonBaseMenuItem',
-	        'translateVoice',
-	        'startRecord',
-	        'stopRecord',
-	        'onRecordEnd',
-	        'playVoice',
-	        'pauseVoice',
-	        'stopVoice',
-	        'uploadVoice',
-	        'downloadVoice',
-	        'chooseImage',
-	        'previewImage',
-	        'uploadImage',
-	        'downloadImage',
+			jsApiList: [
 	        'getNetworkType',
 	        'openLocation',
 	        'getLocation',
 	        'hideOptionMenu',
 	        'showOptionMenu',
 	        'closeWindow',
-	        'scanQRCode',
-	        'chooseWXPay',
-	        'openProductSpecificView',
-	        'addCard',
-	        'chooseCard',
-	        'openCard'] // 必填，需要
+	        'scanQRCode'
+	        ] // 必填，需要
 		
 			});
 	wx.getLocation({
 	    type: 'wgs84', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
 	    success: function (res) {
+			if (isxcqd){//用于判断是否点击过签到按钮并且超过十秒
+				return;
+			}
 	        latitude = res.latitude; // 纬度，浮点数，范围为90 ~ -90
 	        longitude = res.longitude; // 经度，浮点数，范围为180 ~ -180。
 	        var speed = res.speed; // 速度，以米/每秒计
 	        var accuracy = res.accuracy; // 位置精度
-
+			qdtype  = 1;
+			zftime = getNowFormatDate();
 			$("#print").hide();
+			$("#print6").hide();
 			$("#print1").show();
-
+			$("#print3").hide();
+			$("#print5").show();
 	    }
 	});
 	/*if(latitude != "" && latitude != null && latitude != undefined){
@@ -208,12 +203,19 @@ function qiandao (){
 }
 //添加走访记录 --提交到服务器
 function  addzfjl() {
-
+	if (iszztj){
+		alert("正在上传日志！请勿重复提交！")
+		return;
+	}
 	if (latitude=="" || latitude ==null ||  latitude == undefined ){
 		qiandao();
 		alert("必须签到成功才可以提交！");
 		return;
 	}
+	if (qdtype == 2){
+		zftime = $("#AbsentEndDate").val();
+	}
+	iszztj = true;
 	$("#deng").show();
 	$("#tijiao").hide();
 	var newstr=pp.substring(0,pp.length-1);
@@ -226,7 +228,6 @@ function  addzfjl() {
 		return ;
 	}
 	var household_name = $("#poor_name").find("option:selected").text();//贫困户的姓名
-
 	$.ajax({  		       
 	    url: '/assaWeChatApp/addZfjl.do',
 	    type: "POST",
@@ -242,6 +243,10 @@ function  addzfjl() {
 	    	"photo":w_p,
 	    	latitude: latitude,
 	    	longitude:longitude,
+			registerTime:zftime,
+			sendLat:latitude,
+			sendLng:longitude,
+			registerType:qdtype
 	    },
 	    success: function (data) {
 	    	if(data == "5"){
@@ -255,6 +260,9 @@ function  addzfjl() {
 	    },
 	    error: function (data) {
 			alert('添加失败');
+			iszztj = false;
+			$("#deng").hide();
+			$("#tijiao").show();
 	    }  
 	})
 
@@ -278,9 +286,13 @@ function savezfjl(){
 		var zfinfo = $("#zfjlwz").val();
 		var household_name = $("#poor_name").find("option:selected").text();//贫困户的姓名
 		var photopath = pp.substring(0, pp.length -1);
+
+		if (qdtype == 2){
+			zftime = $("#AbsentEndDate").val();
+		}
 		if(lsdate == 0){//添加新的走访记录
 			var currentdate = getNowFormatDate();
-			var mzfjl = new myzfjl(currentdate,household_name,household_card,zfinfo,photopath,latitude,longitude);
+			var mzfjl = new myzfjl(phone,currentdate,household_name,household_card,zfinfo,photopath,latitude,longitude,qdtype,zftime);
 			if(localStorage.mzfjl == null){
 				var arra=[];
 				arra.push(mzfjl);
@@ -298,7 +310,7 @@ function savezfjl(){
 			}
 		}else {//修改保存过的走访记录
 			var arra= JSON.parse(localStorage.mzfjl);
-			var mzfjl = new myzfjl(lsdate,household_name,household_card,zfinfo,photopath,latitude,longitude);
+			var mzfjl = new myzfjl(phone,lsdate,household_name,household_card,zfinfo,photopath,latitude,longitude,qdtype,zftime);
 			arra[potion] = mzfjl;
 			var objStr=JSON.stringify(arra);
 			localStorage.mzfjl = objStr;
@@ -318,7 +330,8 @@ function savezfjl(){
  * @param lat    坐标lat
  * @param lng	  坐标lng
  */
-function myzfjl(zftime,p_name,p_card,zfinfo,photo,lat,lng){
+function myzfjl(uphone,zftime,p_name,p_card,zfinfo,photo,lat,lng,regtype,regtime){
+	this.uphone = uphone;
     this.zftime=zftime;
     this.p_name=p_name;
     this.p_card=p_card;
@@ -326,6 +339,8 @@ function myzfjl(zftime,p_name,p_card,zfinfo,photo,lat,lng){
     this.photo=photo;
     this.lat = lat;
     this.lng = lng;
+	this.regtype = regtype;
+	this.regtime = regtime;
 }
 /**
  * 获取当前时间
@@ -361,12 +376,21 @@ function initData(){
 
 	latitude = lsdata[potion].lat;
 	longitude = lsdata[potion].lng;
-
+	qdtype = lsdata[potion].regtype;
+	zftime = lsdata[potion].regtime;
+	if (qdtype == 2){
+		$("#zftimediv").show();
+		$("#AbsentEndDate").attr("value",zftime);
+	}else {
+		$("#zftimediv").hide()
+	}
 	if(lsdata[potion].lat != "" && lsdata[potion].lat != null && lsdata[potion].lat != undefined  ){
 		latitude = lsdata[potion].lat;
 		longitude = lsdata[potion].lng;
 		$("#print").hide();
 		$("#print1").show();
+		$("#print3").hide();
+		$("#print4").show();
 	}
 	var html = '<option value="'+lsdata[potion].p_card+'">'+lsdata[potion].p_name+'</option>';
 	$("#poor_name").html(html);
@@ -385,13 +409,23 @@ function initData(){
 
 //非现场签到，通过贫困户地址信息解析坐标
 function fqiandao(){
-
 	var household_card = $("#poor_name").val();//贫困户证件号码
 	if(household_card == "请选择" || household_card == null || household_card == ""){
 		alert("请选择扶贫对象")
 		return ;
 	}
+	$("#print").hide();
+	$("#print6").show();
+	$("#zftimediv").show();
+	$("#AbsentEndDate").attr("value",zftime);
 
+	$("#print3").hide();
+	$("#print4").show();
+	for (var i = 0;i < poordata.length ; i++){
+		if (household_card == poordata[i].v8){
+			pkhadd = poordata[i].v2 + poordata[i].v3+poordata[i].v4+poordata[i].v5;
+		}
+	}
 	pkhadd =qwhstr(pkhadd);
 // 百度地图API功能
 	var map = new BMap.Map("allmap");
@@ -408,9 +442,13 @@ function fqiandao(){
 				console.log("检索到的结果"+results.getPoi(0).point.lng+""+results.getPoi(0).point.lat);
 				latitude = results.getPoi(0).point.lat;
 				longitude = results.getPoi(0).point.lng;
+				qdtype = 2;
+				$("#zftimediv").show();
+				$("#AbsentEndDate").attr("value",zftime);
 
 				$("#print3").hide();
 				$("#print4").show();
+
 			});
 		}else{
 			alert("您选择地址没有解析到结果!");
@@ -443,3 +481,26 @@ function dellsdata(lsdate){
 		var objStr=JSON.stringify(lsdata);
 		localStorage.mzfjl = objStr;
 }
+$(function(){
+	var currYear = (new Date()).getFullYear();
+	var opt={};
+	opt.date = {preset : 'date'};
+	opt.datetime = {preset : 'datetime'};
+	opt.time = {preset : 'time'};
+	opt.default = {
+		theme: 'android-ics light', //皮肤样式
+		display: 'modal', //显示方式
+		mode: 'scroller', //日期选择模式
+		dateFormat: 'yyyy-mm-dd',
+		lang: 'zh',
+		showNow: true,
+		nowText: "今天",
+		startYear: currYear - 10, //开始年份
+		endYear: currYear + 80 //结束年份
+	};
+	/*$("#EndDate").mobiscroll($.extend(opt['date'], opt['default']));//年月日型*/
+	var optDateTime = $.extend(opt['datetime'], opt['default']);
+	var optTime = $.extend(opt['time'], opt['default']);
+	$("#AbsentEndDate").mobiscroll(optDateTime).datetime(optDateTime);//年月日时分型
+	/*$("#EndTime").mobiscroll(optTime).time(optTime);//时分型*/
+});
