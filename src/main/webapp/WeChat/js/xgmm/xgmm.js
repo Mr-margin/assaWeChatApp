@@ -6,7 +6,6 @@ $(function(){
 })
 //更改密碼
 function chage_password(){
-	alert(2)
 	if($("#new_password").val() != $("#new_password").val()){
 		alert("密码与确认密码不一致");
 		return;
