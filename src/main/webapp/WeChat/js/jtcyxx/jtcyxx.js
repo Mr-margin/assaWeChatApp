@@ -149,7 +149,6 @@ function jtcyxx(){
 var photo = '';
 //选择头像
 function add_touxiang(){
-	alert(type);
 	qm();
 	wx.config({
 	    debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
@@ -209,7 +208,6 @@ function add_touxiang(){
 			    	        var serverId = res.serverId; // 返回图片的服务器端ID
 			    	        photo = "http://file.api.weixin.qq.com/cgi-bin/media/get?access_token="+token+"&media_id="+serverId;
 			    	        add_jtcy();
-			    	        
 			    	    }
 			    	});
 			    }
