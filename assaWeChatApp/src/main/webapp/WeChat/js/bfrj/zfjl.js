@@ -13,7 +13,7 @@ var personal_name;//帮扶人的姓名
 var personal_phone;//帮扶人的电话
 var household_name;//贫困户姓名
 var zjhm;//证件号码
-
+var iszzyl = false;//正在预览中，，，
 function qm(){
 	$.ajax({  		       
 	    url: '/assaWeChatApp/getQianming.do',
@@ -49,7 +49,8 @@ function show_jbqk(){
 
 	    	$.each(data.data,function(i,item){
 	    		html += '<div class="col-sm-12"><div class="panel panel-default" >'
-	    		html += '<div class="panel-heading"><img src="img/day.png" style="margin:0;vertical-align:middle;width:50px;height:29px;"><span style="font-size:17px">时间：'+item.b+'</span></div>';
+	    		html += '<div class="panel-heading" style="padding-left: 0px"><img src="img/day.png" style="margin:0;vertical-align:middle;width:50px;height:29px;"><span style="font-size:16px;vertical-align: middle">时间：'+item.b+'</span>' +
+					'<img style="float: right;height: 2.9rem ;vertical-align: middle" src="images/uploaded.png"></div>';
 	    		html += ' <div class="panel-body"><div class="row">'
 				html += '<div class="col-sm-12"><div> 帮扶责任人：<strong>'+item.e+'</strong></div><div><p style="padding-left: 25px;">贫困户：'+item.v6+'</p></div>';
 	    		html += '<div><p style="padding-left: 12px;">走访记录：'+item.c+'</p></div>'
@@ -77,6 +78,11 @@ function show_jbqk(){
 }
 //图片的预览功能
 function yulan(p_name,pic){
+	if (iszzyl){
+		alert("正在开启预览图片功能，不可重复请求。");
+		return;
+	}
+	iszzyl = true;
 	var str = pic.split(",");
 	wx.config({
 	    debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
@@ -84,48 +90,23 @@ function yulan(p_name,pic){
 			timestamp: c_time, // 必填，生成签名的时间戳
 			nonceStr: sj_num, // 必填，生成签名的随机串
 			signature: qianming,// 必填，签名，见附录1
-			jsApiList: ['checkJsApi',
-	        'onMenuShareTimeline',
-	        'onMenuShareAppMessage',
-	        'onMenuShareQQ',
-	        'onMenuShareWeibo',
-	        'hideMenuItems',
-	        'showMenuItems',
-	        'hideAllNonBaseMenuItem',
-	        'showAllNonBaseMenuItem',
-	        'translateVoice',
-	        'startRecord',
-	        'stopRecord',
-	        'onRecordEnd',
-	        'playVoice',
-	        'pauseVoice',
-	        'stopVoice',
-	        'uploadVoice',
-	        'downloadVoice',
+			jsApiList: [
 	        'chooseImage',
 	        'previewImage',
-	        'uploadImage',
-	        'downloadImage',
-	        'getNetworkType',
-	        'openLocation',
-	        'getLocation',
-	        'hideOptionMenu',
-	        'showOptionMenu',
-	        'closeWindow',
-	        'scanQRCode',
-	        'chooseWXPay',
-	        'openProductSpecificView',
-	        'addCard',
 	        'chooseCard',
 	        'openCard'] // 必填，需要
 		
 			});
 	wx.ready(function(){
 		wx.previewImage({
-			
 		    current: 'http://www.gistone.cn/'+p_name, // 当前显示图片的http链接
 		    urls: str // 需要预览的图片http链接列表
 		});
+		iszzyl = false;
+	});
+	wx.error(function(res){
+		alert("微信签名失败，无法调用图片预览");
+		iszzyl = false;
 	});
 
 }
@@ -149,30 +130,40 @@ function show_lsjl(){
 	}else{
 		if(!(localStorage.mzfjl == null)){
 			lsdata = JSON.parse(localStorage.mzfjl);
-
+			lsdata.reverse();
+			var qdtypeimg = "images/offsite.png";
 			$.each(lsdata,function(i,item){
 				/*var iscs = dateFormatter(lsdata[i].zftime);*/
-				html += '<div class="col-sm-12"><div class="panel panel-default" >'
+				if (lsdata[i].uphone == personal_phone){
+					html += '<div class="col-sm-12"><div class="panel panel-default" >'
 
-				html += '<div id="zfjl_heading" class="panel-heading" style="padding-left: 2px;background:#afffaf"><img src="img/day.png" style="margin:0;vertical-align:middle;width:50px;height:29px;"><span style="font-size:17px">'+lsdata[i].zftime+'</span>'+
-						'<span style="font-size:17px;float: right;text-decoration: underline" onclick="bjlsdata(\''+lsdata[i].zftime+'\')">编辑'+'</span><span style="font-size:17px;float: right;margin-right: 5px;text-decoration: underline" onclick="dellsdata(\''+lsdata[i].zftime+'\')">删除'+'</span></div>';
+					if (lsdata[i].regtype == 1){
+						qdtypeimg = "images/site.png";
+					}
+					html +='<div id="zfjl_heading" class="panel-heading" style="min-height: 50px;padding-left: 0px"><img src="img/day.png" style="margin:0;vertical-align:middle;width:40px;height:23px;">' +
+						'<span style="font-size:16px;vertical-align: middle">'+lsdata[i].zftime+'</span>'+
+						'<img style="float: right;height: 2.9rem ;vertical-align: middle" onclick="bjlsdata(\''+lsdata[i].zftime+'\')"  src="images/upload.png">'+
+						'<img style="float: right;height: 2.9rem ;vertical-align: middle"  src="'+qdtypeimg+'">'+
+						'</img><img style="float: right;height: 2.9rem ;vertical-align: middle" src="images/delete.png" onclick="dellsdata(\''+lsdata[i].zftime+'\')">'+'</img></div>';
 
-				html += ' <div class="panel-body"><div class="row">'
-				html += '<div class="col-sm-12"><div> 帮扶责任人：<strong>'+personal_name+'</strong></div><div><p style="padding-left: 25px;">贫困户：'+lsdata[i].p_name+'</p></div>';
-				html += '<div><p style="padding-left: 12px;">走访记录：'+lsdata[i].zfinfo+'</p></div>'
-				if(lsdata[i].photo == "" || lsdata[i].photo == null ||lsdata[i].photo == undefined){
-				}else{
-					var pic = (lsdata[i].photo).split(",");
-					var zf_photo = [];
-					for (var i = 0 ; i < pic.length ; i ++){
-						zf_photo[i] ='http://www.gistone.cn/'+pic[i];
+					html += ' <div class="panel-body"><div class="row">'
+					html += '<div class="col-sm-12"><div> 帮扶责任人：<strong>'+personal_name+'</strong></div><div><p style="padding-left: 25px;">贫困户：'+lsdata[i].p_name+'</p></div>';
+					html += '<div><p style="padding-left: 12px;">走访记录：'+lsdata[i].zfinfo+'</p></div>'
+					if(lsdata[i].photo == "" || lsdata[i].photo == null ||lsdata[i].photo == undefined){
+					}else{
+						var pic = (lsdata[i].photo).split(",");
+						var zf_photo = [];
+						for (var i = 0 ; i < pic.length ; i ++){
+							zf_photo[i] ='http://www.gistone.cn/'+pic[i];
+						}
+						for (var i = 0 ; i < pic.length ; i ++){
+							html += '<div style="width:20%;height:20%;float:left">'+
+								'<img src="'+pic[i]+'"style="width:95%;height:80px" onclick="yulan(\''+pic[i]+'\',\''+zf_photo+'\')"/></div>';
+						}
 					}
-					for (var i = 0 ; i < pic.length ; i ++){
-						html += '<div style="width:20%;height:20%;float:left">'+
-							'<img src="'+pic[i]+'"style="width:95%;height:80px" onclick="yulan(\''+pic[i]+'\',\''+zf_photo+'\')"/></div>';
-					}
+					html += '</div><div class="col-sm-12">&nbsp;</div></div></div></div></div>';
 				}
-				html += '</div><div class="col-sm-12">&nbsp;</div></div></div></div></div>';
+
 			})
 			$("#zoufangqingkuang").html(html);
 		}
