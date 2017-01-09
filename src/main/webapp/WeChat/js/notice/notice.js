@@ -23,6 +23,9 @@ $(function(){
 	$("#wen7").click(function(){
 		document.getElementById('da7').scrollIntoView();
 	});
+	$("#wen8").click(function(){
+		document.getElementById('da8').scrollIntoView();
+	});
 })
 
 
