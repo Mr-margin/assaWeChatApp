@@ -135,12 +135,7 @@ function poor_xinxi(){
 					html+= '  <span class="info-middle"></span>  ';
 				}
 				else {
-					var qt = qtzp.split(",");
-					html+= '  <span class="info-middle">';
-					for ( var i = 0; i <qt.length;i++){
-						html += ''+qtzy_sz[qt[i]-1]+' &nbsp;&nbsp;&nbsp;';
-					}
-					html+= ' </span>  ';
+					html+= '  <span class="info-middle">'+qtzy_sz[qtzp-1]+'</span>  ';
 				}
 				html += '</li>'+
 				'</ul>';
