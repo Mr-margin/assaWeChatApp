@@ -11,7 +11,8 @@ var lsdate;//缓存记录的日期
 var potion;//缓存记录的索引
 
 //非现场签到所需的地址
-var pkhadd = "内蒙古自治区鄂尔多斯市东胜区泊尔江海子镇漫赖村委会";//贫困户家庭地址，用于解析坐标
+var pkhadd = "";//贫困户家庭地址，用于解析坐标
+var pkhcm = "";//贫困户的村名-用于检索
 var qdtype = 1;//标记签到类型
 var poordata;
 $("#zftimediv").hide();//默认不让选择时间
@@ -110,7 +111,6 @@ function photo(){
 		    	    isShowProgressTips: 0, // 默认为1，显示进度提示
 		    	    success: function (res) {
 		    	        var serverId = res.serverId; // 返回图片的服务器端ID
-		    	       
 						 pp += "http://file.api.weixin.qq.com/cgi-bin/media/get?access_token="+token+"&media_id="+serverId+",";
 		    	    }
 		    	});
@@ -419,9 +419,17 @@ function fqiandao(){
 	for (var i = 0;i < poordata.length ; i++){
 		if (household_card == poordata[i].v8){
 			pkhadd = poordata[i].v2 + poordata[i].v3+poordata[i].v4+poordata[i].v5;
+			pkhcm = poordata[i].v5;
 		}
 	}
+	if (pkhadd == ""){
+		alert("非现场签到失败!贫困户没有录入地址！");
+		$("#print").show();
+		$("#print6").hide();
+		return;
+	}
 	pkhadd =qwhstr(pkhadd);
+	pkhcm = qwhstr(pkhcm);
 // 百度地图API功能
 	var map = new BMap.Map("allmap");
 	// 创建地址解析器实例
@@ -432,8 +440,15 @@ function fqiandao(){
 			var local = new BMap.LocalSearch(point, {
 				renderOptions:{map: map}
 			});
-			local.search(pkhadd);
-			local.setSearchCompleteCallback(function (results){
+			local.search(pkhcm);
+			if (local.getStatus() == BMAP_STATUS_SUCCESS){
+				local.setSearchCompleteCallback(function (results){
+				if(results.getCurrentNumPois() <= 0){
+					alert("非现场签到失败！未能解析到贫困户地址坐标！");
+					$("#print").show();
+					$("#print6").hide();
+					return;
+				}
 				console.log("检索到的结果"+results.getPoi(0).point.lng+""+results.getPoi(0).point.lat);
 				latitude = results.getPoi(0).point.lat;
 				longitude = results.getPoi(0).point.lng;
@@ -444,8 +459,8 @@ function fqiandao(){
 
 				$("#print3").hide();
 				$("#print4").show();
-
-			});
+				});
+			}
 		}else{
 			alert("非现场签到失败!");
 		}
