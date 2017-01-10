@@ -208,7 +208,6 @@ function  addzfjl() {
 		return;
 	}
 	if (latitude=="" || latitude ==null ||  latitude == undefined ){
-		qiandao();
 		alert("必须签到成功才可以提交！");
 		return;
 	}
@@ -277,8 +276,7 @@ function savezfjl(){
         alert("浏览器不支持缓存请直接提交！");
         return false;
     }else{
-		 if (latitude=="" || latitude ==null || latitude == undefined ){
-		 qiandao();
+		 if (latitude == "" || latitude ==null || latitude == undefined ){
 			 alert("必须签到成功才可以保存！");
 			 return;
 		 }
@@ -414,13 +412,10 @@ function fqiandao(){
 		alert("请选择扶贫对象")
 		return ;
 	}
+
 	$("#print").hide();
 	$("#print6").show();
-	$("#zftimediv").show();
-	$("#AbsentEndDate").attr("value",zftime);
 
-	$("#print3").hide();
-	$("#print4").show();
 	for (var i = 0;i < poordata.length ; i++){
 		if (household_card == poordata[i].v8){
 			pkhadd = poordata[i].v2 + poordata[i].v3+poordata[i].v4+poordata[i].v5;
@@ -443,6 +438,7 @@ function fqiandao(){
 				latitude = results.getPoi(0).point.lat;
 				longitude = results.getPoi(0).point.lng;
 				qdtype = 2;
+
 				$("#zftimediv").show();
 				$("#AbsentEndDate").attr("value",zftime);
 
@@ -451,18 +447,33 @@ function fqiandao(){
 
 			});
 		}else{
-			alert("您选择地址没有解析到结果!");
+			alert("非现场签到失败!");
 		}
 	}, "北京市");
+	if (latitude == "" || latitude ==null || latitude == undefined ){
+		alert("非现场签到失败，未查询到贫困户坐标！");
+	}
 }
 /**
- * 去除地址所带的委会两字
+ * 去除地址所带的委会两字(村委会，村民委员会等)
  * @param str
  * @returns {*}
  */
 function qwhstr(str){
-	if("会" == str.charAt(str.length-1)){
-		var newstr = str.substring(0,str.length-2)
+	if("村村民委员会" == str.substring(str.length-6,str.length)){
+		var newstr = str.substring(0,str.length-5);
+		return newstr;
+	}else if ("村民委员会" == str.substring(str.length-5,str.length)){
+		var newstr = str.substring(0,str.length-4);
+		return newstr;
+	}else if ("村村委会" == str.substring(str.length-4,str.length)){
+		var newstr = str.substring(0,str.length-3);
+		return newstr;
+	}else if("村委会" == str.substring(str.length-3,str.length)){
+		var newstr = str.substring(0,str.length-2);
+		return newstr;
+	}else if("委会" == str.substring(str.length-2,str.length)){
+		var newstr = str.substring(0,str.length-2);
 		return newstr;
 	}else{
 		return str;
