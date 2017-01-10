@@ -450,9 +450,6 @@ function fqiandao(){
 			alert("非现场签到失败!");
 		}
 	}, "北京市");
-	if (latitude == "" || latitude ==null || latitude == undefined ){
-		alert("非现场签到失败，未查询到贫困户坐标！");
-	}
 }
 /**
  * 去除地址所带的委会两字(村委会，村民委员会等)
