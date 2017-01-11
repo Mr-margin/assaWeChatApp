@@ -102,10 +102,10 @@ function photo(){
 	    success: function (res) {
 //	    	var html = '<tr class="row">';
 	    	var html = '';
+			pp='';
 	    	localIds = res.localIds; //返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
 	        for ( var i = 0 ; i < localIds.length; i ++ ){
 	        	html += '<div style="width:20%;height:20%;float:left"><img src="'+localIds[i]+'" border=0 style="width:95%;height:80%;" ></div>'
-	        	
 	        	wx.uploadImage({
 		    	    localId: localIds[i], // 需要上传的图片的本地ID，由chooseImage接口获得
 		    	    isShowProgressTips: 0, // 默认为1，显示进度提示
