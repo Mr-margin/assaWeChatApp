@@ -6,6 +6,13 @@ var latitude ;// 纬度，浮点数，范围为90 ~ -90
 var longitude ;// 经度，浮点数，范围为180 ~ -180。
 var token ;//token
 
+var sendlatitude;//上传时坐标
+var sendlongitude;
+
+var hhhtlat = 111.755176;//解析不到地址设置默认的呼和浩特坐标
+var hhhtlng = 40.848607;
+
+
 //*****缓存变量
 var lsdate;//缓存记录的日期
 var potion;//缓存记录的索引
@@ -189,6 +196,9 @@ wx.config({
 	        var accuracy = res.accuracy; // 位置精度
 			qdtype  = 1;
 			zftime = getNowFormatDate();
+			sendlatitude = latitude;
+			sendlongitude = longitude;
+
 			$("#print").hide();
 			$("#print6").hide();
 			$("#print1").show();
@@ -211,6 +221,8 @@ function  addzfjl() {
 		alert("必须签到成功才可以提交！");
 		return;
 	}
+	dingewi();
+
 	if (qdtype == 2){
 		zftime = $("#AbsentEndDate").val();
 	}
@@ -243,8 +255,8 @@ function  addzfjl() {
 	    	latitude: latitude,
 	    	longitude:longitude,
 			registerTime:zftime,
-			sendLat:latitude,
-			sendLng:longitude,
+			sendLat:sendlatitude,
+			sendLng:sendlongitude,
 			registerType:qdtype
 	    },
 	    success: function (data) {
@@ -365,15 +377,21 @@ function getNowFormatDate() {
  * 页面来至历史记录，初始保存的数据
  */
 function initData(){
+
 	var lsdata = JSON.parse(localStorage.mzfjl);
 	$.each(lsdata,function(i,item){
 		if (lsdate == lsdata[i].zftime){
 			potion = i;
 		}
 	})
-
 	latitude = lsdata[potion].lat;
 	longitude = lsdata[potion].lng;
+
+	sendlatitude = latitude;
+	sendlongitude = longitude;
+
+	dingewi();
+
 	qdtype = lsdata[potion].regtype;
 	zftime = lsdata[potion].regtime;
 	if (qdtype == 2){
@@ -412,22 +430,38 @@ function fqiandao(){
 		alert("请选择扶贫对象")
 		return ;
 	}
-
+	dingewi();
+	zftime = getNowFormatDate();
 	$("#print").hide();
 	$("#print6").show();
+
+	var p_city = '';
 
 	for (var i = 0;i < poordata.length ; i++){
 		if (household_card == poordata[i].v8){
 			pkhadd = poordata[i].v2 + poordata[i].v3+poordata[i].v4+poordata[i].v5;
 			pkhcm = poordata[i].v5;
+			p_city = poordata[i].v2;
 		}
 	}
-	if (pkhadd == ""){
-		alert("非现场签到失败!贫困户没有录入地址！");
-		$("#print").show();
-		$("#print6").hide();
+
+	if (pkhadd == ""){//贫困户地址为空，设置坐标为呼和浩特市中心
+		alert("贫困户没有录入地址！签到坐标设为呼和浩特市中心");
+		latitude = hhhtlat;
+		longitude = hhhtlng;
+
+		sendlatitude = latitude;
+		sendlongitude = longitude;
+
+		qdtype = 3;//非现场签到并且地址未能解析
+		$("#zftimediv").show();
+		$("#AbsentEndDate").attr("value",zftime);
+
+		$("#print3").hide();
+		$("#print4").show();
 		return;
 	}
+
 	pkhadd =qwhstr(pkhadd);
 	pkhcm = qwhstr(pkhcm);
 // 百度地图API功能
@@ -436,7 +470,7 @@ function fqiandao(){
 	var myGeo = new BMap.Geocoder();
 	// 将地址解析结果显示在地图上,并调整地图视野
 	myGeo.getPoint(pkhadd, function(point){
-		if (point) {
+		if (point != null) {
 			var local = new BMap.LocalSearch(point, {
 				renderOptions:{map: map}
 			});
@@ -447,6 +481,8 @@ function fqiandao(){
 					latitude = point.lat;
 					longitude = point.lng;
 					qdtype = 2;
+					sendlatitude = point.lat;
+					sendlongitude = point.lng;
 
 					$("#zftimediv").show();
 					$("#AbsentEndDate").attr("value",zftime);
@@ -454,23 +490,50 @@ function fqiandao(){
 					$("#print3").hide();
 					$("#print4").show();
 					return;
+				}else {
+					console.log("检索到的结果"+results.getPoi(0).point.lng+""+results.getPoi(0).point.lat);
+					latitude = results.getPoi(0).point.lat;
+					longitude = results.getPoi(0).point.lng;
+					qdtype = 2;
+
+					$("#zftimediv").show();
+					$("#AbsentEndDate").attr("value",zftime);
+
+					$("#print3").hide();
+					$("#print4").show();
 				}
-				console.log("检索到的结果"+results.getPoi(0).point.lng+""+results.getPoi(0).point.lat);
-				latitude = results.getPoi(0).point.lat;
-				longitude = results.getPoi(0).point.lng;
+				});
+			}else {
+				latitude = point.lat;
+				longitude = point.lng;
 				qdtype = 2;
+				sendlatitude = point.lat;
+				sendlongitude = point.lng;
 
 				$("#zftimediv").show();
 				$("#AbsentEndDate").attr("value",zftime);
 
 				$("#print3").hide();
 				$("#print4").show();
-				});
+				return;
 			}
 		}else{
-			alert("非现场签到失败!");
+			alert("贫困户地址解析失败！签到坐标设为呼和浩特市中心,并记录为无法解析地址的日志.");
+			latitude = hhhtlat;
+			longitude = hhhtlng;
+
+			sendlatitude = latitude;
+			sendlongitude = longitude;
+
+			qdtype = 3;//非现场签到并且地址未能解析
+			$("#zftimediv").show();
+			$("#AbsentEndDate").attr("value",zftime);
+
+			$("#print3").hide();
+			$("#print4").show();
+			return;
 		}
-	}, "北京市");
+	}, p_city);
 }
 /**
  * 去除地址所带的委会两字(村委会，村民委员会等)
@@ -533,3 +596,37 @@ $(function(){
 	$("#AbsentEndDate").mobiscroll(optDateTime).datetime(optDateTime);//年月日时分型
 	/*$("#EndTime").mobiscroll(optTime).time(optTime);//时分型*/
 });
+/**
+ * 用于非现场定位
+ */
+function dingewi(){
+	wx.config({
+		debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+		appId: 'wx4fa9e95d9af2477a', // 必填，公众号的唯一标识
+		timestamp: c_time, // 必填，生成签名的时间戳
+		nonceStr: sj_num, // 必填，生成签名的随机串
+		signature: qianming,// 必填，签名，见附录1
+		jsApiList: [
+			'getNetworkType',
+			'openLocation',
+			'getLocation',
+			'hideOptionMenu',
+			'showOptionMenu',
+			'closeWindow',
+			'scanQRCode'
+		] // 必填，需要
+
+	});
+	wx.ready(function (){
+		wx.getLocation({
+			type: 'wgs84', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
+			success: function (res) {
+				sendlatitude = res.latitude; // 纬度，浮点数，范围为90 ~ -90
+				sendlongitude = res.longitude; // 经度，浮点数，范围为180 ~ -180。
+				var speed = res.speed; // 速度，以米/每秒计
+				var accuracy = res.accuracy; // 位置精度
+			}
+		});
+	})
+
+}
