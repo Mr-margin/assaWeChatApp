@@ -356,9 +356,10 @@ public class AnController{
 	 * @param request
 	 * @param response
 	 * @return
+	 * @throws IOException 
 	 */
 	@RequestMapping("getAddZfPhoto.do")
-	public void getAddZfPhoto(@RequestParam("image") MultipartFile file,HttpServletRequest request,HttpServletResponse response){
+	public void getAddZfPhoto(@RequestParam("image") MultipartFile file,HttpServletRequest request,HttpServletResponse response) throws IOException{
 		String random_number = request.getParameter("random_number");//随机数
 		String img1=request.getParameter("imgname");//图片的名称
 //		String img =  img1.replaceAll("/", "");
@@ -413,10 +414,10 @@ public class AnController{
                 stream.close();
                 response.getWriter().write(pic);
             } catch (Exception e) {  
-                return ;
+            	 response.getWriter().write("0");
             }
         } else {  
-        	return ;
+        	 response.getWriter().write("0");
         }
 	}
 	/**
@@ -690,47 +691,68 @@ public class AnController{
 		SimpleDateFormat sf = new SimpleDateFormat("yyyyMMddhhmmss");
 	    String random_number = sf.format(date)+"_"+new Random().nextInt(1000);//时间戳+随机数
 	    String AAR008 ="";//村的行政区划代码
-	    String cha_sql = "select AAR008 from (select AAC001,max(AAR040) nian from NM09_AB01 where AAB002='"+household_name+"' AND AAB004='"+household_card+"' group by AAC001) "+
-	    				"  a left join (select AAR008,AAC001,AAR040 from NM09_AC01 ) b on a.AAC001=b.AAC001 and a.nian=b.AAR040";
-	    List<Map> cha_list = this.getBySqlMapper.findRecords(cha_sql);
-	    if ( cha_list.size() > 0 ) {
-	    	AAR008 = cha_list.get(0).get("AAR008").toString();
-	    }
-		String hql = "INSERT INTO DA_HELP_VISIT(HOUSEHOLD_NAME,PERSONAL_NAME,V1,V3,LNG,LAT,HOUSEHOLD_CARD,PERSONAL_PHONE,RANDOM_NUMBER,AAR008,REGISTERTIME,SENDLAT,SENDLNG,REGISTERTYPE)"+
-				" VALUES('"+household_name+"','"+personal_name+"','"+simpleDate.format(new Date())+"','"+zfjl+"','"+longitude+"','"+latitude+"','"+household_card+"','"+personal_phone+"','"+random_number+"','"+AAR008+"','"+registerTime+"','"+sendLat+"','"+sendLng+"','"+registerType+"')";
-		
-		int insert_num = this.getBySqlMapper.insert(hql);
-		
-//		String cha_sql="SELECT MAX(PKID) PKID FROM DA_HELP_VISIT WHERE V1='"+simpleDate.format(new Date())+"' AND V3= '"+zfjl+"' AND DA_HOUSEHOLD_ID="+poor_id +" AND SYS_PERSONAL_ID ='"+sid+"'";
-//		List<Map> list = this.getBySqlMapper.findRecords(cha_sql);
-//		String main = "" ;
-//		if(list.size()>0){
-//			main=list.get(0).get("PKID").toString();    
-//		}
-		if (photo.length>0 && photo[0]!=""){
-			String saveUrl1 = request.getContextPath() + "/attached/2/";
-			String savePath = "E:/attached/2/";
-			String saveUrl = saveUrl1.replaceAll("assaWeChatApp", "assa");
-			// 创建文件夹
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-			String ymd = sdf.format(new Date());
-			savePath += ymd + "\\";
-			saveUrl += ymd + "/";
-			File dirFile = new File(savePath);
-			if (!dirFile.exists()) {
-				dirFile.mkdirs();
+	    try {
+	    	if (photo.length>0 && photo[0]!=""){
+				String saveUrl1 = request.getContextPath() + "/attached/2/";
+				String savePath = "E:/attached/2/";
+				String saveUrl = saveUrl1.replaceAll("assaWeChatApp", "assa");
+				// 创建文件夹
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+				String ymd = sdf.format(new Date());
+				savePath += ymd + "\\";
+				saveUrl += ymd + "/";
+				File dirFile = new File(savePath);
+				if (!dirFile.exists()) {
+					dirFile.mkdirs();
+				}
+				String name = "";
+				for (int i = 0; i < photo.length; i++) {
+					String res = downloadFromUrl(photo[i], savePath,name);
+		            String sql="INSERT INTO DA_PIC_VISIT (RANDOM_NUMBER,PIC_PATH)"+
+		    				" VALUES('"+random_number+"','"+saveUrl+res+"')";
+		            int insert_photo = this.getBySqlMapper.insert(sql);
+				}
+				File f= new File(savePath);  
+		        if (f.exists() && f.isFile()){ 
+		        	if(f.length()>0){
+		        		 String cha_sql = "select AAR008 from (select AAC001,max(AAR040) nian from NM09_AB01 where AAB002='"+household_name+"' AND AAB004='"+household_card+"' group by AAC001) "+
+				 	    				"  a left join (select AAR008,AAC001,AAR040 from NM09_AC01 ) b on a.AAC001=b.AAC001 and a.nian=b.AAR040";
+				 	    List<Map> cha_list = this.getBySqlMapper.findRecords(cha_sql);
+				 	    if ( cha_list.size() > 0 ) {
+				 	    	AAR008 = cha_list.get(0).get("AAR008").toString();
+				 	    }
+				 		String hql = "INSERT INTO DA_HELP_VISIT(HOUSEHOLD_NAME,PERSONAL_NAME,V1,V3,LNG,LAT,HOUSEHOLD_CARD,PERSONAL_PHONE,RANDOM_NUMBER,AAR008,REGISTERTIME,SENDLAT,SENDLNG,REGISTERTYPE)"+
+				 				" VALUES('"+household_name+"','"+personal_name+"','"+simpleDate.format(new Date())+"','"+zfjl+"','"+longitude+"','"+latitude+"','"+household_card+"','"+personal_phone+"','"+random_number+"','"+AAR008+"','"+registerTime+"','"+sendLat+"','"+sendLng+"','"+registerType+"')";
+				 		int insert_num = this.getBySqlMapper.insert(hql);
+				 		response.getWriter().write("5");
+		        	}else{
+		        		response.getWriter().write("0");
+		        	}
+		        }else{  
+		        	 String cha_sql = "select AAR008 from (select AAC001,max(AAR040) nian from NM09_AB01 where AAB002='"+household_name+"' AND AAB004='"+household_card+"' group by AAC001) "+
+			    				"  a left join (select AAR008,AAC001,AAR040 from NM09_AC01 ) b on a.AAC001=b.AAC001 and a.nian=b.AAR040";
+				    List<Map> cha_list = this.getBySqlMapper.findRecords(cha_sql);
+				    if ( cha_list.size() > 0 ) {
+				    	AAR008 = cha_list.get(0).get("AAR008").toString();
+				    }
+					String hql = "INSERT INTO DA_HELP_VISIT(HOUSEHOLD_NAME,PERSONAL_NAME,V1,V3,LNG,LAT,HOUSEHOLD_CARD,PERSONAL_PHONE,RANDOM_NUMBER,AAR008,REGISTERTIME,SENDLAT,SENDLNG,REGISTERTYPE)"+
+							" VALUES('"+household_name+"','"+personal_name+"','"+simpleDate.format(new Date())+"','"+zfjl+"','"+longitude+"','"+latitude+"','"+household_card+"','"+personal_phone+"','"+random_number+"','"+AAR008+"','"+registerTime+"','"+sendLat+"','"+sendLng+"','"+registerType+"')";
+					
+					int insert_num = this.getBySqlMapper.insert(hql);
+				
+				
+				
+				response.getWriter().write("5");
+		        } 
 			}
-			String name = "";
-			for (int i = 0; i < photo.length; i++) {
-				String res = downloadFromUrl(photo[i], savePath,name);
-	            String sql="INSERT INTO DA_PIC_VISIT (RANDOM_NUMBER,PIC_PATH)"+
-	    				" VALUES('"+random_number+"','"+saveUrl+res+"')";
-	            int insert_photo = this.getBySqlMapper.insert(sql);
-			}
-		}else{
+	    	
+	    	
+	   
+		} catch (Exception e) {
+			response.getWriter().write("0");
 		}
-		
-		response.getWriter().write("5");
+	    
+	   
 	}
 	/**
 	 * 添加户主照片
@@ -760,13 +782,25 @@ public class AnController{
 			dirFile.mkdirs();
 		}
 		String name = "";
-
-		String res = downloadFromUrl(photo, savePath,name);
-        String sql="INSERT INTO DA_PIC_HOUSEHOLD (AAB001,HOUSEHOLD_NAME,HOUSEHOLD_CARD,PIC_PATH)"+
-				" VALUES('"+AAB001+"','"+household_name+"','"+household_card+"','"+saveUrl+res+"')";
-        int insert_photo = this.getBySqlMapper.insert(sql);
-	
-		response.getWriter().write("5");
+		try {
+			String res = downloadFromUrl(photo, savePath,name);
+			
+			File f= new File(savePath);  
+		    if (f.exists() && f.isFile()){  
+		    	if ( f.length() > 0 ){
+		    		 String sql="INSERT INTO DA_PIC_HOUSEHOLD (AAB001,HOUSEHOLD_NAME,HOUSEHOLD_CARD,PIC_PATH)"+
+		 					" VALUES('"+AAB001+"','"+household_name+"','"+household_card+"','"+saveUrl+res+"')";
+		 	        int insert_photo = this.getBySqlMapper.insert(sql);
+		 		
+		 			response.getWriter().write("5");
+		    	}
+		    }
+		} catch (Exception e) {
+			response.getWriter().write("0");
+		}
+		
+		
+      
 	
 	}
 	/**
