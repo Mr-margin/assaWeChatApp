@@ -444,9 +444,15 @@ function fqiandao(){
 			if (local.getStatus() == BMAP_STATUS_SUCCESS){
 				local.setSearchCompleteCallback(function (results){
 				if(results.getCurrentNumPois() <= 0){
-					alert("非现场签到失败！未能解析到贫困户地址坐标！");
-					$("#print").show();
-					$("#print6").hide();
+					latitude = point.lat;
+					longitude = point.lng;
+					qdtype = 2;
+
+					$("#zftimediv").show();
+					$("#AbsentEndDate").attr("value",zftime);
+
+					$("#print3").hide();
+					$("#print4").show();
 					return;
 				}
 				console.log("检索到的结果"+results.getPoi(0).point.lng+""+results.getPoi(0).point.lat);
