@@ -86,7 +86,7 @@ var pp='';
 //上传照片
 function photo(){
 	wx.config({
-	    debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+	    debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
 			appId: 'wx4fa9e95d9af2477a', // 必填，公众号的唯一标识
 			timestamp: c_time, // 必填，生成签名的时间戳
 			nonceStr: sj_num, // 必填，生成签名的随机串
@@ -114,12 +114,12 @@ function photo(){
 	        for ( var i = 0 ; i < localIds.length; i ++ ){
 	        	html += '<div style="width:20%;height:20%;float:left"><img src="'+localIds[i]+'" border=0 style="width:95%;height:80%;" ></div>'
 	        	wx.uploadImage({
-
 		    	    localId: localIds[i], // 需要上传的图片的本地ID，由chooseImage接口获得
 		    	    isShowProgressTips: 1, // 默认为1，显示进度提示
 		    	    success: function (res) {
 		    	        var serverId = res.serverId; // 返回图片的服务器端ID
 						 pp += "http://file.api.weixin.qq.com/cgi-bin/media/get?access_token="+token+"&media_id="+serverId+",";
+						alert(pp);
 		    	    }
 		    	});
 	        }
