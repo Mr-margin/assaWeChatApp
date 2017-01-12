@@ -119,7 +119,6 @@ function photo(){
 		    	    success: function (res) {
 		    	        var serverId = res.serverId; // 返回图片的服务器端ID
 						 pp += "http://file.api.weixin.qq.com/cgi-bin/media/get?access_token="+token+"&media_id="+serverId+",";
-						alert(pp);
 		    	    }
 		    	});
 	        }
