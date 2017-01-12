@@ -724,6 +724,7 @@ public class AnController{
 					}
 		            
 				}
+				System.out.println("###########"+cun_list.size());
 				for (int a =0; a < cun_list.size(); a++ ) {
 					//储存照片地址
 		            String sql="INSERT INTO DA_PIC_VISIT (RANDOM_NUMBER,PIC_PATH)"+
