@@ -411,7 +411,7 @@ public class AnController{
                byte[] bytes = file.getBytes();  
                BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(uploadedFile));  
                stream.write(bytes);  
-               stream.close();
+               stream.close(); 
                
 //               File f= new File("E:/attached/2/"+pic+"."+fileExt); 
 //               System.out.println("E:/attached/2/"+pic+"."+fileExt);
