@@ -320,7 +320,7 @@ public class AnController{
 	public void getAddVisitController(HttpServletRequest request,HttpServletResponse response) throws IOException{
 		request.setCharacterEncoding("UTF-8");
 		response.setCharacterEncoding("UTF-8");
-		
+		String random_number = request.getParameter("random_number");//随机数
 		String registerTime = request.getParameter("registerTime");//签到时间
 		String sendLat = request.getParameter("sendLat");//上传维度
 		String sendLng = request.getParameter("sendLng");//上传经度
@@ -336,12 +336,10 @@ public class AnController{
 		String address = request.getParameter("address");//地点
 		String v3=request.getParameter("record");//走访情况记录-
 		
-//		System.out.println(AAR008+" "+personal_name+" "+personal_phone+" "+household_name+" "+household_card+" "+lng+" "+lat+" "+address+" "+v3);
-		
 		Date date = new Date();
         SimpleDateFormat sf = new SimpleDateFormat("yyyyMMddhhmmss");
         SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy-MM-dd"); 
-        String random_number = sf.format(date)+"_"+new Random().nextInt(1000);//时间戳+随机数
+//        String random_number = sf.format(date)+"_"+new Random().nextInt(1000);//时间戳+随机数
         String insert_sql = "insert into DA_HELP_VISIT (household_name,personal_name,v1,v3,lng,lat,address,household_card,personal_phone,random_number,AAR008,REGISTERTIME,SENDLAT,SENDLNG,REGISTERTYPE)"+
         					" values ('"+household_name+"','"+personal_name+"','"+simpleDate.format(new Date())+"','"+v3+"','"+lng+"','"+lat+"','"+address+"','"+household_card+"','"+personal_phone+"','"+random_number+"','"+AAR008+"','"+registerTime+"','"+sendLat+"','"+sendLng+"','"+registerType+"')";
 		try {
@@ -362,8 +360,6 @@ public class AnController{
 	@RequestMapping("getAddZfPhoto.do")
 	public void getAddZfPhoto(@RequestParam("image") MultipartFile file,HttpServletRequest request,HttpServletResponse response) throws IOException{
 		String random_number = request.getParameter("random_number");//随机数
-		String img1=request.getParameter("imgname");//图片的名称
-//		String img =  img1.replaceAll("/", "");
 		Date date = new Date();
 		SimpleDateFormat sf = new SimpleDateFormat("yyyyMMddhhmmss");
 		String pic = sf.format(date)+"_"+new Random().nextInt(1000);//时间戳+随机数
@@ -717,7 +713,8 @@ public class AnController{
 					File f= new File(savePath+res); 
 					File f1 = new File (photo[i]);
 					if (f.exists() && f.isFile()){ 
-						if(f.length() == f1.length()){//判断两个文件的大小是否相等
+//						if(f.length() == f1.length()){//判断两个文件的大小是否相等
+						if(f.length() >0){//判断两个文件的大小是否相等
 							//相等添给list添加地址名称
 							cun_list.add(saveUrl+res);
 						}else {
@@ -727,9 +724,7 @@ public class AnController{
 					}
 		            
 				}
-				
 				for (int a =0; a < cun_list.size(); a++ ) {
-					
 					//储存照片地址
 		            String sql="INSERT INTO DA_PIC_VISIT (RANDOM_NUMBER,PIC_PATH)"+
 		    				" VALUES('"+random_number+"','"+cun_list.get(a)+"')";
