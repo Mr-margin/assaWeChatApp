@@ -411,8 +411,9 @@ public class AnController{
                stream.close();
                
                File f= new File("E:/attached/2/"+pic+"."+fileExt); 
+               System.out.println("E:/attached/2/"+pic+"."+fileExt);
    				if (f.exists() && f.isFile()){ 
-   					if(f.length() == Integer.parseInt(size) ){
+   					if(f.length() > 10240 ){
    					 String sql="INSERT INTO DA_PIC_VISIT (random_number,PIC_PATH) VALUES"+
    	    					"('"+random_number+"','"+saveUrl+pic+".jpg"+"')";
    	           	 
@@ -728,7 +729,7 @@ public class AnController{
 					File f1 = new File (photo[i]);
 					if (f.exists() && f.isFile()){ 
 //						if(f.length() == f1.length()){//判断两个文件的大小是否相等
-						if(f.length() >1024){//判断两个文件的大小是否相等
+						if(f.length() >10240){//判断两个文件的大小是否相等
 							//相等添给list添加地址名称
 							cun_list.add(saveUrl+res);
 						}else {
