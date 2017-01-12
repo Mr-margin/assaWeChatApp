@@ -360,10 +360,10 @@ public class AnController{
 	@RequestMapping("getAddZfPhoto.do")
 	public void getAddZfPhoto(@RequestParam("image") MultipartFile file,HttpServletRequest request,HttpServletResponse response) throws IOException{
 		String random_number = request.getParameter("random_number");//随机数
+		String  size = request.getParameter("size");//图片大小
 		Date date = new Date();
 		SimpleDateFormat sf = new SimpleDateFormat("yyyyMMddhhmmss");
-		String pic = sf.format(date)+"_"+new Random().nextInt(1000);//时间戳+随机数
-		
+		String pic = sf.format(date)+"_"+new Random().nextInt(1000);
 		if (!file.isEmpty()) {
 			// 文件保存目录路径
 			String savePath = "E:/attached/2/";
@@ -400,17 +400,17 @@ public class AnController{
 //            String newFileName = df.format(new Date()) + "_" + new Random().nextInt(1000) + "." + fileExt; 
         
             try {
-            	 String sql="INSERT INTO DA_PIC_VISIT (random_number,PIC_PATH) VALUES"+
-     					"('"+random_number+"','"+saveUrl+pic+".jpg"+"')";
-            	 
-     			int insert_num1 = this.getBySqlMapper.insert(sql);
-            	File uploadedFile = new File(savePath, pic+"."+fileExt);
-                byte[] bytes = file.getBytes();  
-                BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(uploadedFile));  
-                stream.write(bytes);  
-                stream.close();
-                response.getWriter().write(pic);
-            } catch (Exception e) {  
+           	 String sql="INSERT INTO DA_PIC_VISIT (random_number,PIC_PATH) VALUES"+
+    					"('"+random_number+"','"+saveUrl+pic+".jpg"+"')";
+           	 
+    			int insert_num1 = this.getBySqlMapper.insert(sql);
+    			File uploadedFile = new File(savePath, pic+"."+fileExt);
+               byte[] bytes = file.getBytes();  
+               BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(uploadedFile));  
+               stream.write(bytes);  
+               stream.close();
+               response.getWriter().write(pic);
+           } catch (Exception e) {  
             	 response.getWriter().write("0");
             }
         } else {  
