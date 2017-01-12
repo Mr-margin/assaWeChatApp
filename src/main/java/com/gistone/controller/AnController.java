@@ -400,15 +400,29 @@ public class AnController{
 //            String newFileName = df.format(new Date()) + "_" + new Random().nextInt(1000) + "." + fileExt; 
         
             try {
-           	 String sql="INSERT INTO DA_PIC_VISIT (random_number,PIC_PATH) VALUES"+
-    					"('"+random_number+"','"+saveUrl+pic+".jpg"+"')";
-           	 
-    			int insert_num1 = this.getBySqlMapper.insert(sql);
+            	
+            	
+            	
+           	
     			File uploadedFile = new File(savePath, pic+"."+fileExt);
                byte[] bytes = file.getBytes();  
                BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(uploadedFile));  
                stream.write(bytes);  
                stream.close();
+               
+               File f= new File("E:/attached/2/"+pic+"."+fileExt); 
+   				if (f.exists() && f.isFile()){ 
+   					if(f.length() == Integer.parseInt(size) ){
+   					 String sql="INSERT INTO DA_PIC_VISIT (random_number,PIC_PATH) VALUES"+
+   	    					"('"+random_number+"','"+saveUrl+pic+".jpg"+"')";
+   	           	 
+   					 	int insert_num1 = this.getBySqlMapper.insert(sql);
+   					}else {
+   					 response.getWriter().write("0");
+   					}
+   				}else {
+   				 response.getWriter().write("0");
+   				}
                response.getWriter().write(pic);
            } catch (Exception e) {  
             	 response.getWriter().write("0");
