@@ -293,7 +293,7 @@ public class AnController{
 		try {
 			List<Map> list = this.getBySqlMapper.findRecords(sql);
 			for ( int i = 0 ; i < list.size() ; i ++ ) {
-				System.out.println(list.get(i).get("REGISTERTIME")+"---"+list.get(i).get("V3")+"---"+list.get(i).get("PIC_PATH")+"---"+list.get(i).get("ADDRESS")+"---"+list.get(i).get("PERSONAL_NAME")+"---"+list.get(i).get("HOUSEHOLD_NAME"));
+//				System.out.println(list.get(i).get("REGISTERTIME")+"---"+list.get(i).get("V3")+"---"+list.get(i).get("PIC_PATH")+"---"+list.get(i).get("ADDRESS")+"---"+list.get(i).get("PERSONAL_NAME")+"---"+list.get(i).get("HOUSEHOLD_NAME"));
 				JSONObject obj = new JSONObject ();
 				obj.put("b", "".equals(list.get(i).get("REGISTERTIME")) || list.get(i).get("REGISTERTIME") == null ? "" : list.get(i).get("REGISTERTIME").toString());//走访时间
 				obj.put("c","".equals(list.get(i).get("V3")) || list.get(i).get("V3") == null ? "" : list.get(i).get("V3").toString());//走访情况记录
@@ -401,7 +401,10 @@ public class AnController{
         
             try {
             	
-            	
+            	 String sql="INSERT INTO DA_PIC_VISIT (random_number,PIC_PATH) VALUES"+
+	    					"('"+random_number+"','"+saveUrl+pic+".jpg"+"')";
+	           	 
+					 	int insert_num1 = this.getBySqlMapper.insert(sql);
             	
            	
     			File uploadedFile = new File(savePath, pic+"."+fileExt);
@@ -410,20 +413,17 @@ public class AnController{
                stream.write(bytes);  
                stream.close();
                
-               File f= new File("E:/attached/2/"+pic+"."+fileExt); 
-               System.out.println("E:/attached/2/"+pic+"."+fileExt);
-   				if (f.exists() && f.isFile()){ 
-   					if(f.length() > 10240 ){
-   					 String sql="INSERT INTO DA_PIC_VISIT (random_number,PIC_PATH) VALUES"+
-   	    					"('"+random_number+"','"+saveUrl+pic+".jpg"+"')";
-   	           	 
-   					 	int insert_num1 = this.getBySqlMapper.insert(sql);
-   					}else {
-   					 response.getWriter().write("0");
-   					}
-   				}else {
-   				 response.getWriter().write("0");
-   				}
+//               File f= new File("E:/attached/2/"+pic+"."+fileExt); 
+//               System.out.println("E:/attached/2/"+pic+"."+fileExt);
+//   				if (f.exists() && f.isFile()){ 
+//   					if(f.length() > 10240 ){
+//   					
+//   					}else {
+//   					 response.getWriter().write("0");
+//   					}
+//   				}else {
+//   				 response.getWriter().write("0");
+//   				}
                response.getWriter().write(pic);
            } catch (Exception e) {  
             	 response.getWriter().write("0");
@@ -739,7 +739,7 @@ public class AnController{
 					}
 		            
 				}
-				System.out.println("###########"+cun_list.size());
+//				System.out.println("###########"+cun_list.size());
 				for (int a =0; a < cun_list.size(); a++ ) {
 					//储存照片地址
 		            String sql="INSERT INTO DA_PIC_VISIT (RANDOM_NUMBER,PIC_PATH)"+
