@@ -714,7 +714,7 @@ public class AnController{
 					File f1 = new File (photo[i]);
 					if (f.exists() && f.isFile()){ 
 //						if(f.length() == f1.length()){//判断两个文件的大小是否相等
-						if(f.length() >0){//判断两个文件的大小是否相等
+						if(f.length() >1024){//判断两个文件的大小是否相等
 							//相等添给list添加地址名称
 							cun_list.add(saveUrl+res);
 						}else {
@@ -1068,4 +1068,33 @@ public class AnController{
 		}
 		response.getWriter().write("111111111111111111111");
 	}
+
+	@RequestMapping("fei_pic.do")
+	public void fei_pic(HttpServletRequest request,HttpServletResponse response ) {
+		String sql ="select pic_path,household_name,household_card,personal_name,personal_phone from ( "+
+					" select household_name,household_card,personal_name,personal_phone, random_number FROM DA_HELP_VISIT ) a LEFT JOIN ( "+
+					" select random_number b_num,pic_path from DA_PIC_VISIT)b on a.random_number = b.b_num where pic_path is not null";
+		
+		List<Map> list = this.getBySqlMapper.findRecords(sql);
+		for( int i =0;i<list.size();i++ ) {
+			File f= new File(list.get(i).get("PIC_PATH").toString().replace("/assa/attached", "E:/attached")); 
+			if (f.exists() && f.isFile()){ 
+				 if(f.length()>1024){
+					
+				 } else {//图片破损
+					 String in_sql = "insert into PIC_FEI_VISIT (PERSONAL_NAME,PERSON_PHONE,HOUSEHOLD_NAME,HOUSEHOLD_CARD,V3,PIC_PATH,TYPE) VALUES "+
+						 		" ('"+list.get(i).get("PERSONAL_NAME")+"','"+list.get(i).get("PERSON_PHONE")+"','"+list.get(i).get("HOUSEHOLD_NAME")+"','"+list.get(i).get("HOUSEHOLD_CARD")+"','"+list.get(i).get("V3")+"','"+list.get(i).get("PIC_PATH")+"','图片损坏')";
+					 this.getBySqlMapper.insert(in_sql);
+				 }
+			}else {//图片不存在
+				 String in_sql = "insert into PIC_FEI_VISIT (PERSONAL_NAME,PERSON_PHONE,HOUSEHOLD_NAME,HOUSEHOLD_CARD,V3,PIC_PATH,TYPE) VALUES "+
+					 		" ('"+list.get(i).get("PERSONAL_NAME")+"','"+list.get(i).get("PERSON_PHONE")+"','"+list.get(i).get("HOUSEHOLD_NAME")+"','"+list.get(i).get("HOUSEHOLD_CARD")+"','"+list.get(i).get("V3")+"','"+list.get(i).get("PIC_PATH")+"','图片不存在')";
+			 this.getBySqlMapper.insert(in_sql);
+				
+			}
+		}
+		
+		
+	}
+
 }
