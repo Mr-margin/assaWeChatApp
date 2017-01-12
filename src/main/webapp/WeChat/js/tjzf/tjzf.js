@@ -268,6 +268,7 @@ function  addzfjl() {
 				}
 	    	}else if (data == "0") {
 	    		alert('图片上传失败，请重新上传。');
+				iszztj = false;
 	    		$("#deng").hide();
 	    		$("#tijiao").show();
 	    	}
