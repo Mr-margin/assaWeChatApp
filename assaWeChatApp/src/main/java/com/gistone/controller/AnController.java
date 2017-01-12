@@ -14,6 +14,7 @@ import java.security.DigestException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -691,6 +692,9 @@ public class AnController{
 		SimpleDateFormat sf = new SimpleDateFormat("yyyyMMddhhmmss");
 	    String random_number = sf.format(date)+"_"+new Random().nextInt(1000);//时间戳+随机数
 	    String AAR008 ="";//村的行政区划代码
+	    
+	    List cun_list = new ArrayList();
+	    
 	    try {
 	    	if (photo.length>0 && photo[0]!=""){
 				String saveUrl1 = request.getContextPath() + "/attached/2/";
@@ -707,47 +711,43 @@ public class AnController{
 				}
 				String name = "";
 				for (int i = 0; i < photo.length; i++) {
+					
 					String res = downloadFromUrl(photo[i], savePath,name);
+					
+					File f= new File(savePath+res); 
+					File f1 = new File (photo[i]);
+					if (f.exists() && f.isFile()){ 
+						if(f.length() == f1.length()){//判断两个文件的大小是否相等
+							//相等添给list添加地址名称
+							cun_list.add(saveUrl+res);
+						}else {
+							response.getWriter().write("0");
+							return ;
+						}
+					}
+		            
+				}
+				
+				for (int a =0; a < cun_list.size(); a++ ) {
+					
+					//储存照片地址
 		            String sql="INSERT INTO DA_PIC_VISIT (RANDOM_NUMBER,PIC_PATH)"+
-		    				" VALUES('"+random_number+"','"+saveUrl+res+"')";
+		    				" VALUES('"+random_number+"','"+cun_list.get(a)+"')";
 		            int insert_photo = this.getBySqlMapper.insert(sql);
 				}
-				File f= new File(savePath);  
-		        if (f.exists() && f.isFile()){ 
-		        	if(f.length()>0){
-		        		 String cha_sql = "select AAR008 from (select AAC001,max(AAR040) nian from NM09_AB01 where AAB002='"+household_name+"' AND AAB004='"+household_card+"' group by AAC001) "+
-				 	    				"  a left join (select AAR008,AAC001,AAR040 from NM09_AC01 ) b on a.AAC001=b.AAC001 and a.nian=b.AAR040";
-				 	    List<Map> cha_list = this.getBySqlMapper.findRecords(cha_sql);
-				 	    if ( cha_list.size() > 0 ) {
-				 	    	AAR008 = cha_list.get(0).get("AAR008").toString();
-				 	    }
-				 		String hql = "INSERT INTO DA_HELP_VISIT(HOUSEHOLD_NAME,PERSONAL_NAME,V1,V3,LNG,LAT,HOUSEHOLD_CARD,PERSONAL_PHONE,RANDOM_NUMBER,AAR008,REGISTERTIME,SENDLAT,SENDLNG,REGISTERTYPE)"+
-				 				" VALUES('"+household_name+"','"+personal_name+"','"+simpleDate.format(new Date())+"','"+zfjl+"','"+longitude+"','"+latitude+"','"+household_card+"','"+personal_phone+"','"+random_number+"','"+AAR008+"','"+registerTime+"','"+sendLat+"','"+sendLng+"','"+registerType+"')";
-				 		int insert_num = this.getBySqlMapper.insert(hql);
-				 		response.getWriter().write("5");
-		        	}else{
-		        		response.getWriter().write("0");
-		        	}
-		        }else{  
-		        	 String cha_sql = "select AAR008 from (select AAC001,max(AAR040) nian from NM09_AB01 where AAB002='"+household_name+"' AND AAB004='"+household_card+"' group by AAC001) "+
-			    				"  a left join (select AAR008,AAC001,AAR040 from NM09_AC01 ) b on a.AAC001=b.AAC001 and a.nian=b.AAR040";
-				    List<Map> cha_list = this.getBySqlMapper.findRecords(cha_sql);
-				    if ( cha_list.size() > 0 ) {
-				    	AAR008 = cha_list.get(0).get("AAR008").toString();
-				    }
-					String hql = "INSERT INTO DA_HELP_VISIT(HOUSEHOLD_NAME,PERSONAL_NAME,V1,V3,LNG,LAT,HOUSEHOLD_CARD,PERSONAL_PHONE,RANDOM_NUMBER,AAR008,REGISTERTIME,SENDLAT,SENDLNG,REGISTERTYPE)"+
-							" VALUES('"+household_name+"','"+personal_name+"','"+simpleDate.format(new Date())+"','"+zfjl+"','"+longitude+"','"+latitude+"','"+household_card+"','"+personal_phone+"','"+random_number+"','"+AAR008+"','"+registerTime+"','"+sendLat+"','"+sendLng+"','"+registerType+"')";
-					
-					int insert_num = this.getBySqlMapper.insert(hql);
-				
-				
-				
-				response.getWriter().write("5");
-		        } 
 			}
-	    	
-	    	
-	   
+	    	//查询行政编码
+		    String cha_sql = "select AAR008 from (select AAC001,max(AAR040) nian from NM09_AB01 where AAB002='"+household_name+"' AND AAB004='"+household_card+"' group by AAC001) "+
+		    				"  a left join (select AAR008,AAC001,AAR040 from NM09_AC01 ) b on a.AAC001=b.AAC001 and a.nian=b.AAR040";
+		    List<Map> cha_list = this.getBySqlMapper.findRecords(cha_sql);
+		    if ( cha_list.size() > 0 ) {
+		    	AAR008 = cha_list.get(0).get("AAR008").toString();
+		    }
+		    //添加走访记录文字信息
+			String hql = "INSERT INTO DA_HELP_VISIT(HOUSEHOLD_NAME,PERSONAL_NAME,V1,V3,LNG,LAT,HOUSEHOLD_CARD,PERSONAL_PHONE,RANDOM_NUMBER,AAR008,REGISTERTIME,SENDLAT,SENDLNG,REGISTERTYPE,TYPE)"+
+					" VALUES('"+household_name+"','"+personal_name+"','"+simpleDate.format(new Date())+"','"+zfjl+"','"+longitude+"','"+latitude+"','"+household_card+"','"+personal_phone+"','"+random_number+"','"+AAR008+"','"+registerTime+"','"+sendLat+"','"+sendLng+"','"+registerType+"','微信')";
+			int insert_num = this.getBySqlMapper.insert(hql);
+			response.getWriter().write("5");
 		} catch (Exception e) {
 			response.getWriter().write("0");
 		}
@@ -786,7 +786,7 @@ public class AnController{
 			String res = downloadFromUrl(photo, savePath,name);
 			
 			File f= new File(savePath);  
-		    if (f.exists() && f.isFile()){  
+		    if (f.exists() && f.isFile()){
 		    	if ( f.length() > 0 ){
 		    		 String sql="INSERT INTO DA_PIC_HOUSEHOLD (AAB001,HOUSEHOLD_NAME,HOUSEHOLD_CARD,PIC_PATH)"+
 		 					" VALUES('"+AAB001+"','"+household_name+"','"+household_card+"','"+saveUrl+res+"')";
