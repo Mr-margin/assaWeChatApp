@@ -16,13 +16,13 @@
 		</div>
 		<ul class="login-box">
 			<li>
-		        <input id="old_password" type="password" name="name" placeholder="旧密码" />   
+		        <input id="old_password" type="password" onkeyup="value=value.replace(/[^\w\.\/]/ig,'')" name="name" placeholder="旧密码（只能输入字母或数字" />
 			</li>
 			<li>
-		        <input id="new_password" type="password" name="name" placeholder="新密码" />   
+		        <input id="new_password" type="password" onkeyup="value=value.replace(/[^\w\.\/]/ig,'')" name="name" placeholder="新密码(只能输入字母或数字)" />
 			</li>
 			<li>
-		        <input id="new_password1" type="password" name="name" placeholder="确认密码" />   
+		        <input id="new_password1" type="password" onkeyup="value=value.replace(/[^\w\.\/]/ig,'')" name="name" placeholder="确认密码（只能输入字母或数字" />
 			</li>
 		</ul>
 		<div class="confirm">
