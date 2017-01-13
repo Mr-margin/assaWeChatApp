@@ -320,7 +320,7 @@ public class AnController{
 	public void getAddVisitController(HttpServletRequest request,HttpServletResponse response) throws IOException{
 		request.setCharacterEncoding("UTF-8");
 		response.setCharacterEncoding("UTF-8");
-		String random_number = request.getParameter("random_number");//随机数
+//		String random_number = request.getParameter("random_number");//随机数
 		String registerTime = request.getParameter("registerTime");//签到时间
 		String sendLat = request.getParameter("sendLat");//上传维度
 		String sendLng = request.getParameter("sendLng");//上传经度
@@ -339,7 +339,7 @@ public class AnController{
 		Date date = new Date();
         SimpleDateFormat sf = new SimpleDateFormat("yyyyMMddhhmmss");
         SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy-MM-dd"); 
-//        String random_number = sf.format(date)+"_"+new Random().nextInt(1000);//时间戳+随机数
+        String random_number = sf.format(date)+"_"+new Random().nextInt(1000);//时间戳+随机数
         String insert_sql = "insert into DA_HELP_VISIT (household_name,personal_name,v1,v3,lng,lat,address,household_card,personal_phone,random_number,AAR008,REGISTERTIME,SENDLAT,SENDLNG,REGISTERTYPE)"+
         					" values ('"+household_name+"','"+personal_name+"','"+simpleDate.format(new Date())+"','"+v3+"','"+lng+"','"+lat+"','"+address+"','"+household_card+"','"+personal_phone+"','"+random_number+"','"+AAR008+"','"+registerTime+"','"+sendLat+"','"+sendLng+"','"+registerType+"')";
 		try {
