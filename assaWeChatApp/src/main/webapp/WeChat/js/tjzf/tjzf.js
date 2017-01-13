@@ -224,6 +224,11 @@ function  addzfjl() {
 		alert("必须签到成功才可以提交！");
 		return;
 	}
+	var zfjlwz = $("#zfjlwz").val();
+	if(zfjlwz.length > 300){
+		alert("走访记录文字不得超过300个，请重新输入!");
+		return;
+	}
 	dingewi();
 
 	if (qdtype == 2){
@@ -242,6 +247,7 @@ function  addzfjl() {
 		return ;
 	}
 	var household_name = $("#poor_name").find("option:selected").text();//贫困户的姓名
+
 	$.ajax({  		       
 	    url: '/assaWeChatApp/addZfjl.do',
 	    type: "POST",
@@ -253,7 +259,7 @@ function  addzfjl() {
 	    	personal_phone:phone,
 	    	household_name:household_name,
 	    	household_card:household_card,
-	    	zfjl:$("#zfjlwz").val(),
+	    	zfjl:zfjlwz.replace(/'/g,"’"),
 	    	"photo":w_p,
 	    	latitude: latitude,
 	    	longitude:longitude,
