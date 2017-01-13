@@ -1102,7 +1102,7 @@ public class AnController{
 					 this.getBySqlMapper.insert(in_sql);
 				 }
 			}else {//图片不存在
-				 String in_sql = "insert into PIC_FEI_VISIT (PERSONAL_NAME,PERSON_PHONE,HOUSEHOLD_NAME,HOUSEHOLD_CARD,V3,PIC_PATH,TYPE) VALUES "+
+				 String in_sql = "insert into PIC_FEI_VISIT (PERSONAL_NAME,PERSONAL_PHONE,HOUSEHOLD_NAME,HOUSEHOLD_CARD,V3,PIC_PATH,TYPE) VALUES "+
 					 		" ('"+list.get(i).get("PERSONAL_NAME")+"','"+list.get(i).get("PERSON_PHONE")+"','"+list.get(i).get("HOUSEHOLD_NAME")+"','"+list.get(i).get("HOUSEHOLD_CARD")+"','"+list.get(i).get("V3")+"','"+list.get(i).get("PIC_PATH")+"','图片不存在')";
 			 this.getBySqlMapper.insert(in_sql);
 				
