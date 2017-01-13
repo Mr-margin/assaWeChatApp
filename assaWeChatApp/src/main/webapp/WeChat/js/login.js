@@ -30,6 +30,10 @@ $(function(){
 
 //手机登录
 function login(){
+	if ($("#username").val().length != 11){
+		alert("请输入正确的11位手机号码！");
+		return;
+	}
 	$.ajax({  		       
 	    url: '/assaWeChatApp/getAnLoginController.do',
 	    type: "POST",
@@ -50,4 +54,11 @@ function login(){
 	    	alert('登录失败')
 	    }  
 	})
+}
+function verify_phone(obj){
+	if(obj.value.length==1){
+		obj.value=obj.value.replace(/[^1-9]/g,'');
+	}else{
+		obj.value=obj.value.replace(/\D/g,'');
+	}
 }
