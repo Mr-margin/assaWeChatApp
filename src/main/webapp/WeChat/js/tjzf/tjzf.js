@@ -140,8 +140,10 @@ function settime(val) {
 		countdown = 10;
 		clearTimeout(timeout);
 		isxcqd = true;
-		$("#print3").show();
-		$("#print5").hide();
+		if (latitude=="" || latitude ==null ||  latitude == undefined ){
+			$("#print3").show();
+			$("#print5").hide();
+		}
 		return;
 	} else {
 		val.innerHTML="定&nbsp;位&nbsp;中(" + countdown + "s)";
@@ -203,6 +205,7 @@ wx.config({
 			$("#print6").hide();
 			$("#print1").show();
 			$("#print3").hide();
+			$("#print4").hide();
 			$("#print5").show();
 	    }
 	});
