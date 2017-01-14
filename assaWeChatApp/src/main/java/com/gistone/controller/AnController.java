@@ -1224,7 +1224,7 @@ public class AnController{
 		for( int i =0;i<list.size();i++ ) {
 			
 			String PERSONAL_NAME = "".equals(list.get(i).get("PERSONAL_NAME")) || list.get(i).get("PERSONAL_NAME") == null ? "" : list.get(i).get("PERSONAL_NAME").toString();
-			String PERSON_PHONE = "".equals(list.get(i).get("PERSON_PHONE")) || list.get(i).get("PERSON_PHONE") == null ? "" : list.get(i).get("PERSON_PHONE").toString();
+			String PERSONAL_PHONE = "".equals(list.get(i).get("PERSONAL_PHONE")) || list.get(i).get("PERSONAL_PHONE") == null ? "" : list.get(i).get("PERSONAL_PHONE").toString();
 			String HOUSEHOLD_NAME = "".equals(list.get(i).get("HOUSEHOLD_NAME")) || list.get(i).get("HOUSEHOLD_NAME") == null ? "" : list.get(i).get("HOUSEHOLD_NAME").toString();
 			String HOUSEHOLD_CARD = "".equals(list.get(i).get("HOUSEHOLD_CARD")) || list.get(i).get("HOUSEHOLD_CARD") == null ? "" : list.get(i).get("HOUSEHOLD_CARD").toString();
 			String V3 = "".equals(list.get(i).get("V3")) || list.get(i).get("V3") == null ? "" : list.get(i).get("V3").toString();
@@ -1235,13 +1235,13 @@ public class AnController{
 				 if(f.length()>1024){
 					
 				 } else {//图片破损
-					 String in_sql = "insert into PIC_FEI_VISIT (PERSONAL_NAME,PERSON_PHONE,HOUSEHOLD_NAME,HOUSEHOLD_CARD,V3,V1,PIC_PATH,TYPE) VALUES "+
-						 		" ('"+PERSONAL_NAME+"','"+PERSON_PHONE+"','"+HOUSEHOLD_NAME+"','"+HOUSEHOLD_CARD+"','"+V3+"','"+V1+"','"+PIC_PATH+"','图片损坏')";
+					 String in_sql = "insert into PIC_FEI_VISIT (PERSONAL_NAME,PERSONAL_PHONE,HOUSEHOLD_NAME,HOUSEHOLD_CARD,V3,V1,PIC_PATH,TYPE) VALUES "+
+						 		" ('"+PERSONAL_NAME+"','"+PERSONAL_PHONE+"','"+HOUSEHOLD_NAME+"','"+HOUSEHOLD_CARD+"','"+V3+"','"+V1+"','"+PIC_PATH+"','图片损坏')";
 					 this.getBySqlMapper.insert(in_sql);
 				 }
 			}else {//图片不存在
 				 String in_sql = "insert into PIC_FEI_VISIT (PERSONAL_NAME,PERSONAL_PHONE,HOUSEHOLD_NAME,HOUSEHOLD_CARD,V3,V1,PIC_PATH,TYPE) VALUES "+
-					 		" ('"+PERSONAL_NAME+"','"+PERSON_PHONE+"','"+HOUSEHOLD_NAME+"','"+HOUSEHOLD_CARD+"','"+V3+"','"+V1+"','"+PIC_PATH+"','图片不存在')";
+					 		" ('"+PERSONAL_NAME+"','"+PERSONAL_PHONE+"','"+HOUSEHOLD_NAME+"','"+HOUSEHOLD_CARD+"','"+V3+"','"+V1+"','"+PIC_PATH+"','图片不存在')";
 			 this.getBySqlMapper.insert(in_sql);
 				
 			}
