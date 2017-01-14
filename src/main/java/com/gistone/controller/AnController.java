@@ -338,7 +338,6 @@ public class AnController{
 		
 		if ("".equals(random_number) || "null".equals(random_number) || random_number == null ) {
 			response.getWriter().write("{\"success\":\"1\",\"message\":\"失败\",\"data\":\"\"}");
-			return;
 		} else {
 			Date date = new Date();
 	        SimpleDateFormat sf = new SimpleDateFormat("yyyyMMddhhmmss");
