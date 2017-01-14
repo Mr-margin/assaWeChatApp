@@ -320,7 +320,7 @@ public class AnController{
 	public void getAddVisitController(HttpServletRequest request,HttpServletResponse response) throws IOException{
 		request.setCharacterEncoding("UTF-8");
 		response.setCharacterEncoding("UTF-8");
-//		String random_number = request.getParameter("random_number");//随机数
+		String random_number = request.getParameter("random_number");//随机数
 		String registerTime = request.getParameter("registerTime");//签到时间
 		String sendLat = request.getParameter("sendLat");//上传维度
 		String sendLng = request.getParameter("sendLng");//上传经度
@@ -336,19 +336,26 @@ public class AnController{
 		String address = request.getParameter("address");//地点
 		String v3=request.getParameter("record");//走访情况记录-
 		
-		Date date = new Date();
-        SimpleDateFormat sf = new SimpleDateFormat("yyyyMMddhhmmss");
-        SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy-MM-dd"); 
-        String random_number = sf.format(date)+"_"+new Random().nextInt(1000);//时间戳+随机数
-        String insert_sql = "insert into DA_HELP_VISIT (household_name,personal_name,v1,v3,lng,lat,address,household_card,personal_phone,random_number,AAR008,REGISTERTIME,SENDLAT,SENDLNG,REGISTERTYPE)"+
-        					" values ('"+household_name+"','"+personal_name+"','"+simpleDate.format(new Date())+"','"+v3+"','"+lng+"','"+lat+"','"+address+"','"+household_card+"','"+personal_phone+"','"+random_number+"','"+AAR008+"','"+registerTime+"','"+sendLat+"','"+sendLng+"','"+registerType+"')";
-		try {
-			 this.getBySqlMapper.findRecords(insert_sql);
-			 response.getWriter().write("{\"success\":\"0\",\"message\":\"成功\",\"data\":{\"random_number\":\""+random_number+"\"}}");
-		} catch (Exception e) {
+		if ("".equals(random_number) || "null".equals(random_number) || random_number == null ) {
 			response.getWriter().write("{\"success\":\"1\",\"message\":\"失败\",\"data\":\"\"}");
-			response.getWriter().close();
+			return;
+		} else {
+			Date date = new Date();
+	        SimpleDateFormat sf = new SimpleDateFormat("yyyyMMddhhmmss");
+	        SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy-MM-dd"); 
+//	        String random_number = sf.format(date)+"_"+new Random().nextInt(1000);//时间戳+随机数
+	        String insert_sql = "insert into DA_HELP_VISIT (household_name,personal_name,v1,v3,lng,lat,address,household_card,personal_phone,random_number,AAR008,REGISTERTIME,SENDLAT,SENDLNG,REGISTERTYPE)"+
+	        					" values ('"+household_name+"','"+personal_name+"','"+simpleDate.format(new Date())+"','"+v3+"','"+lng+"','"+lat+"','"+address+"','"+household_card+"','"+personal_phone+"','"+random_number+"','"+AAR008+"','"+registerTime+"','"+sendLat+"','"+sendLng+"','"+registerType+"')";
+			try {
+				 this.getBySqlMapper.findRecords(insert_sql);
+				 response.getWriter().write("{\"success\":\"0\",\"message\":\"成功\",\"data\":{\"random_number\":\""+random_number+"\"}}");
+			} catch (Exception e) {
+				response.getWriter().write("{\"success\":\"1\",\"message\":\"失败\",\"data\":\"\"}");
+				response.getWriter().close();
+			}
 		}
+		
+		
 	}
 	/**
 	 * 上传走访记录图片
@@ -1086,24 +1093,32 @@ public class AnController{
 
 	@RequestMapping("fei_pic.do")
 	public void fei_pic(HttpServletRequest request,HttpServletResponse response ) {
-		String sql ="select pic_path,household_name,household_card,personal_name,personal_phone from ( "+
-					" select household_name,household_card,personal_name,personal_phone, random_number FROM DA_HELP_VISIT ) a LEFT JOIN ( "+
+		String sql ="select pic_path,household_name,household_card,personal_name,personal_phone,v1,v3 from ( "+
+					" select household_name,household_card,personal_name,personal_phone, random_number,v1,v3 FROM DA_HELP_VISIT ) a LEFT JOIN ( "+
 					" select random_number b_num,pic_path from DA_PIC_VISIT)b on a.random_number = b.b_num where pic_path is not null";
 		
 		List<Map> list = this.getBySqlMapper.findRecords(sql);
 		for( int i =0;i<list.size();i++ ) {
+			
+			String PERSONAL_NAME = "".equals(list.get(i).get("PERSONAL_NAME")) || list.get(i).get("PERSONAL_NAME") == null ? "" : list.get(i).get("PERSONAL_NAME").toString();
+			String PERSON_PHONE = "".equals(list.get(i).get("PERSON_PHONE")) || list.get(i).get("PERSON_PHONE") == null ? "" : list.get(i).get("PERSON_PHONE").toString();
+			String HOUSEHOLD_NAME = "".equals(list.get(i).get("HOUSEHOLD_NAME")) || list.get(i).get("HOUSEHOLD_NAME") == null ? "" : list.get(i).get("HOUSEHOLD_NAME").toString();
+			String HOUSEHOLD_CARD = "".equals(list.get(i).get("HOUSEHOLD_CARD")) || list.get(i).get("HOUSEHOLD_CARD") == null ? "" : list.get(i).get("HOUSEHOLD_CARD").toString();
+			String V3 = "".equals(list.get(i).get("V3")) || list.get(i).get("V3") == null ? "" : list.get(i).get("V3").toString();
+			String PIC_PATH = "".equals(list.get(i).get("PIC_PATH")) || list.get(i).get("PIC_PATH") == null ? "" : list.get(i).get("PIC_PATH").toString();
+			String V1 = "".equals(list.get(i).get("V1")) || list.get(i).get("V1") == null ? "" : list.get(i).get("V1").toString();
 			File f= new File(list.get(i).get("PIC_PATH").toString().replace("/assa/attached", "E:/attached")); 
 			if (f.exists() && f.isFile()){ 
 				 if(f.length()>1024){
 					
 				 } else {//图片破损
-					 String in_sql = "insert into PIC_FEI_VISIT (PERSONAL_NAME,PERSON_PHONE,HOUSEHOLD_NAME,HOUSEHOLD_CARD,V3,PIC_PATH,TYPE) VALUES "+
-						 		" ('"+list.get(i).get("PERSONAL_NAME")+"','"+list.get(i).get("PERSON_PHONE")+"','"+list.get(i).get("HOUSEHOLD_NAME")+"','"+list.get(i).get("HOUSEHOLD_CARD")+"','"+list.get(i).get("V3")+"','"+list.get(i).get("PIC_PATH")+"','图片损坏')";
+					 String in_sql = "insert into PIC_FEI_VISIT (PERSONAL_NAME,PERSON_PHONE,HOUSEHOLD_NAME,HOUSEHOLD_CARD,V3,V1,PIC_PATH,TYPE) VALUES "+
+						 		" ('"+PERSONAL_NAME+"','"+PERSON_PHONE+"','"+HOUSEHOLD_NAME+"','"+HOUSEHOLD_CARD+"','"+V3+"','"+V1+"','"+PIC_PATH+"','图片损坏')";
 					 this.getBySqlMapper.insert(in_sql);
 				 }
 			}else {//图片不存在
-				 String in_sql = "insert into PIC_FEI_VISIT (PERSONAL_NAME,PERSONAL_PHONE,HOUSEHOLD_NAME,HOUSEHOLD_CARD,V3,PIC_PATH,TYPE) VALUES "+
-					 		" ('"+list.get(i).get("PERSONAL_NAME")+"','"+list.get(i).get("PERSON_PHONE")+"','"+list.get(i).get("HOUSEHOLD_NAME")+"','"+list.get(i).get("HOUSEHOLD_CARD")+"','"+list.get(i).get("V3")+"','"+list.get(i).get("PIC_PATH")+"','图片不存在')";
+				 String in_sql = "insert into PIC_FEI_VISIT (PERSONAL_NAME,PERSONAL_PHONE,HOUSEHOLD_NAME,HOUSEHOLD_CARD,V3,V1,PIC_PATH,TYPE) VALUES "+
+					 		" ('"+PERSONAL_NAME+"','"+PERSON_PHONE+"','"+HOUSEHOLD_NAME+"','"+HOUSEHOLD_CARD+"','"+V3+"','"+V1+"','"+PIC_PATH+"','图片不存在')";
 			 this.getBySqlMapper.insert(in_sql);
 				
 			}
