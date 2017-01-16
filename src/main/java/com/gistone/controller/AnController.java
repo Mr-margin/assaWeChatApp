@@ -334,19 +334,21 @@ public class AnController{
 		String lat = request.getParameter("lat");//维度
 		String address = request.getParameter("address");//地点
 		String v3=request.getParameter("record");//走访情况记录-
-		Date date = new Date();
-        SimpleDateFormat sf = new SimpleDateFormat("yyyyMMddhhmmss");
-        SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy-MM-dd"); 
-        String random_number = sf.format(date)+"_"+new Random().nextInt(1000);//时间戳+随机数
-        String insert_sql = "insert into DA_HELP_VISIT (household_name,personal_name,v1,v3,lng,lat,address,household_card,personal_phone,random_number,AAR008,REGISTERTIME,SENDLAT,SENDLNG,REGISTERTYPE)"+
-        					" values ('"+household_name+"','"+personal_name+"','"+simpleDate.format(new Date())+"','"+v3+"','"+lng+"','"+lat+"','"+address+"','"+household_card+"','"+personal_phone+"','"+random_number+"','"+AAR008+"','"+registerTime+"','"+sendLat+"','"+sendLng+"','"+registerType+"')";
-		try {
-			 this.getBySqlMapper.findRecords(insert_sql);
-			 response.getWriter().write("{\"success\":\"0\",\"message\":\"成功\",\"data\":{\"random_number\":\""+random_number+"\"}}");
-		} catch (Exception e) {
-			response.getWriter().write("{\"success\":\"1\",\"message\":\"失败\",\"data\":\"\"}");
-			response.getWriter().close();
-		}
+		response.getWriter().write("{\"success\":\"1\",\"message\":\"失败\",\"data\":\"\"}");
+		return;
+//		Date date = new Date();
+//        SimpleDateFormat sf = new SimpleDateFormat("yyyyMMddhhmmss");
+//        SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy-MM-dd"); 
+//        String random_number = sf.format(date)+"_"+new Random().nextInt(1000);//时间戳+随机数
+//        String insert_sql = "insert into DA_HELP_VISIT (household_name,personal_name,v1,v3,lng,lat,address,household_card,personal_phone,random_number,AAR008,REGISTERTIME,SENDLAT,SENDLNG,REGISTERTYPE)"+
+//        					" values ('"+household_name+"','"+personal_name+"','"+simpleDate.format(new Date())+"','"+v3+"','"+lng+"','"+lat+"','"+address+"','"+household_card+"','"+personal_phone+"','"+random_number+"','"+AAR008+"','"+registerTime+"','"+sendLat+"','"+sendLng+"','"+registerType+"')";
+//		try {
+//			 this.getBySqlMapper.findRecords(insert_sql);
+//			 response.getWriter().write("{\"success\":\"0\",\"message\":\"成功\",\"data\":{\"random_number\":\""+random_number+"\"}}");
+//		} catch (Exception e) {
+//			response.getWriter().write("{\"success\":\"1\",\"message\":\"失败\",\"data\":\"\"}");
+//			response.getWriter().close();
+//		}
 	
 		
 		
@@ -365,73 +367,75 @@ public class AnController{
 		Date date = new Date();
 		SimpleDateFormat sf = new SimpleDateFormat("yyyyMMddhhmmss");
 		String pic = sf.format(date)+"_"+new Random().nextInt(1000);
-		if (!file.isEmpty()) {
-			// 文件保存目录路径
-			String savePath = "E:/attached/2/";
-	        // 文件保存目录URL 
-	        String saveUrl1 = request.getContextPath() + "/attached/2/";
-	        String saveUrl = saveUrl1.replaceAll("assaWeChatApp", "assa");
-	        
-	        // 定义允许上传的文件扩展名  
-	        HashMap<String, String> extMap = new HashMap<String, String>();  
-	        extMap.put("image", "gif,jpg,jpeg,png,bmp");
-	        extMap.put("excel", "xls");
-	        String dirName = "image";
-	        // 检查目录  
-            File uploadDir = new File(savePath);  
-            if (!uploadDir.isDirectory()) {  
-            	if(!uploadDir.exists()){
-            		uploadDir.mkdirs();
-            	}
-            }
-            //创建文件夹 
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");  
-            String ymd = sdf.format(new Date());  
-            savePath += ymd + "\\";  
-            saveUrl += ymd + "/";
-            File dirFile = new File(savePath);  
-            if (!dirFile.exists()) {  
-                dirFile.mkdirs();  
-            }
-            
-            // 检查扩展名 
-            String filename_hout = file.getOriginalFilename();
-            String fileExt = filename_hout.substring(filename_hout.lastIndexOf(".") + 1).toLowerCase(); 
-            SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");  
-//            String newFileName = df.format(new Date()) + "_" + new Random().nextInt(1000) + "." + fileExt; 
-        
-            try {
-            	
-            	 String sql="INSERT INTO DA_PIC_VISIT (random_number,PIC_PATH) VALUES"+
-	    					"('"+random_number+"','"+saveUrl+pic+".jpg"+"')";
-	           	 
-					 	int insert_num1 = this.getBySqlMapper.insert(sql);
-            	
-           	
-    			File uploadedFile = new File(savePath, pic+"."+fileExt);
-               byte[] bytes = file.getBytes();  
-               BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(uploadedFile));  
-               stream.write(bytes);  
-               stream.close(); 
-               
-//               File f= new File("E:/attached/2/"+pic+"."+fileExt); 
-//               System.out.println("E:/attached/2/"+pic+"."+fileExt);
-//   				if (f.exists() && f.isFile()){ 
-//   					if(f.length() > 10240 ){
-//   					
-//   					}else {
-//   					 response.getWriter().write("0");
-//   					}
-//   				}else {
-//   				 response.getWriter().write("0");
-//   				}
-               response.getWriter().write(pic);
-           } catch (Exception e) {  
-            	 response.getWriter().write("0");
-            }
-        } else {  
-        	 response.getWriter().write("0");
-        }
+		response.getWriter().write("{\"success\":\"1\",\"message\":\"失败\",\"data\":\"\"}");
+		return;
+//		if (!file.isEmpty()) {
+//			// 文件保存目录路径
+//			String savePath = "E:/attached/2/";
+//	        // 文件保存目录URL 
+//	        String saveUrl1 = request.getContextPath() + "/attached/2/";
+//	        String saveUrl = saveUrl1.replaceAll("assaWeChatApp", "assa");
+//	        
+//	        // 定义允许上传的文件扩展名  
+//	        HashMap<String, String> extMap = new HashMap<String, String>();  
+//	        extMap.put("image", "gif,jpg,jpeg,png,bmp");
+//	        extMap.put("excel", "xls");
+//	        String dirName = "image";
+//	        // 检查目录  
+//            File uploadDir = new File(savePath);  
+//            if (!uploadDir.isDirectory()) {  
+//            	if(!uploadDir.exists()){
+//            		uploadDir.mkdirs();
+//            	}
+//            }
+//            //创建文件夹 
+//            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");  
+//            String ymd = sdf.format(new Date());  
+//            savePath += ymd + "\\";  
+//            saveUrl += ymd + "/";
+//            File dirFile = new File(savePath);  
+//            if (!dirFile.exists()) {  
+//                dirFile.mkdirs();  
+//            }
+//            
+//            // 检查扩展名 
+//            String filename_hout = file.getOriginalFilename();
+//            String fileExt = filename_hout.substring(filename_hout.lastIndexOf(".") + 1).toLowerCase(); 
+//            SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");  
+////            String newFileName = df.format(new Date()) + "_" + new Random().nextInt(1000) + "." + fileExt; 
+//        
+//            try {
+//            	
+//            	 String sql="INSERT INTO DA_PIC_VISIT (random_number,PIC_PATH) VALUES"+
+//	    					"('"+random_number+"','"+saveUrl+pic+".jpg"+"')";
+//	           	 
+//					 	int insert_num1 = this.getBySqlMapper.insert(sql);
+//            	
+//           	
+//    			File uploadedFile = new File(savePath, pic+"."+fileExt);
+//               byte[] bytes = file.getBytes();  
+//               BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(uploadedFile));  
+//               stream.write(bytes);  
+//               stream.close(); 
+//               
+////               File f= new File("E:/attached/2/"+pic+"."+fileExt); 
+////               System.out.println("E:/attached/2/"+pic+"."+fileExt);
+////   				if (f.exists() && f.isFile()){ 
+////   					if(f.length() > 10240 ){
+////   					
+////   					}else {
+////   					 response.getWriter().write("0");
+////   					}
+////   				}else {
+////   				 response.getWriter().write("0");
+////   				}
+//               response.getWriter().write(pic);
+//           } catch (Exception e) {  
+//            	 response.getWriter().write("0");
+//            }
+//        } else {  
+//        	 response.getWriter().write("0");
+//        }
 	}
 	/**
 	 * 添加走访情况2.02
@@ -522,44 +526,35 @@ public class AnController{
 			if (!dirFile.exists()) {  
 				dirFile.mkdirs();  
 			}
-			
 			// 检查扩展名 
 			String filename_hout = file.getOriginalFilename();
 			String fileExt = filename_hout.substring(filename_hout.lastIndexOf(".") + 1).toLowerCase(); 
 			SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");  
-//            String newFileName = df.format(new Date()) + "_" + new Random().nextInt(1000) + "." + fileExt; 
-			
 			try {
-				
-				String sql="INSERT INTO DA_PIC_VISIT (random_number,PIC_PATH) VALUES"+
-						"('"+random_number+"','"+saveUrl+pic+".jpg"+"')";
-				
-				int insert_num1 = this.getBySqlMapper.insert(sql);
-				
-				
 				File uploadedFile = new File(savePath, pic+"."+fileExt);
 				byte[] bytes = file.getBytes();  
 				BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(uploadedFile));  
 				stream.write(bytes);  
 				stream.close(); 
 				
-//               File f= new File("E:/attached/2/"+pic+"."+fileExt); 
-//               System.out.println("E:/attached/2/"+pic+"."+fileExt);
-//   				if (f.exists() && f.isFile()){ 
-//   					if(f.length() > 10240 ){
-//   					
-//   					}else {
-//   					 response.getWriter().write("0");
-//   					}
-//   				}else {
-//   				 response.getWriter().write("0");
-//   				}
-				response.getWriter().write(pic);
+               File f= new File(savePath+pic+"."+fileExt); 
+   				if (f.exists() && f.isFile()){ 
+   					if(f.length() > 10240 ){//数据库存照片地址
+   						String sql="INSERT INTO DA_PIC_VISIT (random_number,PIC_PATH) VALUES"+
+   								"('"+random_number+"','"+saveUrl+pic+"."+fileExt+"')";
+   						int insert_num1 = this.getBySqlMapper.insert(sql);
+   						response.getWriter().write("{\"success\":\"0\",\"message\":\"成功\",\"data\":\"\"}");
+   					}else {
+   						response.getWriter().write("{\"success\":\"1\",\"message\":\"图片损坏\",\"data\":\"\"}");
+   					}
+   				}else {
+   					response.getWriter().write("{\"success\":\"1\",\"message\":\"图片不存在\",\"data\":\"\"}");
+   				}
 			} catch (Exception e) {  
-				response.getWriter().write("0");
+				response.getWriter().write("{\"success\":\"1\",\"message\":\"失败\",\"data\":\"\"}");
 			}
 		} else {  
-			response.getWriter().write("0");
+			response.getWriter().write("{\"success\":\"1\",\"message\":\"没有图片\",\"data\":\"\"}");
 		}
 	}
 	/**
