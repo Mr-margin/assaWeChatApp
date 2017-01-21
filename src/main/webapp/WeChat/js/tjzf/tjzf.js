@@ -271,7 +271,7 @@ function  addzfjl() {
 	    success: function (data) {
 	    	if(data == "5"){
 	    		alert('添加成功');
-	    		location.reload(window.location.href);
+				window.location.href = "bfrj.html?phone"+phone+"&name="+name;
 				if (lsdate != 0){
 					dellsdata(lsdate);
 				}
@@ -286,8 +286,7 @@ function  addzfjl() {
 	    error: function (data) {
 			alert('添加失败');
 			iszztj = false;
-			$("#deng").hide();
-			$("#tijiao").show();
+			location.reload(window.location.href);
 	    }  
 	})
 
