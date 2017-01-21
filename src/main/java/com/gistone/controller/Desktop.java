@@ -89,7 +89,7 @@ public class Desktop {
 			val_ret.put("data1", jsa);
 			val_ret.put("data2", count);//日记数量
 			val_ret.put("data3", shejicount);//涉及到的贫困户数
-			System.out.println(val_ret.toString());
+//			System.out.println(val_ret.toString());
 			response.getWriter().write(val_ret.toString());
 		}else{
 			JSONObject val_ret = new JSONObject();
@@ -128,7 +128,7 @@ public class Desktop {
 		}
 		try {
 			List<Map> list = this.getBySqlMapper.findRecords(sql);
-			System.out.println(list.get(0).get("CODE").toString());
+//			System.out.println(list.get(0).get("CODE").toString());
 			response.getWriter().write(list.get(0).get("CODE").toString());
 			
 		} catch (Exception e) {
