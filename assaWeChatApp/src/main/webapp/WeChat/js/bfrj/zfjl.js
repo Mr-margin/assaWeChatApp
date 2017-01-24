@@ -3,7 +3,7 @@ var html = '';
 
 $(document).ready(function() {
 	qm();
-	show_lsjl();//现在缓存的走访日记，未提交的
+	//show_lsjl();//现在缓存的走访日记，未提交的
 	show_jbqk();
 });
 //$(function(){
