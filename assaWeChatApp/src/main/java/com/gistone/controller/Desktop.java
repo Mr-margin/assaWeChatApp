@@ -89,7 +89,6 @@ public class Desktop {
 			val_ret.put("data1", jsa);
 			val_ret.put("data2", count);//日记数量
 			val_ret.put("data3", shejicount);//涉及到的贫困户数
-//			System.out.println(val_ret.toString());
 			response.getWriter().write(val_ret.toString());
 		}else{
 			JSONObject val_ret = new JSONObject();
@@ -128,7 +127,6 @@ public class Desktop {
 		}
 		try {
 			List<Map> list = this.getBySqlMapper.findRecords(sql);
-//			System.out.println(list.get(0).get("CODE").toString());
 			response.getWriter().write(list.get(0).get("CODE").toString());
 			
 		} catch (Exception e) {
@@ -136,9 +134,30 @@ public class Desktop {
 		}
 		
 	}
-	
-	
-	
+	/**
+	 * 到帮扶人数据
+	 * @param request
+	 * @param response
+	 * @throws IOException 
+	 */
+	@RequestMapping("dao_personal_household.do")
+	public void dao_personal_household(HttpServletRequest request , HttpServletResponse response ) throws IOException {
+		String sql = "select household_name,household_card,personal_name,personal_phone from  "+
+					"(select AAK110,AAC001 from NEIMENG0117_AC08 where AAR100='1') aa LEFT JOIN "+
+					" (select AAK110,AAB002 personal_name,AAR012 personal_phone from  NEIMENG0117_AK11 ) bb on aa.AAK110=bb.AAK110 LEFT JOIN ( "+
+					" select AAB002 household_name,AAB004 household_card,q1.AAC001 from  (select AAC001 from  NEIMENG0117_AC01) q1 LEFT JOIN ( "+
+					" select AAC001,AAB002,AAB004 from NEIMENG0117_AB01 where AAB006='01' ) q2 on  q1.aac001=q2.aac001 "+
+					" where AAB002 is not null) cc on aa.AAc001 =cc.AAc001  where household_name is not null and household_card is not null  and personal_name is not null ";
+		List<Map> list = this.getBySqlMapper.findRecords(sql);
+		for ( int i = 0 ; i < list.size() ; i ++ ) {
+			String  household_name = "".equals(list.get(i).get("HOUSEHOLD_NAME")) || list.get(i).get("HOUSEHOLD_NAME") == null ? "": list.get(i).get("HOUSEHOLD_NAME").toString();
+			String  household_card = "".equals(list.get(i).get("HOUSEHOLD_CARD")) || list.get(i).get("HOUSEHOLD_CARD") == null ? "": list.get(i).get("HOUSEHOLD_CARD").toString().replace("'","");
+			String  personal_name = "".equals(list.get(i).get("PERSONAL_NAME")) || list.get(i).get("PERSONAL_NAME") == null ? "": list.get(i).get("PERSONAL_NAME").toString();
+			String  personal_phone = "".equals(list.get(i).get("PERSONAL_PHONE")) || list.get(i).get("PERSONAL_PHONE") == null ? "": list.get(i).get("PERSONAL_PHONE").toString();
+			String  insert_sql = " insert into SYS_PERSONAL_HOUSEHOLD_MANY (PERSONAL_NAME,HOUSEHOLD_NAME,PERSONAL_PHONE,HOUSEHOLD_CARD) VALUES "+
+									"('"+personal_name+"','"+household_name+"','"+personal_phone+"','"+household_card+"')";
+			this.getBySqlMapper.insert(insert_sql);			
+		}
+		response.getWriter().write("1111111111111111111111111111");
+	}
 }
-
-

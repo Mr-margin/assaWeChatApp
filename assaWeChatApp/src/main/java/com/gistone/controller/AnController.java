@@ -85,7 +85,6 @@ public class AnController{
 		
 	}
 	/**
-	 * 根据帮扶人查看相应的贫困户的详细信息
 	 * @author 太年轻
 	 * @date 2016年9月6日
 	 * @param request
@@ -98,9 +97,9 @@ public class AnController{
 		String name = request.getParameter("name");
 		String sql = "SELECT AAB002,AAR008,BB.AAC001,BB.AAB001,AAB004,AAR012,AAQ002,AAC004,AAC005,AAC006,AAC007,AAC008,AAC012,NUM,V1,V3,V5,V7,V9,PIC_PATH FROM  " +
 					"(SELECT HOUSEHOLD_NAME ,HOUSEHOLD_CARD FROM SYS_PERSONAL_HOUSEHOLD_MANY WHERE PERSONAL_PHONE ='"+phone+"' AND PERSONAL_NAME='"+name+"' GROUP BY HOUSEHOLD_NAME,HOUSEHOLD_CARD )AA "+
-					"LEFT JOIN (SELECT AAB002,AAB001,AAC001,AAB004 FROM NM09_AB01 WHERE AAR040 ='2015')BB ON AA.HOUSEHOLD_NAME=BB.AAB002 AND AA.HOUSEHOLD_CARD=BB.AAB004 LEFT JOIN "+
-					"(SELECT AAC001,AAR008,AAR012,AAQ002,AAC004,AAC005,AAC006,AAC007,AAC008,AAC012 FROM NM09_AC01 WHERE AAR040 ='2015') CC "+
-					"ON BB.AAC001 = CC.AAC001 LEFT JOIN (SELECT AAC001, COUNT(*) NUM FROM NM09_AB01 WHERE AAR040='2015' GROUP BY AAC001  ) DD "+
+					"LEFT JOIN (SELECT AAB002,AAB001,AAC001,AAB004 FROM NEIMENG0117_AB01 WHERE AAR040 ='2016')BB ON AA.HOUSEHOLD_NAME=BB.AAB002 AND AA.HOUSEHOLD_CARD=BB.AAB004 LEFT JOIN "+
+					"(SELECT AAC001,AAR008,AAR012,AAQ002,AAC004,AAC005,AAC006,AAC007,AAC008,AAC012 FROM NEIMENG0117_AC01 WHERE AAR040 ='2016') CC "+
+					"ON BB.AAC001 = CC.AAC001 LEFT JOIN (SELECT AAC001, COUNT(*) NUM FROM NEIMENG0117_AB01 WHERE AAR040='2016' GROUP BY AAC001  ) DD "+
 					"ON BB.AAC001=DD.AAC001 LEFT JOIN SYS_COM EE ON CC.AAR008=EE.v10  "+
 					"LEFT JOIN	(SELECT AAB001,HOUSEHOLD_NAME,HOUSEHOLD_CARD,PIC_PATH FROM DA_PIC_HOUSEHOLD)FF  "+
 					"ON BB.AAB002=FF.HOUSEHOLD_NAME AND BB.AAB004 =FF.HOUSEHOLD_CARD AND BB.AAB001=FF.AAB001";
@@ -150,7 +149,7 @@ public class AnController{
 		String AAC001 = request.getParameter("pkid");//贫困户编号
 		
 		String sql = "select AAB001,AAB002,AAB003, AAB004,AAB006,AAB007,AAB008,AAB009,AAB010,AAB011,AAB012,AAB017,AAB019 "+
-					"from  NM09_AB01 where AAC001='"+AAC001+"' and AAR040='2015' ORDER BY AAB006";
+					"from  NEIMENG0117_AB01 where AAC001='"+AAC001+"' and AAR040='2016' ORDER BY AAB006";
 		List<Map> list = this.getBySqlMapper.findRecords(sql);
 		JSONArray json = new JSONArray () ;
 		if ( list.size() > 0 ) {
@@ -195,7 +194,7 @@ public class AnController{
 		String AAC001 = request.getParameter("AAC001");//贫困户的编号3000498544
 		String AAB004 = request.getParameter("AAB004");//贫困户的证件号码
 		//贫困户的基本信息
-		String cha_sql = "select * from (select AAB002,AAB001,AAC001,AAB004 from NM09_AB01 where ";
+		String cha_sql = "select * from (select AAB002,AAB001,AAC001,AAB004 from NEIMENG0117_AB01 where ";
 		if (!"".equals(name) && name != null) {
 			cha_sql += "AAB002='"+name+"'";
 		} else if(!"".equals(AAC001) && AAC001!=null){
@@ -203,15 +202,15 @@ public class AnController{
 		} else if(!"".equals(AAB004) && AAB004!=null){
 			cha_sql += "AAB004='"+AAB004+"'";
 		}
-		cha_sql += " and AAB006='01'  and AAR040='2015' and AAB015='1' group by AAB002,AAB001,AAC001,AAB004)a left join (select AAC001,AAR008,AAR012,AAQ002,AAC004,AAC005,AAC006,AAC007,AAC008,AAC012,max(AAR040) nian"+
-					" from NM09_AC01 group BY  AAC001,AAR008,AAR012,AAQ002,AAC004,AAC005,AAC006,AAC007,AAC008,AAC012) b ON a.AAC001 = b.AAC001";
+		cha_sql += " and AAB006='01'  and AAR040='2016' and AAB015='1' group by AAB002,AAB001,AAC001,AAB004)a left join (select AAC001,AAR008,AAR012,AAQ002,AAC004,AAC005,AAC006,AAC007,AAC008,AAC012,max(AAR040) nian"+
+					" from NEIMENG0117_AC01 group BY  AAC001,AAR008,AAR012,AAQ002,AAC004,AAC005,AAC006,AAC007,AAC008,AAC012) b ON a.AAC001 = b.AAC001";
 		List<Map> cha_list = this.getBySqlMapper.findRecords(cha_sql);
 		JSONArray json = new JSONArray ();
 		if ( cha_list.size() > 0 ) {
 			for ( int i = 0 ; i < cha_list.size() ; i ++ ) {
 			
 				//贫困户的人口
-				String cha_sql1 = "select count(*) num from (select AAB001,max(AAR040) from NM09_AB01 where AAC001='"+cha_list.get(i).get("AAC001")+"' group by AAB001)";
+				String cha_sql1 = "select count(*) num from (select AAB001,max(AAR040) from NEIMENG0117_AB01 where AAC001='"+cha_list.get(i).get("AAC001")+"' group by AAB001)";
 				List<Map> cha_list1 = this.getBySqlMapper.findRecords(cha_sql1);
 				//贫困户的地址
 				String cha_sql2 = "select v1 sheng,v3 shi,v5 xian,v7 xiang,v9 cun from  SYS_COM where v10='"+cha_list.get(i).get("AAR008")+"'";
@@ -463,7 +462,6 @@ public class AnController{
 		String lat = request.getParameter("lat");//维度
 		String address = request.getParameter("address");//地点
 		String v3=request.getParameter("record");//走访情况记录-
-		
 		if ("".equals(random_number) || "null".equals(random_number) || random_number == null ) {
 			response.getWriter().write("{\"success\":\"1\",\"message\":\"失败\",\"data\":\"\"}");
 		} else {
@@ -873,8 +871,8 @@ public class AnController{
 				}
 			}
 	    	//查询行政编码
-		    String cha_sql = "select AAR008 from (select AAC001,max(AAR040) nian from NM09_AB01 where AAB002='"+household_name+"' AND AAB004='"+household_card+"' group by AAC001) "+
-		    				"  a left join (select AAR008,AAC001,AAR040 from NM09_AC01 ) b on a.AAC001=b.AAC001 and a.nian=b.AAR040";
+		    String cha_sql = "select AAR008 from (select AAC001,max(AAR040) nian from NEIMENG0117_AB01 where AAB002='"+household_name+"' AND AAB004='"+household_card+"' group by AAC001) "+
+		    				"  a left join (select AAR008,AAC001,AAR040 from NEIMENG0117_AC01 ) b on a.AAC001=b.AAC001 and a.nian=b.AAR040";
 		    List<Map> cha_list = this.getBySqlMapper.findRecords(cha_sql);
 		    if ( cha_list.size() > 0 ) {
 		    	AAR008 = cha_list.get(0).get("AAR008").toString();
@@ -1004,7 +1002,7 @@ public class AnController{
 	@RequestMapping("getVisit.do")
 	public void getVisit(HttpServletRequest request,HttpServletResponse response ) throws IOException {
 		String  sql = "SELECT DD.PKID,V6,V8,V1,V2,V3,AAC001 FROM (SELECT PKID,V6,V8 FROM DA_HOUSEHOLD_F)AA LEFT JOIN "+
-						" (SELECT AAC001,AAB002,AAB004 FROM NM09_AB01 WHERE AAR040='2015' and AAB006='01') BB ON AA.V6=BB.AAB002 AND AA.V8=BB.AAB004"+
+						" (SELECT AAC001,AAB002,AAB004 FROM NEIMENG0117_AB01 WHERE AAR040='2016' and AAB006='01') BB ON AA.V6=BB.AAB002 AND AA.V8=BB.AAB004"+
 						" LEFT JOIN (SELECT PKID,HOUSEHOLD_ID,v1,v2,v3 FROM DA_HELP_VISIT_F)DD ON AA.PKID=DD.HOUSEHOLD_ID  WHERE BB.AAC001 IS NOT NULL AND DD.PKID IS NOT NULL";
 		List<Map> list = this.getBySqlMapper.findRecords(sql);
 		for (int i = 0; i < list.size(); i++) {
@@ -1019,7 +1017,7 @@ public class AnController{
 					phone = "".equals(cha_list.get(0).get("TELEPHONE")) || cha_list.get(0).get("TELEPHONE") == null ? "" : cha_list.get(0).get("TELEPHONE").toString();
 					col_name = "".equals(cha_list.get(0).get("COL_NAME")) || cha_list.get(0).get("COL_NAME") == null ? "" : cha_list.get(0).get("COL_NAME").toString();
 				}
-				String  cha_sql1 = "SELECT AAR008 FROM NM09_AC01 WHERE AAC001='"+list.get(i).get("AAC001")+"' AND AAR040='2015'";
+				String  cha_sql1 = "SELECT AAR008 FROM NEIMENG0117_AC01 WHERE AAC001='"+list.get(i).get("AAC001")+"' AND AAR040='2016'";
 				List<Map> cha_list1 = this.getBySqlMapper.findRecords(cha_sql1);
 				String AAR008 = "";
 				if ( cha_list1.size() > 0 ) {
@@ -1051,7 +1049,7 @@ public class AnController{
 	public void gethou(HttpServletRequest request,HttpServletResponse response ) throws IOException {
 
 		String  sql = "SELECT A4,A6,A37,A41,AAB002,AAB004, GPS,CONTENT,time,pic,BB.AAC001,tel,AAR008 FROM (SELECT NID,A4,A6,A37,A41 FROM AR_DAKL WHERE A7='户主' "+
-						")AA LEFT JOIN   (SELECT AAC001,AAB002,AAB004,AAR008 FROM NM09_AB01 WHERE AAR040='2015' and AAB006='01' and AAB015='1' "+
+						")AA LEFT JOIN   (SELECT AAC001,AAB002,AAB004,AAR008 FROM NEIMENG0117_AB01 WHERE AAR040='2016' and AAB006='01' and AAB015='1' "+
 						") BB ON AA.A4=BB.AAB002 AND AA.A6=BB.AAB004   LEFT JOIN ("+
 						"SELECT GPS,CONTENT,time,YN,PICTURE pic,KEYWORD FROM AR_KL )DD ON AA.NID=DD.YN "+
 						" LEFT JOIN (select name gname,tel ,id from AR_GB_KL ) ee on dd.KEYWORD=ee.id WHERE BB.AAC001 IS NOT NULL and CONTENT is not null";
@@ -1135,7 +1133,7 @@ public class AnController{
 	public void gethou1(HttpServletRequest request,HttpServletResponse response ) throws IOException {
 
 		String  sql = "SELECT A4,A6,A37,A41,AAB002,AAB004, GPS,CONTENT,time,pic,BB.AAC001,A41 tel,AAR008 FROM (SELECT NID,A4,A6,A37,A41 FROM AR_DAKL1 WHERE A7='户主'"+
-						" )AA LEFT JOIN   (SELECT AAC001,AAB002,AAB004,AAR008 FROM NM09_AB01 WHERE AAR040='2015' and AAB006='01' and AAB015='1' "+
+						" )AA LEFT JOIN   (SELECT AAC001,AAB002,AAB004,AAR008 FROM NEIMENG0117_AB01 WHERE AAR040='2016' and AAB006='01' and AAB015='1' "+
 						"	) BB ON AA.A4=BB.AAB002 AND AA.A6=BB.AAB004   LEFT JOIN ("+
 						"		SELECT GPS,CONTENT,time,YN,PICTURE pic,KEYWORD FROM AR_KL1 )DD ON AA.NID=DD.YN "+
 						"  WHERE BB.AAC001 IS NOT NULL and CONTENT is not null";
@@ -1241,8 +1239,38 @@ public class AnController{
 				
 			}
 		}
-		
-		
 	}
+	@RequestMapping("fei_url.do")
+	public void fei_url(HttpServletRequest request,HttpServletResponse response) throws IOException {
+		
+		String  sql = " select pic_path from DA_PIC_VISIT";
+		List<Map> list = this.getBySqlMapper.findRecords(sql);
+		
+		for ( int i = 0 ; i < list.size() ; i ++ ) {
+			String pic_path = "".equals(list.get(i).get("PIC_PATH")) || list.get(i).get("PIC_PATH")==null ?"": list.get(i).get("PIC_PATH").toString();
+			String pkid = "".equals(list.get(i).get("PKID")) || list.get(i).get("PKID")==null ?"": list.get(i).get("PKIDs").toString();
+			
+			File f= new File(list.get(i).get("PIC_PATH").toString().replace("/assa/attached", "E:/attached")); 
+			
+			if (f.exists() && f.isFile()){ //存在
+				
+				
+			}else { //不存在
+				  String[] ary = list.get(i).get("PIC_PATH").toString().replace("/assa/attached", "E:/attached").split(".");//
+				  String[] pic_type = {"gif","jpg","jpeg","png","bmp"};
+				  for ( int j = 0 ; j < pic_type.length;j++ ) {
+					  File f1= new File(ary[0]+pic_type[j]);
+					  if ( f1.exists() && f1.isFile() ) {
+						  String in_sql = "insert into pic_fei_url (pic_id,pic_path,d_path,y_h,x_h) values "+
+								  			"('"+pkid+"','"+pic_path+"','"+ary[0]+pic_type[j]+"','"+ary[0]+"','"+pic_type[j]+"')";
+						  this.getBySqlMapper.insert(in_sql);
+					  }
+				  }
+			}
+		}
+		response.getWriter().write("111111111111111111111");
+
+	}
+	
 
 }
