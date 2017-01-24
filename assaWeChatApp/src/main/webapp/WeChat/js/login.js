@@ -30,6 +30,7 @@ $(function(){
 
 //手机登录
 function login(){
+
 	if ($("#username").val().length != 11){
 		alert("请输入正确的11位手机号码！");
 		return;
