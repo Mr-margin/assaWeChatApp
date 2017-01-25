@@ -147,7 +147,8 @@ public class Desktop {
 					" (select AAK110,AAB002 personal_name,AAR012 personal_phone from  NEIMENG0117_AK11 ) bb on aa.AAK110=bb.AAK110 LEFT JOIN ( "+
 					" select AAB002 household_name,AAB004 household_card,q1.AAC001 from  (select AAC001 from  NEIMENG0117_AC01 where AAR100='1' and AAR010 in ('0','3')) q1 LEFT JOIN ( "+
 					" select AAC001,AAB002,AAB004 from NEIMENG0117_AB01 where AAB006='01' ) q2 on  q1.aac001=q2.aac001 "+
-					" where AAB002 is not null) cc on aa.AAc001 =cc.AAc001  where household_name is not null and household_card is not null  and personal_name is not null ";
+					" where AAB002 is not null) cc on aa.AAc001 =cc.AAc001  where household_name is not null and household_card is not null  and personal_name is not null "+
+					" GROUP BY household_name,household_card,personal_name,personal_phone";
 		List<Map> list = this.getBySqlMapper.findRecords(sql);
 		for ( int i = 0 ; i < list.size() ; i ++ ) {
 			String  household_name = "".equals(list.get(i).get("HOUSEHOLD_NAME")) || list.get(i).get("HOUSEHOLD_NAME") == null ? "": list.get(i).get("HOUSEHOLD_NAME").toString();
