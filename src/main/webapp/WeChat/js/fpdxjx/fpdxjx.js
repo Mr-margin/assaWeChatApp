@@ -39,7 +39,6 @@ $(function () {
 //贫困户的详细信息
 
 function poor_xinxi(){
-	alert(hou_phone)
 	var title_html = '<div>';
 	if (url == "" || url == null || url == undefined){
 		title_html += '<img src="img/no-person.png" style="width:130px;height:140px;padding-left:10px;padding-top:10px;border-radius:10%"><span style="padding-left: 70px;padding-top:30px;position: absolute;">'+v6+'</span>';
