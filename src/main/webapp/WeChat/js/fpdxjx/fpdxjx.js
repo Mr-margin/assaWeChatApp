@@ -1,6 +1,6 @@
 var dz;//地址
 var renshu;//户籍人数
-var phone;//联系电话
+var hou_phone;//联系电话
 var khyh;//开户银行
 var yhzh;//银行账号
 var sbbz;//识别标准
@@ -19,7 +19,7 @@ $(function () {
 	Request = GetRequest();
 	dz =  Request['dz'];
 	renshu =  Request['renshu'];
-	phone =  Request['phone'];
+	hou_phone =  Request['da_phone'];
 	khyh =  Request['khyh'];
 	yhzh =  Request['yhzh'];
 	sbbz =  Request['sbbz'];
@@ -37,7 +37,9 @@ $(function () {
 	poor_xinxi();
 })
 //贫困户的详细信息
+
 function poor_xinxi(){
+	alert(hou_phone)
 	var title_html = '<div>';
 	if (url == "" || url == null || url == undefined){
 		title_html += '<img src="img/no-person.png" style="width:130px;height:140px;padding-left:10px;padding-top:10px;border-radius:10%"><span style="padding-left: 70px;padding-top:30px;position: absolute;">'+v6+'</span>';
@@ -73,7 +75,7 @@ function poor_xinxi(){
 						'<img src="img/phone.png">'+
 					'</span>'+
 				   ' <span class="stu-name">联系电话</span></span>'+
-				    '<span class="info-middle">'+phone+'</span>  '+
+				    '<span class="info-middle">'+hou_phone+'</span>  '+
 				'</li>'+
 				'<li>'+
 					'<span class="book-tit"><span class="heade-img" style="height:15px; width:15px;">'+

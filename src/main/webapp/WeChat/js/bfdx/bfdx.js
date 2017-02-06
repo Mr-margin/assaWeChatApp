@@ -18,7 +18,7 @@ function savePoor(){
 	    success: function (data) {
 	    	if(data.message == '1'){
 	    		$.each(data.data,function(i,item){
-		    		html += '<a href="fpdxjx.html?dz='+item.v1+item.v2+item.v3+item.v4+item.v5+'&renshu='+item.v9+'&phone='+item.v25+'&khyh='+item.v26+'&yhzh='+item.v27+'&'+
+		    		html += '<a href="fpdxjx.html?dz='+item.v1+item.v2+item.v3+item.v4+item.v5+'&renshu='+item.v9+'&da_phone='+item.v25+'&khyh='+item.v26+'&yhzh='+item.v27+'&'+
 		    		'sbbz='+item.v34+'&shuxing='+item.v21+'&jls='+item.v29+'&zpyy='+item.v23+'&qtzp='+item.v33+'&url='+item.pic_path+'&v6='+item.v6+'&phone='+phone+'&name='+name+'&bottom=1&pkhbh='+item.v0+'&zjhm='+item.v8+'">'+
 		    				'<li class="notice-list">'+
 		    				'<table width="100%" border="0" cellspacing="0" cellpadding="0">'+
