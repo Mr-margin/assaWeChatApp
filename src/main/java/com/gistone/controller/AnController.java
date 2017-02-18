@@ -13,6 +13,7 @@ import java.net.URLConnection;
 import java.security.DigestException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -47,7 +48,6 @@ public class AnController{
 	
 	@Autowired
 	private GetBySqlMapper getBySqlMapper;
-	//定义地图中的全局参数
 	/**
 	 * 安卓登录接口 
 	 * @author 太年轻
@@ -55,6 +55,7 @@ public class AnController{
 	 * @param request
 	 * @param response
 	 * @throws Exception
+	 * 微信和app公用
 	 */
 	@RequestMapping("getAnLoginController.do")
 	public void getAnLoginController(HttpServletRequest request,HttpServletResponse response) throws Exception{
@@ -85,6 +86,7 @@ public class AnController{
 		
 	}
 	/**
+	 *根据帮夫人进行查询帮扶对象（公用）
 	 * @author 太年轻
 	 * @date 2016年9月6日
 	 * @param request
@@ -93,6 +95,8 @@ public class AnController{
 	 */
 	@RequestMapping("getSavePoorController.do")
 	public void getSavePoorController (HttpServletRequest request,HttpServletResponse response) throws IOException{
+		response.setContentType("text/html;charset=UTF-8");
+	    response.setCharacterEncoding("UTF-8");
 		String phone = request.getParameter("phone");
 		String name = request.getParameter("name");
 		String sql = "SELECT AAB002,AAR008,BB.AAC001,BB.AAB001,AAB004,AAR012,AAQ002,AAC004,AAC005,AAC006,AAC007,AAC008,AAC012,NUM,V1,V3,V5,V7,V9,PIC_PATH FROM  " +
@@ -136,7 +140,7 @@ public class AnController{
 		}
 	}
 	/**
-	 * 查看家庭成员
+	 * 查看家庭成员（公用）
 	 * @param request
 	 * @param response
 	 * @return
@@ -183,7 +187,8 @@ public class AnController{
 		}
 	}
 	/**
-	 * 查询贫困户信息
+	 * 查询贫困户信息（公用）
+	 * 家庭某一个成员详细信息
 	 * @param request
 	 * @param response
 	 * @throws IOException
@@ -251,7 +256,7 @@ public class AnController{
 	}
 	
 	/**
-	 * 查看走访记录情况
+	 * 查看走访记录情况（公用）
 	 * @param request
 	 * @param response
 	 * @return
@@ -309,135 +314,7 @@ public class AnController{
 		
 	}
 	/**
-	 * 添加走访情况1.8
-	 * @param request
-	 * @param response
-	 * @return
-	 * @throws IOException
-	 */
-	@RequestMapping("getAddVisitController.do")
-	public void getAddVisitController(HttpServletRequest request,HttpServletResponse response) throws IOException{
-		request.setCharacterEncoding("UTF-8");
-		response.setCharacterEncoding("UTF-8");
-		String registerTime = request.getParameter("registerTime");//签到时间
-		String sendLat = request.getParameter("sendLat");//上传维度
-		String sendLng = request.getParameter("sendLng");//上传经度
-		String registerType  = request.getParameter("registerType");//签到类型
-		
-		String AAR008 = request.getParameter("AAR008");//村行政编码
-		String personal_name = request.getParameter("personal_name");//帮扶人姓名
-		String personal_phone = request.getParameter("personal_phone");//帮扶人电话
-		String household_name = request.getParameter("household_name");//贫苦户姓名
-		String household_card = request.getParameter("household_card");//贫苦户证件号码
-		String lng = request.getParameter("lng");//经度
-		String lat = request.getParameter("lat");//维度
-		String address = request.getParameter("address");//地点
-		String v3=request.getParameter("record");//走访情况记录-
-		response.getWriter().write("{\"success\":\"1\",\"message\":\"失败\",\"data\":\"\"}");
-		return;
-//		Date date = new Date();
-//        SimpleDateFormat sf = new SimpleDateFormat("yyyyMMddhhmmss");
-//        SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy-MM-dd"); 
-//        String random_number = sf.format(date)+"_"+new Random().nextInt(1000);//时间戳+随机数
-//        String insert_sql = "insert into DA_HELP_VISIT (household_name,personal_name,v1,v3,lng,lat,address,household_card,personal_phone,random_number,AAR008,REGISTERTIME,SENDLAT,SENDLNG,REGISTERTYPE)"+
-//        					" values ('"+household_name+"','"+personal_name+"','"+simpleDate.format(new Date())+"','"+v3+"','"+lng+"','"+lat+"','"+address+"','"+household_card+"','"+personal_phone+"','"+random_number+"','"+AAR008+"','"+registerTime+"','"+sendLat+"','"+sendLng+"','"+registerType+"')";
-//		try {
-//			 this.getBySqlMapper.findRecords(insert_sql);
-//			 response.getWriter().write("{\"success\":\"0\",\"message\":\"成功\",\"data\":{\"random_number\":\""+random_number+"\"}}");
-//		} catch (Exception e) {
-//			response.getWriter().write("{\"success\":\"1\",\"message\":\"失败\",\"data\":\"\"}");
-//			response.getWriter().close();
-//		}
-	
-		
-		
-	}
-	/**
-	 * 上传走访记录图片1.8
-	 * @param request
-	 * @param response
-	 * @return
-	 * @throws IOException 
-	 */
-	@RequestMapping("getAddZfPhoto.do")
-	public void getAddZfPhoto(@RequestParam("image") MultipartFile file,HttpServletRequest request,HttpServletResponse response) throws IOException{
-		String random_number = request.getParameter("random_number");//随机数
-		String  size = request.getParameter("size");//图片大小
-		Date date = new Date();
-		SimpleDateFormat sf = new SimpleDateFormat("yyyyMMddhhmmss");
-		String pic = sf.format(date)+"_"+new Random().nextInt(1000);
-		response.getWriter().write("{\"success\":\"1\",\"message\":\"失败\",\"data\":\"\"}");
-		return;
-//		if (!file.isEmpty()) {
-//			// 文件保存目录路径
-//			String savePath = "E:/attached/2/";
-//	        // 文件保存目录URL 
-//	        String saveUrl1 = request.getContextPath() + "/attached/2/";
-//	        String saveUrl = saveUrl1.replaceAll("assaWeChatApp", "assa");
-//	        
-//	        // 定义允许上传的文件扩展名  
-//	        HashMap<String, String> extMap = new HashMap<String, String>();  
-//	        extMap.put("image", "gif,jpg,jpeg,png,bmp");
-//	        extMap.put("excel", "xls");
-//	        String dirName = "image";
-//	        // 检查目录  
-//            File uploadDir = new File(savePath);  
-//            if (!uploadDir.isDirectory()) {  
-//            	if(!uploadDir.exists()){
-//            		uploadDir.mkdirs();
-//            	}
-//            }
-//            //创建文件夹 
-//            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");  
-//            String ymd = sdf.format(new Date());  
-//            savePath += ymd + "\\";  
-//            saveUrl += ymd + "/";
-//            File dirFile = new File(savePath);  
-//            if (!dirFile.exists()) {  
-//                dirFile.mkdirs();  
-//            }
-//            
-//            // 检查扩展名 
-//            String filename_hout = file.getOriginalFilename();
-//            String fileExt = filename_hout.substring(filename_hout.lastIndexOf(".") + 1).toLowerCase(); 
-//            SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");  
-////            String newFileName = df.format(new Date()) + "_" + new Random().nextInt(1000) + "." + fileExt; 
-//        
-//            try {
-//            	
-//            	 String sql="INSERT INTO DA_PIC_VISIT (random_number,PIC_PATH) VALUES"+
-//	    					"('"+random_number+"','"+saveUrl+pic+".jpg"+"')";
-//	           	 
-//					 	int insert_num1 = this.getBySqlMapper.insert(sql);
-//            	
-//           	
-//    			File uploadedFile = new File(savePath, pic+"."+fileExt);
-//               byte[] bytes = file.getBytes();  
-//               BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(uploadedFile));  
-//               stream.write(bytes);  
-//               stream.close(); 
-//               
-////               File f= new File("E:/attached/2/"+pic+"."+fileExt); 
-////               System.out.println("E:/attached/2/"+pic+"."+fileExt);
-////   				if (f.exists() && f.isFile()){ 
-////   					if(f.length() > 10240 ){
-////   					
-////   					}else {
-////   					 response.getWriter().write("0");
-////   					}
-////   				}else {
-////   				 response.getWriter().write("0");
-////   				}
-//               response.getWriter().write(pic);
-//           } catch (Exception e) {  
-//            	 response.getWriter().write("0");
-//            }
-//        } else {  
-//        	 response.getWriter().write("0");
-//        }
-	}
-	/**
-	 * 添加走访情况2.02
+	 * 添加走访情况2.02（app第二步）
 	 * @param request
 	 * @param response
 	 * @return
@@ -483,7 +360,7 @@ public class AnController{
 		
 	}
 	/**
-	 * 上传走访记录图片2.02
+	 * 上传走访记录图片2.02（app第一步）
 	 * @param request
 	 * @param response
 	 * @return
@@ -580,7 +457,7 @@ public class AnController{
 		}
 	}
 	/**
-	 * 上传用户头像
+	 * 上传用户头像（app)
 	 * @param request
 	 * @param response
 	 * @return
@@ -599,7 +476,7 @@ public class AnController{
 		String v1=simpleDate.format(new Date());
 		String img1=request.getParameter("img");//图片名称
 		String img = img1.replaceAll("/", "");
-		String type=request.getParameter("type");
+		String type=request.getParameter("type");//户主还是家庭成员
 		SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMdd"); 
 		try {//户主  	
 			String cha_sql="SELECT * FROM DA_PIC_HOUSEHOLD WHERE AAB001="+AAB001+"";
@@ -678,7 +555,7 @@ public class AnController{
         }
 	}
 	/**
-	 * 根据帮扶人查相应的贫困户
+	 * 根据帮扶人查相应的贫困户（公用select)下拉框
 	 * @param request
 	 * @param response
 	 * @throws IOException 
@@ -704,6 +581,9 @@ public class AnController{
 		}
 	}
 	
+	
+	
+	/*****************************************微信跟照片有关的***********************************************************************/
 	/**
 	 * 获取签名
 	 * @param request
@@ -799,7 +679,7 @@ public class AnController{
 		} 
 	 
 	/**
-	 * 添加走访记录
+	 * 添加走访记录（微信）
 	 * @param request
 	 * @param response
 	 * @throws DigestException
@@ -889,7 +769,7 @@ public class AnController{
 	   
 	}
 	/**
-	 * 添加户主照片
+	 * 添加户主照片（微信）
 	 * @param request
 	 * @param response
 	 * @throws DigestException
@@ -960,7 +840,7 @@ public class AnController{
 		return name;
 	}
 	/**
-	 * 微信修改密码
+	 * 微信,app 修改密码(公用）
 	 * @param request
 	 * @param response
 	 * @throws NoSuchAlgorithmException 
@@ -993,6 +873,331 @@ public class AnController{
 			}
 		}
 	}
+	
+	
+	/***************************精准扶贫帮扶通领导版接口*******************************/
+	
+	/**行政区划获取接口，cType:1、获取省份及code2、获取市级3、获取县区，此时需要带上市级code参数获取该市级下的县
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 */
+	@RequestMapping("getXzqh.do")
+	public void getXzqh(HttpServletRequest request,HttpServletResponse response ) throws IOException {
+		response.setContentType("text/html;charset=UTF-8");
+	    response.setCharacterEncoding("UTF-8");
+	    response.setHeader("Access-Control-Allow-Origin", "*");
+		String sql = "";
+		String cType = request.getParameter("cType");//查询类别1、省2、市3、县
+		String code = request.getParameter("code");//市级CODE，根据市级CODE获取该市级下的县
+		List<Map> list = null;
+		if(cType!=null&&!"".equals(cType)&&Integer.valueOf(cType)==1){//省
+			sql="select V1 as V1,V2 as V2 from sys_com GROUP BY V1,V2";
+			list = this.getBySqlMapper.findRecords(sql);
+		}else if(cType!=null&&!"".equals(cType)&&Integer.valueOf(cType)==2){//查询所有市级
+			sql="select V3 as V1,V4 as V2 from sys_com GROUP BY V3,V4";
+			list = this.getBySqlMapper.findRecords(sql);
+		}else if(cType!=null&&!"".equals(cType)&&Integer.valueOf(cType)==3){//查询所有县级
+			sql="select V4,V5 as V1,V6 as V2 from sys_com ";
+			if(code!=null&&!"".equals(code)){
+				sql+=" where V4="+code;
+			}
+			sql+=" GROUP BY V4,V5,V6 ";
+			list = this.getBySqlMapper.findRecords(sql);
+		}
+		JSONArray jn = new JSONArray();
+		if(list.size()>0){
+			for(int j=0;j<list.size();j++){
+				JSONObject jb = new JSONObject();
+				jb.put("name", list.get(j).get("V1"));
+				jb.put("code", list.get(j).get("V2"));
+				jn.add(jb);
+			}
+		}
+		response.getWriter().write(jn.toString());
+	}
+	/**根据区划级别截取code
+	 * @param ctype
+	 * @param code
+	 * @return
+	 */
+	public String getXjcode(String ctype,String code){
+		String codes="";
+		if(Integer.valueOf(ctype)==2){
+			codes=code.substring(0, 4);
+		}else if(Integer.valueOf(ctype)==3){
+			codes=code;
+		}
+		return codes;
+	}
+	/**获取日记统计参数
+	 * 1、当前帮扶日记总条数：diary_sum					int
+		2、走访相关贫困户数：d_poor_sum					int
+		3、走访覆盖率：d_poor_coverage					double
+		4、上传走访记录干部总数：d_cadre_sum				int
+		5、上传走访记录干部占总数比：d_cadre_proportion	double
+		6、全区帮扶干部总数:：cadre_sum					int
+		7、全区贫困户总数：poor_sum						int
+		8、落实责任人比例：assist_coverage				double
+		9、当日日记条数：day_sum						int
+		10、本周日记条数：week_sum						int
+		11、本月日记条数：month_sum						int
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 * 
+	 * 
+	 * 	    //单个
+	    String sql0 = "SELECT COUNT(*) AS diary_sum,COUNT (DISTINCT(household_card)) AS d_poor_sum,COUNT (DISTINCT(personal_phone)) AS d_cadre_sum FROM DA_HELP_VISIT";//日记总条数、走访贫困户总数、上传走访记录干部总数
+	    String sql3 = "select count(*) from DA_HELP_VISIT where registertime is not null and to_char(to_date(registertime,'yyyy-mm-dd hh24:mi:ss'),'yyyy-mm-dd')=to_char(sysdate,'yyyy-mm-dd')";//当天日记数
+	    String sql4 = "select count(*) from DA_HELP_VISIT where to_char(to_date(registertime,'yyyy-mm-dd hh24:mi:ss'),'iw')=to_char(sysdate,'iw')";//本周日记数
+	    String sql5 = "select count(*) from DA_HELP_VISIT where to_char(to_date(registertime,'yyyy-mm-dd hh24:mi:ss'),'yyyy-mm')=to_char(sysdate,'yyyy-mm')";//本月日记数
+	    
+	 * 
+	 * 
+	 */
+	@RequestMapping("getTjSum.do")
+	public void getTjSum(HttpServletRequest request,HttpServletResponse response ) throws IOException {
+		response.setContentType("text/html;charset=UTF-8");
+	    response.setCharacterEncoding("UTF-8");
+	    response.setHeader("Access-Control-Allow-Origin", "*");
+	    long startTime = System.currentTimeMillis();    //获取开始时间
+	    System.out.println("进入接口时间："+startTime);
+	    JSONArray jn = new JSONArray();
+	    String cType = request.getParameter("cType");//查询类别1、省2、市3、县
+	    String code = request.getParameter("code");//当前查询的区域范围如默认内蒙古自治区
+	    if(Integer.valueOf(cType)>1){
+	    	code=this.getXjcode(cType,code);//根据当前传的行政区划code获取所有村级行政区划
+	    }
+	    String sTime = request.getParameter("stime");//开始时间
+	    String eTime = request.getParameter("etime");//结束时间
+	    //日记总条数、走访贫困户总数、上传走访记录干部总数、当天日记数、本周日记数、本月日记数 DA_HELP_VISIT
+	    String sqlx = "SELECT	COUNT (*) AS diary_sum,	COUNT (DISTINCT(household_card)) AS d_poor_sum,	COUNT (DISTINCT(personal_phone)) AS d_cadre_sum,	count(case when to_char(to_date(registertime,'yyyy-mm-dd hh24:mi:ss'),'yyyy-mm-dd')=to_char(sysdate,'yyyy-mm-dd') then 'a00' end)day,	count(	CASE when to_char(to_date(registertime,'yyyy-mm-dd hh24:mi:ss'),'iw')=to_char(sysdate,'iw') THEN 'a01' end)week,	count(	CASE when to_char(to_date(registertime,'yyyy-mm-dd hh24:mi:ss'),'yyyy-mm')=to_char(sysdate,'yyyy-mm') THEN 'a02' end)month	FROM	xxx  WHERE 1=1";
+
+	    String sql1 = "select count(*) as poor_sum from NEIMENG0117_AC01 WHERE 1=1";//总贫困户数
+	    String sql2 = "select COUNT(*) AS CADRE_SUM from NEIMENG0117_AK11 T1 JOIN (select AAK110 from NEIMENG0117_AC08  WHERE AAR100=1 GROUP BY AAK110) T2 ON T1.AAK110=T2.AAK110 WHERE 1=1";//总帮扶干部数
+	    String sqlc = "select * from DA_HELP_VISIT where 1=1 ";//计算走访覆盖率子查询语句
+	    
+	    if(code!=null&&!"".equals(code)&&Integer.valueOf(cType)>1){//按区域查
+	    	sqlx+=" and AAR008 like('%"+code+"%')";
+	    	sql1+=" and AAR008 like('%"+code+"%')";
+	    	sql2+=" and T1.AAR008 like('%"+code+"%')";
+	    	sqlc+=" and AAR008 like('%"+code+"%')";
+	    }
+	    if(sTime!=null&&!"".equals(sTime)){//按时间查
+	    	sqlx+=" and to_date(REGISTERTIME,'yyyy-mm-dd hh24:mi:ss') >= to_date('"+sTime+"','yyyy-mm-dd')";
+	    	sqlc+=" and to_date(REGISTERTIME,'yyyy-mm-dd hh24:mi:ss') >= to_date('"+sTime+"','yyyy-mm-dd')";
+	    }
+		if(eTime!=null&&!"".equals(eTime)){//按时间查
+			sqlx+=" AND to_date(REGISTERTIME,'yyyy-mm-dd hh24:mi:ss') <= to_date('"+eTime+"','yyyy-mm-dd')";	
+			sqlc+=" AND to_date(REGISTERTIME,'yyyy-mm-dd hh24:mi:ss') <= to_date('"+eTime+"','yyyy-mm-dd')";
+	    }
+		//计算走访覆盖率 分组前
+		String sql3 = "select count(*)  as summ from ("+sqlc+") tt left join SYS_PERSONAL_HOUSEHOLD_MANY ti  on tt.PERSONAL_NAME = ti.PERSONAL_NAME and tt.HOUSEHOLD_NAME = ti.HOUSEHOLD_NAME and tt.PERSONAL_PHONE = ti.PERSONAL_PHONE and tt.HOUSEHOLD_CARD = ti.HOUSEHOLD_CARD ";
+		//计算走访覆盖率 分组后
+	    String sql4 = "select count(count(*))  as summ from ("+sqlc+") tt left join SYS_PERSONAL_HOUSEHOLD_MANY ti  on tt.PERSONAL_NAME = ti.PERSONAL_NAME and tt.HOUSEHOLD_NAME = ti.HOUSEHOLD_NAME and tt.PERSONAL_PHONE = ti.PERSONAL_PHONE and tt.HOUSEHOLD_CARD = ti.HOUSEHOLD_CARD GROUP BY tt.PERSONAL_NAME,tt.PERSONAL_PHONE,tt.HOUSEHOLD_NAME,tt.HOUSEHOLD_CARD";
+	    sql1+=" and AAR010 IN (0,3) and AAR100=1";//未脱贫 有效性
+		JSONObject jb = new JSONObject();
+	    List<Map> listx = this.getBySqlMapper.findRecords(sqlx);
+	    List<Map> list1 = this.getBySqlMapper.findRecords(sql1);
+	    List<Map> list2 = this.getBySqlMapper.findRecords(sql2);
+	    List<Map> list3 = this.getBySqlMapper.findRecords(sql3);
+	    List<Map> list4 = this.getBySqlMapper.findRecords(sql4);
+	    //统计数
+	    if(listx.size()>0){
+	    	jb.put("diary_sum", listx.get(0).get("DIARY_SUM")==null?0:listx.get(0).get("DIARY_SUM"));//总日记条数
+	    	jb.put("d_poor_sum", listx.get(0).get("D_POOR_SUM")==null?0:listx.get(0).get("D_POOR_SUM"));//走访相关贫困户数
+	    	jb.put("d_cadre_sum", listx.get(0).get("D_CADRE_SUM")==null?0:listx.get(0).get("D_CADRE_SUM"));//走访记录干部总数
+	    	jb.put("day_sum", listx.get(0).get("DAY")==null?0:listx.get(0).get("DAY"));//当天日记条数
+	    	jb.put("week_sum", listx.get(0).get("WEEK")==null?0:listx.get(0).get("WEEK"));//当周日记条数
+	    	jb.put("month_sum", listx.get(0).get("MONTH")==null?0:listx.get(0).get("MONTH"));//当月日记条数
+	    }else{
+	    	jb.put("diary_sum", 0);
+	    	jb.put("d_poor_sum", 0);
+	    	jb.put("d_cadre_sum", 0);
+	    	jb.put("day_sum", 0);
+	    	jb.put("week_sum", 0);
+	    	jb.put("month_sum", 0);
+	    }
+	    //总贫困户数
+	    if(list1.size()>0){
+	    	jb.put("poor_sum", list1.get(0).get("POOR_SUM")==null?0:list1.get(0).get("POOR_SUM"));
+	    }else{
+	    	jb.put("poor_sum", 0);
+	    }
+	    //总帮扶干部数
+	    if(list2.size()>0){
+	    	jb.put("cadre_sum", list2.get(0).get("CADRE_SUM")==null?0:list2.get(0).get("CADRE_SUM"));
+	    }else{
+	    	jb.put("cadre_sum", 0);
+	    }
+	    DecimalFormat df = new DecimalFormat("0.00");//格式化小数，不足的补0
+	    //落实责任人比例 帮扶贫困户/总贫困户
+	    if(list1.size()>0&&listx.size()>0){
+	    	jb.put("assist_coverage",  df.format((float)Integer.valueOf(listx.get(0).get("D_POOR_SUM").toString())/Integer.valueOf(list1.get(0).get("POOR_SUM").toString())));
+	    }
+	    
+	    //走访覆盖率   登录表（即结对表）关联除以  走访表=走访覆盖率
+	    jb.put("d_poor_coverage",  df.format((float)Integer.valueOf(list4.get(0).get("SUMM").toString())/Integer.valueOf(list3.get(0).get("SUMM").toString())));
+	    //上传走访记录干部占总数比 走访干部/总干部
+	    
+	    jb.put("d_cadre_proportion",  df.format((float)Integer.valueOf(listx.get(0).get("D_CADRE_SUM").toString())/Integer.valueOf(list2.get(0).get("CADRE_SUM").toString())));
+	    jn.add(jb);
+	    long endTime = System.currentTimeMillis();    //获取结束时间
+	    System.out.println("程序运行时间：" + (endTime - startTime) + "ms");    //输出程序运行时间
+	    response.getWriter().write(jn.toString());
+	}
+	
+	/** 查询日记浏览中查询日记
+	 * @param request
+	 * @param response
+	 * @throws IOException   DA_HELP_VISIT
+	 */
+	@RequestMapping("getRjll.do")
+	public void getRjll(HttpServletRequest request,HttpServletResponse response ) throws IOException {
+		response.setContentType("text/html;charset=UTF-8");
+	    response.setCharacterEncoding("UTF-8");
+	    response.setHeader("Access-Control-Allow-Origin", "*");
+	    String cType = request.getParameter("cType");//查询类别1、省2、市3、县
+	    String code = request.getParameter("code");//当前查询的区域范围如默认内蒙古自治区
+	    if(Integer.valueOf(cType)>1){
+	    	code=this.getXjcode(cType,code);//根据当前传的行政区划code获取所有村级行政区划
+	    }
+	    String pageNum = request.getParameter("pageNum");//分页页码
+	    String sTime = request.getParameter("stime");//开始时间
+	    String eTime = request.getParameter("etime");//结束时间
+	    String phone = request.getParameter("phone");//干部电话
+	    String name = request.getParameter("name");//干部名称
+	    int start =0;
+	    if(Integer.valueOf(pageNum)>1){
+	    	for(int i=0;i<Integer.valueOf(pageNum)-1;i++){
+	    		start+=20;
+	    	}
+	    }
+	    int end = 20*Integer.valueOf(pageNum);
+	    JSONArray jn = new JSONArray();
+	    String sqlX="select * from (";
+	    String sql = "select t1.*,ROWNUM as rn,t2.pic_path from DA_HELP_VISIT t1 left join DA_PIC_VISIT t2 on t1.random_number=t2.random_number where 1=1 ";//DA_HELP_VISIT
+	    if(code!=null&&!"".equals(code)&&Integer.valueOf(cType)>1){
+	    	sql+=" and AAR008 like('%"+code+"%')";
+	    }
+	    if(sTime!=null&&!"".equals(sTime)){
+	    	sql+=" and to_date(REGISTERTIME,'yyyy-mm-dd hh24:mi:ss') >= to_date('"+sTime+"','yyyy-mm-dd')";
+	    }
+		if(eTime!=null&&!"".equals(eTime)){
+			sql+=" AND to_date(REGISTERTIME,'yyyy-mm-dd hh24:mi:ss') <= to_date('"+eTime+"','yyyy-mm-dd')";	
+	    }
+		if(phone!=null&&!"".equals(phone)){
+			sql+=" and PERSONAL_PHONE LIKE '%"+phone+"%'";	
+		}
+		if(name!=null&&!"".equals(name)){
+			sql+=" and PERSONAL_NAME LIKE '%"+name+"%'";	
+		}
+		sqlX+=sql +") rr";
+		sqlX+=" where rr.rn <="+end+" and rr.rn>"+start+" order by v1 desc";
+		
+		List<Map> list = this.getBySqlMapper.findRecords(sqlX);
+	    if(list.size()>0){
+	    	for(int l=0;l<list.size();l++){
+	    		JSONObject jb = new JSONObject();
+	    		jb.put("name", list.get(l).get("PERSONAL_NAME"));//帮扶人名称
+	    		jb.put("hname", list.get(l).get("HOUSEHOLD_NAME"));//贫困户名称
+	    		jb.put("phone", list.get(l).get("PERSONAL_PHONE"));//帮扶人电话
+	    		jb.put("content", list.get(l).get("V3"));//帮扶内容
+	    		jb.put("time", list.get(l).get("REGISTERTIME"));//帮扶日期
+	    		jb.put("pic", list.get(l).get("PIC_PATH")==null?"":list.get(l).get("PIC_PATH"));//帮扶照片
+	    		jn.add(jb);
+	    	}
+	    }
+	    response.getWriter().write(jn.toString());
+	}
+	/** 查询日记浏览中按帮扶人姓名、电话查询
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 */
+	@RequestMapping("getRjllByName.do")
+	public void getRjllByName(HttpServletRequest request,HttpServletResponse response ) throws IOException {
+		response.setContentType("text/html;charset=UTF-8");
+	    response.setCharacterEncoding("UTF-8");
+	    response.setHeader("Access-Control-Allow-Origin", "*");
+	    JSONArray jn = new JSONArray();
+	    String name = request.getParameter("name");//干部名称
+	    String phone = request.getParameter("phone");//干部名称
+	    String sqlc = "select personal_phone,personal_name from SYS_PERSONAL_HOUSEHOLD_MANY where 1=1 ";
+	    if(name!=null&&!"".equals(name)){
+	    	sqlc+=" and PERSONAL_NAME like '%"+name+"%' ";
+	    }
+	    if(phone!=null&&!"".equals(phone)){
+	    	sqlc+=" and PERSONAL_PHONE like '%"+phone+"%' ";
+	    }
+	    sqlc+=" GROUP BY personal_phone,personal_name ";
+	    String sql = "select personal_phone,personal_name,AAP001 from (select t1.personal_phone,t1.personal_name,t2.AAP001  from("+sqlc+") t1 left join (select AAR012,AAP001 from NEIMENG0117_AK11 where AAP001 is not null) t2 on t1.personal_phone=t2.AAR012)GROUP BY personal_phone,personal_name,AAP001";
+	    List<Map> list = this.getBySqlMapper.findRecords(sql);
+	    if(list.size()>0){
+	    	for(int l=0;l<list.size();l++){
+	    		JSONObject jb = new JSONObject();
+	    		jb.put("name", list.get(l).get("PERSONAL_NAME"));
+	    		jb.put("phone", list.get(l).get("PERSONAL_PHONE"));
+	    		jb.put("dep", list.get(l).get("AAP001"));
+	    		jn.add(jb);
+	    	}
+	    }
+	    response.getWriter().write(jn.toString());
+	}
+	/** 查询扶贫现状
+	 * @param request
+	 * @param response AAR010  0未脱贫1已脱贫
+	 * //	    String sTime = request.getParameter("stime");//开始时间
+//	    String eTime = request.getParameter("etime");//结束时间
+	 * @throws IOException
+	 */
+	@RequestMapping("getFpxz.do")
+	public void getFpxz(HttpServletRequest request,HttpServletResponse response ) throws IOException {
+		response.setContentType("text/html;charset=UTF-8");
+	    response.setCharacterEncoding("UTF-8");
+	    response.setHeader("Access-Control-Allow-Origin", "*");
+	    String cType = request.getParameter("cType");//查询类别1、省2、市3、县
+	    String code = request.getParameter("code");//当前查询的区域范围如默认内蒙古自治区
+	    if(Integer.valueOf(cType)>1){
+	    	code=this.getXjcode(cType,code);//根据当前传的行政区划code获取所有村级行政区划
+	    }
+	    JSONArray jn = new JSONArray();
+	    JSONObject jb = new JSONObject();
+	    //贫困户总数、已脱贫户数、因病、因残、缺土地、缺资金、一般贫困户、低保贫困户、五保贫困户
+	    String sql1 = "select count(a.AAC001) AS 贫困户总数,count(CASE when a.AAR010=1 then 'a01'end) 已脱贫户数,count(CASE when a.AAC007=1 then 'a02'end) 因病,count(CASE when a.AAC007=2 then 'a03'end) 因残,count(CASE when a.AAC007=5 then 'a04'end) 缺土地,count(CASE when a.AAC007=9 then 'a05'end) 缺资金,count(CASE when a.AAC006=1 then 'a06'end) 一般贫困户,count(CASE when a.AAC006=4 then 'a07'end) 低保贫困户,count(CASE when a.AAC006=6 then 'a08'end) 五保贫困户 from NEIMENG0117_AC01 a where 1=1";
+	    String sqlc = "select AAC001 from NEIMENG0117_Ac01  where AAR010 in (0,3) and AAR100=1 ";
+	    if(code!=null&&!"".equals(code)&&Integer.valueOf(cType)>1){
+	    	sql1+=" and AAR008 like('%"+code+"%')";
+	    	sqlc+=" and AAR008 like('%"+code+"%')";
+	    }
+	    sql1+=" and AAR010 IN(0,3) and AAR100=1";
+	    String sql0 = "select count(*) from( select q1.AAC001 from ("+sqlc+")q LEFT JOIN  ( select AAC001 from  NEIMENG0117_AB01 where aab015=1 )q1 on q.AAC001= q1.AAC001)";//贫困人口
+	    List<Map> list1 = this.getBySqlMapper.findRecords(sql1);
+	    List<Map> list0 = this.getBySqlMapper.findRecords(sql0);
+	    if(list0.size()>0){
+	    	jb.put("pkrk", list0.get(0).get("pkrk"));//贫困人口
+	    }
+	    if(list1.size()>0){
+	    	jb.put("pkhzs", list1.get(0).get("贫困户总数"));
+	    	jb.put("ytphs", list1.get(0).get("已脱贫户数"));
+	    	jb.put("yb", list1.get(0).get("因病"));
+	    	jb.put("yc", list1.get(0).get("因残"));
+	    	jb.put("qtd", list1.get(0).get("缺土地"));
+	    	jb.put("qzj", list1.get(0).get("缺资金"));
+	    	jb.put("ybpkh", list1.get(0).get("一般贫困户"));
+	    	jb.put("dbpkh", list1.get(0).get("低保贫困户"));
+	    	jb.put("wbpkh", list1.get(0).get("五保贫困户"));
+	    }
+	    jn.add(jb);
+	    response.getWriter().write(jn.toString());
+	}
+	/***************************以下所有方法为测试时使用*******************************/
+	
+	
+	
+	
+	
 	/**
 	 * 导入鄂尔多斯走访记录
 	 * @param request
