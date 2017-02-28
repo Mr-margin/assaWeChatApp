@@ -18,9 +18,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
@@ -41,6 +43,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.gistone.WeChatApp;
 import com.gistone.MyBatis.config.GetBySqlMapper;
+import com.gistone.util.MapUtil;
 
 @RestController
 @RequestMapping
@@ -59,24 +62,44 @@ public class AnController{
 	 */
 	@RequestMapping("getAnLoginController.do")
 	public void getAnLoginController(HttpServletRequest request,HttpServletResponse response) throws Exception{
-		request.setCharacterEncoding("UTF-8");
-		response.setCharacterEncoding("UTF-8");
+		response.setContentType("text/html;charset=UTF-8");
+	    response.setCharacterEncoding("UTF-8");
+	    response.setHeader("Access-Control-Allow-Origin", "*");
+		List<Map> list;
 		String phone = request.getParameter("phone");//电话13904794720
 		String password = request.getParameter("password");//密码
 		String str = phone.substring(5,11);
-		String sql = "select * from SYS_PERSONAL_HOUSEHOLD_MANY where PERSONAL_PHONE ='"+phone+"'";
-		List<Map> list = this.getBySqlMapper.findRecords(sql);
-		if ( list.size() > 0 ) {
-			if ( "".equals(list.get(0).get("PASSWORD")) || list.get(0).get("PASSWORD") == null ){
-				if ( password.equals(phone.substring(5,11))){
-					response.getWriter().write("{\"success\":0,\"message\":\"登录成功\",\"data\":{\"phone\":"+phone+",\"name\":\""+list.get(0).get("PERSONAL_NAME").toString()+"\"}}");//登录成功
-				}else {
+		String sqlLd = "select * from SYS_PERSONAL_LD where PERSONAL_PHONE ='"+phone+"'";
+		if(this.getBySqlMapper.findRecords(sqlLd).size()>0){
+			System.out.println(this.getBySqlMapper.findRecords(sqlLd).get(0).get("PASSWORD"));
+			if (this.getBySqlMapper.findRecords(sqlLd).get(0).get("PASSWORD")!=null&&!"".equals(this.getBySqlMapper.findRecords(sqlLd).get(0).get("PASSWORD"))){
+				if (password!=null&&!"".equals(password)&&password.equals(this.getBySqlMapper.findRecords(sqlLd).get(0).get("PASSWORD"))){
+					response.getWriter().write("{\"success\":0,\"message\":\"0\",\"data\":\"\"}");//登录成功
+				}else{
 					response.getWriter().write("{\"success\":1,\"message\":\"密码错误\",\"data\":\"\"}");
 				}
 			} else {
-				if (password.equals(list.get(0).get("PASSWORD"))){
+				if (password!=null&&!"".equals(password)&& password.equals(phone.substring(5,11))){
+					response.getWriter().write("{\"success\":0,\"message\":\"0\",\"data\":\"\"}");//登录成功
+				}else {
+					response.getWriter().write("{\"success\":1,\"message\":\"密码错误\",\"data\":\"\"}");
+				}
+			}
+			return;
+		}
+		String sql = "select * from SYS_PERSONAL_HOUSEHOLD_MANY where PERSONAL_PHONE ='"+phone+"'";
+		list = this.getBySqlMapper.findRecords(sql);
+		if ( list.size() > 0 ) {
+			if (list.get(0).get("PASSWORD")!=null&&!"".equals(list.get(0).get("PASSWORD"))){
+				if (password!=null&&!"".equals(password)&&password.equals(list.get(0).get("PASSWORD"))){
 					response.getWriter().write("{\"success\":0,\"message\":\"登录成功\",\"data\":{\"phone\":"+phone+",\"name\":\""+list.get(0).get("PERSONAL_NAME").toString()+"\"}}");//登录成功
 				}else{
+					response.getWriter().write("{\"success\":1,\"message\":\"密码错误\",\"data\":\"\"}");
+				}
+			} else {
+				if ( password!=null&&!"".equals(password)&&password.equals(phone.substring(5,11))){
+					response.getWriter().write("{\"success\":0,\"message\":\"登录成功\",\"data\":{\"phone\":"+phone+",\"name\":\""+list.get(0).get("PERSONAL_NAME").toString()+"\"}}");//登录成功
+				}else {
 					response.getWriter().write("{\"success\":1,\"message\":\"密码错误\",\"data\":\"\"}");
 				}
 			}
@@ -891,18 +914,31 @@ public class AnController{
 		String cType = request.getParameter("cType");//查询类别1、省2、市3、县
 		String code = request.getParameter("code");//市级CODE，根据市级CODE获取该市级下的县
 		List<Map> list = null;
-		if(cType!=null&&!"".equals(cType)&&Integer.valueOf(cType)==1){//省
-			sql="select V1 as V1,V2 as V2 from sys_com GROUP BY V1,V2";
-			list = this.getBySqlMapper.findRecords(sql);
-		}else if(cType!=null&&!"".equals(cType)&&Integer.valueOf(cType)==2){//查询所有市级
-			sql="select V3 as V1,V4 as V2 from sys_com GROUP BY V3,V4";
-			list = this.getBySqlMapper.findRecords(sql);
-		}else if(cType!=null&&!"".equals(cType)&&Integer.valueOf(cType)==3){//查询所有县级
-			sql="select V4,V5 as V1,V6 as V2 from sys_com ";
-			if(code!=null&&!"".equals(code)){
-				sql+=" where V4="+code;
+		if(cType!=null&&!"".equals(cType)){
+			if(MapUtil.isNumeric(cType)){
+				if(Integer.valueOf(cType)==1){//省
+					sql="select V1 as V1,V2 as V2 from sys_com GROUP BY V1,V2";
+					list = this.getBySqlMapper.findRecords(sql);
+				}else if(Integer.valueOf(cType)==2){//查询所有市级
+					sql="select V3 as V1,V4 as V2 from sys_com GROUP BY V3,V4";
+					list = this.getBySqlMapper.findRecords(sql);
+				}else if(Integer.valueOf(cType)==3){//查询所有县级
+					sql="select V4,V5 as V1,V6 as V2 from sys_com ";
+					if(code!=null&&!"".equals(code)){
+						sql+=" where V4="+code;
+					}
+					sql+=" GROUP BY V4,V5,V6 ";
+					list = this.getBySqlMapper.findRecords(sql);
+				}else{
+					sql="select V1 as V1,V2 as V2 from sys_com GROUP BY V1,V2";
+					list = this.getBySqlMapper.findRecords(sql);
+				}
+			}else{
+				sql="select V1 as V1,V2 as V2 from sys_com GROUP BY V1,V2";
+				list = this.getBySqlMapper.findRecords(sql);
 			}
-			sql+=" GROUP BY V4,V5,V6 ";
+		}else{
+			sql="select V1 as V1,V2 as V2 from sys_com GROUP BY V1,V2";
 			list = this.getBySqlMapper.findRecords(sql);
 		}
 		JSONArray jn = new JSONArray();
@@ -932,13 +968,21 @@ public class AnController{
 	}
 	/**获取日记统计参数
 	 * 1、当前帮扶日记总条数：diary_sum					int
+	 * 
 		2、走访相关贫困户数：d_poor_sum					int
+		
 		3、走访覆盖率：d_poor_coverage					double
+		
 		4、上传走访记录干部总数：d_cadre_sum				int
+		
+		
 		5、上传走访记录干部占总数比：d_cadre_proportion	double
+		
+		
 		6、全区帮扶干部总数:：cadre_sum					int
 		7、全区贫困户总数：poor_sum						int
 		8、落实责任人比例：assist_coverage				double
+		
 		9、当日日记条数：day_sum						int
 		10、本周日记条数：week_sum						int
 		11、本月日记条数：month_sum						int
@@ -962,7 +1006,7 @@ public class AnController{
 	    response.setCharacterEncoding("UTF-8");
 	    response.setHeader("Access-Control-Allow-Origin", "*");
 	    long startTime = System.currentTimeMillis();    //获取开始时间
-	    System.out.println("进入接口时间："+startTime);
+//	    System.out.println("进入接口时间："+startTime);
 	    JSONArray jn = new JSONArray();
 	    String cType = request.getParameter("cType");//查询类别1、省2、市3、县
 	    String code = request.getParameter("code");//当前查询的区域范围如默认内蒙古自治区
@@ -971,61 +1015,70 @@ public class AnController{
 	    }
 	    String sTime = request.getParameter("stime");//开始时间
 	    String eTime = request.getParameter("etime");//结束时间
-	    //日记总条数、走访贫困户总数、上传走访记录干部总数、当天日记数、本周日记数、本月日记数 DA_HELP_VISIT
-	    String sqlx = "SELECT	COUNT (*) AS diary_sum,	COUNT (DISTINCT(household_card)) AS d_poor_sum,	COUNT (DISTINCT(personal_phone)) AS d_cadre_sum,	count(case when to_char(to_date(registertime,'yyyy-mm-dd hh24:mi:ss'),'yyyy-mm-dd')=to_char(sysdate,'yyyy-mm-dd') then 'a00' end)day,	count(	CASE when to_char(to_date(registertime,'yyyy-mm-dd hh24:mi:ss'),'iw')=to_char(sysdate,'iw') THEN 'a01' end)week,	count(	CASE when to_char(to_date(registertime,'yyyy-mm-dd hh24:mi:ss'),'yyyy-mm')=to_char(sysdate,'yyyy-mm') THEN 'a02' end)month	FROM	xxx  WHERE 1=1";
-
+	    //不跟随传递的时间变，当天日记数、本周日记数、本月日记数 DA_HELP_VISIT
+	    String sqlx = "SELECT	count(case when to_char(to_date(registertime,'yyyy-mm-dd hh24:mi:ss'),'yyyy-mm-dd')=to_char(sysdate,'yyyy-mm-dd') then 'a00' end)day,	count(	CASE when to_char(to_date(registertime,'yyyy-mm-dd hh24:mi:ss'),'iw')=to_char(sysdate,'iw') and TO_NUMBER(sysdate-to_date(registertime,'yyyy-mm-dd hh24:mi:ss'))<10 THEN 'a01' end)week,	count(	CASE when to_char(to_date(registertime,'yyyy-mm-dd hh24:mi:ss'),'yyyy-mm')=to_char(sysdate,'yyyy-mm') THEN 'a02' end)month	FROM	DA_HELP_VISIT  WHERE 1=1";
+	    //跟随传递的时间变 日记总条数、走访贫困户总数、上传走访记录干部总数、
+	    String sqlx1 = "SELECT	COUNT (*) AS diary_sum,	COUNT (DISTINCT(household_card)) AS d_poor_sum,	COUNT (DISTINCT(personal_phone)) AS d_cadre_sum,	count(case when to_char(to_date(registertime,'yyyy-mm-dd hh24:mi:ss'),'yyyy-mm-dd')=to_char(sysdate,'yyyy-mm-dd') then 'a00' end)day,	count(	CASE when to_char(to_date(registertime,'yyyy-mm-dd hh24:mi:ss'),'iw')=to_char(sysdate,'iw') and TO_NUMBER(sysdate-to_date(registertime,'yyyy-mm-dd hh24:mi:ss'))<10 THEN 'a01' end)week,	count(	CASE when to_char(to_date(registertime,'yyyy-mm-dd hh24:mi:ss'),'yyyy-mm')=to_char(sysdate,'yyyy-mm') THEN 'a02' end)month	FROM	DA_HELP_VISIT  WHERE 1=1";
+	  //不跟随传递的时间变
 	    String sql1 = "select count(*) as poor_sum from NEIMENG0117_AC01 WHERE 1=1";//总贫困户数
-	    String sql2 = "select COUNT(*) AS CADRE_SUM from NEIMENG0117_AK11 T1 JOIN (select AAK110 from NEIMENG0117_AC08  WHERE AAR100=1 GROUP BY AAK110) T2 ON T1.AAK110=T2.AAK110 WHERE 1=1";//总帮扶干部数
+	  //不跟随传递的时间变 总帮扶干部数
+	    String sql2 = "select COUNT(*) AS CADRE_SUM from NEIMENG0117_AK11 T1 JOIN (select AAK110 from NEIMENG0117_AC08  WHERE AAR100=1 GROUP BY AAK110) T2 ON T1.AAK110=T2.AAK110 WHERE 1=1";
 	    String sqlc = "select * from DA_HELP_VISIT where 1=1 ";//计算走访覆盖率子查询语句
-	    
+	    String sqlc3 = "select * from DA_HELP_VISIT where 1=1 ";//计算走访覆盖率子查询语句
 	    if(code!=null&&!"".equals(code)&&Integer.valueOf(cType)>1){//按区域查
 	    	sqlx+=" and AAR008 like('%"+code+"%')";
+	    	sqlx1+=" and AAR008 like('%"+code+"%')";
 	    	sql1+=" and AAR008 like('%"+code+"%')";
 	    	sql2+=" and T1.AAR008 like('%"+code+"%')";
 	    	sqlc+=" and AAR008 like('%"+code+"%')";
+	    	sqlc3+=" and AAR008 like('%"+code+"%')";
 	    }
 	    if(sTime!=null&&!"".equals(sTime)){//按时间查
-	    	sqlx+=" and to_date(REGISTERTIME,'yyyy-mm-dd hh24:mi:ss') >= to_date('"+sTime+"','yyyy-mm-dd')";
+	    	sqlx1+=" and to_date(REGISTERTIME,'yyyy-mm-dd hh24:mi:ss') >= to_date('"+sTime+"','yyyy-mm-dd')";
 	    	sqlc+=" and to_date(REGISTERTIME,'yyyy-mm-dd hh24:mi:ss') >= to_date('"+sTime+"','yyyy-mm-dd')";
 	    }
 		if(eTime!=null&&!"".equals(eTime)){//按时间查
-			sqlx+=" AND to_date(REGISTERTIME,'yyyy-mm-dd hh24:mi:ss') <= to_date('"+eTime+"','yyyy-mm-dd')";	
+			sqlx1+=" AND to_date(REGISTERTIME,'yyyy-mm-dd hh24:mi:ss') <= to_date('"+eTime+"','yyyy-mm-dd')";	
 			sqlc+=" AND to_date(REGISTERTIME,'yyyy-mm-dd hh24:mi:ss') <= to_date('"+eTime+"','yyyy-mm-dd')";
 	    }
 		//计算走访覆盖率 分组前
-		String sql3 = "select count(*)  as summ from ("+sqlc+") tt left join SYS_PERSONAL_HOUSEHOLD_MANY ti  on tt.PERSONAL_NAME = ti.PERSONAL_NAME and tt.HOUSEHOLD_NAME = ti.HOUSEHOLD_NAME and tt.PERSONAL_PHONE = ti.PERSONAL_PHONE and tt.HOUSEHOLD_CARD = ti.HOUSEHOLD_CARD ";
+		String sql3 = "select count(*)  as summ from ("+sqlc3+") tt left join SYS_PERSONAL_HOUSEHOLD_MANY ti  on tt.PERSONAL_NAME = ti.PERSONAL_NAME and tt.HOUSEHOLD_NAME = ti.HOUSEHOLD_NAME and tt.PERSONAL_PHONE = ti.PERSONAL_PHONE and tt.HOUSEHOLD_CARD = ti.HOUSEHOLD_CARD ";
 		//计算走访覆盖率 分组后
 	    String sql4 = "select count(count(*))  as summ from ("+sqlc+") tt left join SYS_PERSONAL_HOUSEHOLD_MANY ti  on tt.PERSONAL_NAME = ti.PERSONAL_NAME and tt.HOUSEHOLD_NAME = ti.HOUSEHOLD_NAME and tt.PERSONAL_PHONE = ti.PERSONAL_PHONE and tt.HOUSEHOLD_CARD = ti.HOUSEHOLD_CARD GROUP BY tt.PERSONAL_NAME,tt.PERSONAL_PHONE,tt.HOUSEHOLD_NAME,tt.HOUSEHOLD_CARD";
 	    sql1+=" and AAR010 IN (0,3) and AAR100=1";//未脱贫 有效性
 		JSONObject jb = new JSONObject();
 	    List<Map> listx = this.getBySqlMapper.findRecords(sqlx);
+	    List<Map> listx1 = this.getBySqlMapper.findRecords(sqlx1);
 	    List<Map> list1 = this.getBySqlMapper.findRecords(sql1);
 	    List<Map> list2 = this.getBySqlMapper.findRecords(sql2);
 	    List<Map> list3 = this.getBySqlMapper.findRecords(sql3);
 	    List<Map> list4 = this.getBySqlMapper.findRecords(sql4);
 	    //统计数
 	    if(listx.size()>0){
-	    	jb.put("diary_sum", listx.get(0).get("DIARY_SUM")==null?0:listx.get(0).get("DIARY_SUM"));//总日记条数
-	    	jb.put("d_poor_sum", listx.get(0).get("D_POOR_SUM")==null?0:listx.get(0).get("D_POOR_SUM"));//走访相关贫困户数
-	    	jb.put("d_cadre_sum", listx.get(0).get("D_CADRE_SUM")==null?0:listx.get(0).get("D_CADRE_SUM"));//走访记录干部总数
 	    	jb.put("day_sum", listx.get(0).get("DAY")==null?0:listx.get(0).get("DAY"));//当天日记条数
 	    	jb.put("week_sum", listx.get(0).get("WEEK")==null?0:listx.get(0).get("WEEK"));//当周日记条数
 	    	jb.put("month_sum", listx.get(0).get("MONTH")==null?0:listx.get(0).get("MONTH"));//当月日记条数
 	    }else{
-	    	jb.put("diary_sum", 0);
-	    	jb.put("d_poor_sum", 0);
-	    	jb.put("d_cadre_sum", 0);
 	    	jb.put("day_sum", 0);
 	    	jb.put("week_sum", 0);
 	    	jb.put("month_sum", 0);
 	    }
-	    //总贫困户数
+	    if(listx1.size()>0){
+	    	jb.put("diary_sum", listx1.get(0).get("DIARY_SUM")==null?0:listx1.get(0).get("DIARY_SUM"));//总日记条数
+	    	jb.put("d_poor_sum", listx1.get(0).get("D_POOR_SUM")==null?0:listx1.get(0).get("D_POOR_SUM"));//走访相关贫困户数
+	    	jb.put("d_cadre_sum", listx1.get(0).get("D_CADRE_SUM")==null?0:listx1.get(0).get("D_CADRE_SUM"));//走访记录干部总数
+	    }else{
+	    	jb.put("diary_sum", 0);
+	    	jb.put("d_poor_sum", 0);
+	    	jb.put("d_cadre_sum", 0);
+	    }
+	    //总贫困户数  不跟随时间变化
 	    if(list1.size()>0){
 	    	jb.put("poor_sum", list1.get(0).get("POOR_SUM")==null?0:list1.get(0).get("POOR_SUM"));
 	    }else{
 	    	jb.put("poor_sum", 0);
 	    }
-	    //总帮扶干部数
+	    //总帮扶干部数 不跟随时间变化
 	    if(list2.size()>0){
 	    	jb.put("cadre_sum", list2.get(0).get("CADRE_SUM")==null?0:list2.get(0).get("CADRE_SUM"));
 	    }else{
@@ -1033,18 +1086,36 @@ public class AnController{
 	    }
 	    DecimalFormat df = new DecimalFormat("0.00");//格式化小数，不足的补0
 	    //落实责任人比例 帮扶贫困户/总贫困户
-	    if(list1.size()>0&&listx.size()>0){
-	    	jb.put("assist_coverage",  df.format((float)Integer.valueOf(listx.get(0).get("D_POOR_SUM").toString())/Integer.valueOf(list1.get(0).get("POOR_SUM").toString())));
+	    if(list1.size()>0){
+	    	String d = "0";
+	    	if(Integer.valueOf(list1.get(0).get("POOR_SUM").toString())>0){
+	    		d=df.format((float)Integer.valueOf(list3.get(0).get("SUMM").toString())/Integer.valueOf(list1.get(0).get("POOR_SUM").toString()));
+	    	}
+	    	if(Double.parseDouble(d)>1){
+	    		jb.put("assist_coverage",  1);//listx.get(0).get("D_POOR_SUM").toString()
+	    	}else{
+	    		if(Integer.valueOf(list1.get(0).get("POOR_SUM").toString())>0){
+	    			jb.put("assist_coverage",  df.format((float)Integer.valueOf(list3.get(0).get("SUMM").toString())/Integer.valueOf(list1.get(0).get("POOR_SUM").toString())));//listx.get(0).get("D_POOR_SUM").toString()
+		    	}else{
+		    		jb.put("assist_coverage",  0);//listx.get(0).get("D_POOR_SUM").toString()
+		    	}
+	    		
+	    	}
 	    }
 	    
 	    //走访覆盖率   登录表（即结对表）关联除以  走访表=走访覆盖率
-	    jb.put("d_poor_coverage",  df.format((float)Integer.valueOf(list4.get(0).get("SUMM").toString())/Integer.valueOf(list3.get(0).get("SUMM").toString())));
+	    if(Integer.valueOf(list3.get(0).get("SUMM").toString())>0){
+	    	jb.put("d_poor_coverage",  df.format((float)Integer.valueOf(list4.get(0).get("SUMM").toString())/Integer.valueOf(list3.get(0).get("SUMM").toString())));
+	    }else{
+	    	jb.put("d_poor_coverage",  0);
+	    }
+	    
 	    //上传走访记录干部占总数比 走访干部/总干部
 	    
-	    jb.put("d_cadre_proportion",  df.format((float)Integer.valueOf(listx.get(0).get("D_CADRE_SUM").toString())/Integer.valueOf(list2.get(0).get("CADRE_SUM").toString())));
+	    jb.put("d_cadre_proportion",  df.format((float)Integer.valueOf(listx1.get(0).get("D_CADRE_SUM").toString())/Integer.valueOf(list2.get(0).get("CADRE_SUM").toString())));
 	    jn.add(jb);
 	    long endTime = System.currentTimeMillis();    //获取结束时间
-	    System.out.println("程序运行时间：" + (endTime - startTime) + "ms");    //输出程序运行时间
+//	    System.out.println("程序运行时间：" + (endTime - startTime) + "ms");    //输出程序运行时间
 	    response.getWriter().write(jn.toString());
 	}
 	
@@ -1069,6 +1140,11 @@ public class AnController{
 	    String phone = request.getParameter("phone");//干部电话
 	    String name = request.getParameter("name");//干部名称
 	    int start =0;
+	    //当pageNum参数为空时，自动赋值为1
+	    if(pageNum!=null&&!"".equals(pageNum)){
+	    }else{
+	    	pageNum="1";
+	    }
 	    if(Integer.valueOf(pageNum)>1){
 	    	for(int i=0;i<Integer.valueOf(pageNum)-1;i++){
 	    		start+=20;
@@ -1076,8 +1152,8 @@ public class AnController{
 	    }
 	    int end = 20*Integer.valueOf(pageNum);
 	    JSONArray jn = new JSONArray();
-	    String sqlX="select * from (";
-	    String sql = "select t1.*,ROWNUM as rn,t2.pic_path from DA_HELP_VISIT t1 left join DA_PIC_VISIT t2 on t1.random_number=t2.random_number where 1=1 ";//DA_HELP_VISIT
+	    String sqlX="select * from (select rownum as num,ts.* from (";
+	    String sql = "SELECT	PERSONAL_NAME,	HOUSEHOLD_NAME,	PERSONAL_PHONE,	V3,	REGISTERTIME,	t2.pic_path FROM	DA_HELP_VISIT t1 LEFT JOIN (select DISTINCT(random_number),pic_path from DA_PIC_VISIT) t2 ON t1.random_number = t2.random_number WHERE	1 = 1 ";//DA_HELP_VISIT
 	    if(code!=null&&!"".equals(code)&&Integer.valueOf(cType)>1){
 	    	sql+=" and AAR008 like('%"+code+"%')";
 	    }
@@ -1093,8 +1169,9 @@ public class AnController{
 		if(name!=null&&!"".equals(name)){
 			sql+=" and PERSONAL_NAME LIKE '%"+name+"%'";	
 		}
-		sqlX+=sql +") rr";
-		sqlX+=" where rr.rn <="+end+" and rr.rn>"+start+" order by v1 desc";
+		sql+=" and t1.registertime is not null ORDER BY TO_DATE (REGISTERTIME,'yyyy-mm-dd hh24:mi:ss') desc";
+		sqlX+=sql +") ts )tt";
+		sqlX+=" where tt.num <="+end+" and tt.num>"+start+"";
 		
 		List<Map> list = this.getBySqlMapper.findRecords(sqlX);
 	    if(list.size()>0){
@@ -1162,38 +1239,78 @@ public class AnController{
 	    if(Integer.valueOf(cType)>1){
 	    	code=this.getXjcode(cType,code);//根据当前传的行政区划code获取所有村级行政区划
 	    }
-	    JSONArray jn = new JSONArray();
+	    JSONObject qt = new JSONObject();
 	    JSONObject jb = new JSONObject();
-	    //贫困户总数、已脱贫户数、因病、因残、缺土地、缺资金、一般贫困户、低保贫困户、五保贫困户
-	    String sql1 = "select count(a.AAC001) AS 贫困户总数,count(CASE when a.AAR010=1 then 'a01'end) 已脱贫户数,count(CASE when a.AAC007=1 then 'a02'end) 因病,count(CASE when a.AAC007=2 then 'a03'end) 因残,count(CASE when a.AAC007=5 then 'a04'end) 缺土地,count(CASE when a.AAC007=9 then 'a05'end) 缺资金,count(CASE when a.AAC006=1 then 'a06'end) 一般贫困户,count(CASE when a.AAC006=4 then 'a07'end) 低保贫困户,count(CASE when a.AAC006=6 then 'a08'end) 五保贫困户 from NEIMENG0117_AC01 a where 1=1";
-	    String sqlc = "select AAC001 from NEIMENG0117_Ac01  where AAR010 in (0,3) and AAR100=1 ";
+	    JSONObject jbzpyy = new JSONObject();
+	    //已脱贫户数、
+	    String sqltph = "select count(CASE when a.AAR010=1 then 'a01'end) 已脱贫户数 from NEIMENG0117_AC01 a where 1=1  and AAR100=1";
+	    //贫困户总数、因病、因残、缺土地、缺资金、一般贫困户、低保贫困户、五保贫困户
+	    String sql1 = "select count(a.AAC001) AS 贫困户总数,count(CASE when a.AAC007=1 then 'a02'end) 因病,count(CASE when a.AAC007=2 then 'a03'end) 因残,count(CASE when a.AAC007=3 then 'a003'end) 因学,count(CASE when a.AAC007=4 then 'a004'end) 因灾,count(CASE when a.AAC007=5 then 'a04'end) 缺土地,count(CASE when a.AAC007=6 then 'a006'end) 缺水,count(CASE when a.AAC007=7 then 'a007'end) 缺技术,count(CASE when a.AAC007=8 then 'a008'end) 缺劳力,count(CASE when a.AAC007=9 then 'a05'end) 缺资金,count(CASE when a.AAC007=10 then 'a0010'end) 交通条件落后,count(CASE when a.AAC007=11 then 'a0011'end) 自身发展力不足,count(CASE when a.AAC007=99 then 'a0099'end) 其他,count(CASE when a.AAC006=1 then 'a06'end) 一般贫困户,count(CASE when a.AAC006=4 then 'a07'end) 低保贫困户,count(CASE when a.AAC006=6 then 'a08'end) 五保贫困户 from NEIMENG0117_AC01 a where 1=1";
+	    String sqlc = "select AAC001 from NEIMENG0117_Ac01  where AAR010 in (0,3) and AAR100=1 ";//贫困人口
+	    String sqlct = "select AAC001 from NEIMENG0117_Ac01  where AAR010 in (1) and AAR100=1 ";//已脱贫贫困人口
+	    String sqlpkc = "select count(*) as pkc from NEIMENG0117_AD01 where 1=1 and aar010 in(1) ";//贫困村
 	    if(code!=null&&!"".equals(code)&&Integer.valueOf(cType)>1){
 	    	sql1+=" and AAR008 like('%"+code+"%')";
 	    	sqlc+=" and AAR008 like('%"+code+"%')";
+	    	sqlct+=" and AAR008 like('%"+code+"%')";
+	    	sqltph+=" and AAR008 like('%"+code+"%')";
+	    	sqlpkc+=" and AAR008 like('%"+code+"%')";
 	    }
 	    sql1+=" and AAR010 IN(0,3) and AAR100=1";
-	    String sql0 = "select count(*) from( select q1.AAC001 from ("+sqlc+")q LEFT JOIN  ( select AAC001 from  NEIMENG0117_AB01 where aab015=1 )q1 on q.AAC001= q1.AAC001)";//贫困人口
+	    String sql0 = "select count(*) as pkrk from( select q1.AAC001 from ("+sqlc+")q left JOIN  ( select AAC001 from  NEIMENG0117_AB01 where aab015=1 )q1 on q.AAC001= q1.AAC001)";//贫困人口
+	    String sqltpr = "select count(*) as ytpr from( select q1.AAC001 from ("+sqlct+")q left JOIN  ( select AAC001 from  NEIMENG0117_AB01 where aab015=1 )q1 on q.AAC001= q1.AAC001)";//已脱贫贫困人口
 	    List<Map> list1 = this.getBySqlMapper.findRecords(sql1);
 	    List<Map> list0 = this.getBySqlMapper.findRecords(sql0);
-	    if(list0.size()>0){
-	    	jb.put("pkrk", list0.get(0).get("pkrk"));//贫困人口
-	    }
-	    if(list1.size()>0){
-	    	jb.put("pkhzs", list1.get(0).get("贫困户总数"));
-	    	jb.put("ytphs", list1.get(0).get("已脱贫户数"));
-	    	jb.put("yb", list1.get(0).get("因病"));
-	    	jb.put("yc", list1.get(0).get("因残"));
-	    	jb.put("qtd", list1.get(0).get("缺土地"));
-	    	jb.put("qzj", list1.get(0).get("缺资金"));
-	    	jb.put("ybpkh", list1.get(0).get("一般贫困户"));
-	    	jb.put("dbpkh", list1.get(0).get("低保贫困户"));
-	    	jb.put("wbpkh", list1.get(0).get("五保贫困户"));
-	    }
-	    jn.add(jb);
-	    response.getWriter().write(jn.toString());
+	    
+	    List<Map> listYtph = this.getBySqlMapper.findRecords(sqltph);//已脱贫户
+	    List<Map> listYtpr = this.getBySqlMapper.findRecords(sqltpr);//已脱贫人
+	    List<Map> listPkc = this.getBySqlMapper.findRecords(sqlpkc);//贫困村
+    	jb.put("pkzrk", list0.get(0).get("PKRK"));//贫困人口
+    	
+    	jb.put("ytphs", listYtph.get(0).get("已脱贫户数"));
+    	
+    	jb.put("pkzhs", list1.get(0).get("贫困户总数"));
+    	
+    	Map m = new HashMap();
+    	m.put("因病", list1.get(0).get("因病"));
+    	m.put("因残", list1.get(0).get("因残"));
+    	m.put("因学", list1.get(0).get("因学"));
+    	m.put("因灾", list1.get(0).get("因灾"));
+    	m.put("缺土地", list1.get(0).get("缺土地"));
+    	m.put("缺水", list1.get(0).get("缺水"));
+    	m.put("缺技术", list1.get(0).get("缺技术"));
+    	m.put("缺劳力", list1.get(0).get("缺劳力"));
+    	m.put("缺资金", list1.get(0).get("缺资金"));
+    	m.put("交通条件落后", list1.get(0).get("交通条件落后"));
+    	m.put("自身发展力不足", list1.get(0).get("自身发展力不足"));
+    	m.put("其他", list1.get(0).get("其他"));
+    	
+    	m=MapUtil.sortByValue(m);//倒序排序
+    	
+    	Set<String> key = m.keySet();
+    	int sm=0;
+        for (Iterator it = key.iterator(); it.hasNext();) {
+        	if(sm<4){
+        		String s = (String) it.next();
+        		jbzpyy.put(s, m.get(s));
+        	}else{
+        		break;
+        	}
+            sm++;
+        }
+        
+    	jb.put("ybpkh", list1.get(0).get("一般贫困户"));
+    	jb.put("dbpkh", list1.get(0).get("低保贫困户"));
+    	jb.put("wbpkh", list1.get(0).get("五保贫困户"));
+    	
+    	jb.put("ytpr", listYtpr.get(0).get("YTPR"));
+    	jb.put("pkc", listPkc.get(0).get("PKC"));
+    	
+    	qt.put("zpyy", jbzpyy);//致贫原因
+    	qt.put("qt", jb);//其他
+	    response.getWriter().write(qt.toString());
 	}
 	/***************************以下所有方法为测试时使用*******************************/
-	
 	
 	
 	
