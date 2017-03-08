@@ -49,7 +49,10 @@ function login(){
 	    	}else if(data.message == '登录成功'){
 				localStorage.bftusername = $("#username").val();
 	    		window.location.href = "w_home.html?phone="+data.data.phone+"&name="+data.data.name;
-	    	}
+	    	}else if(data.message == '0'){
+				localStorage.bftusername = $("#username").val();
+				window.location.href = "http://www.gistone.cn/assaWeChatApp/BFTLeader/index.html";
+			}
 	    },
 	    error: function (ret) { 
 	    	alert('登录失败')
