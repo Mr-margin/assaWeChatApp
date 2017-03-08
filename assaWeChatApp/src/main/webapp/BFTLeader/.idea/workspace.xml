@@ -6,93 +6,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" readonly="true" id="e8d17f05-2819-47a0-bdf7-43c7e3676246" name="默认的" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weui/dist/example/images/icon_nav_tab.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weui" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weui/dist/example/snapshot/actionSheet.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weui/dist/example/images/pic_160.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/js/index.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/js/diary_bro.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/encodings.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weui/dist/example/images/icon_nav_form.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weui/dist/example" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weui/dist/example/example.css" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/js/poverst_sit.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weui/dist/example/images/layers/popout.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weui/dist/example/snapshot/result.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weui/dist/example/snapshot/cell.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weui/dist/example/snapshot/text.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weui/dist/example/images/icon_tabbar.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weui/dist/example/example.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weui/dist/example/images" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weui/dist/example/snapshot/dialog1.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weui/dist/example/images/icon_intro.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/css/public.css" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/poverty_situation.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/images/icon_tabbar.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weui/dist/example/images/layers/navigation.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/diary_browse.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weui/dist/example/images/layers" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weui/dist/example/images/vcode.jpg" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weui/dist/style/weui.css" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weui/dist/example/snapshot/progress.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/images/zftp.jpg" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weui/dist/example/images/icon_nav_z-index.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weui/dist/example/images/icon_nav_nav.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weui/dist/example/images/layers/content.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weui/dist/example/images/icon_nav_button.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/.name" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weui/dist/example/images/icon_nav_toast.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weui/dist/example/images/pic_article.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/js/diary_sta.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weui/dist/example/images/icon_nav_icons.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/images/black.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/images" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weui/dist/example/images/layers/transparent.gif" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weui/dist/example/snapshot/qrcode.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weui/dist/example/images/icon_footer.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/css/index.css" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weui/dist/example/snapshot/dialog2.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weui/dist" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weui/dist/example/images/icon_nav_search_bar.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/index.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weui/dist/example/images/icon_nav_actionSheet.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/js/jquery-2.1.4.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weui/dist/example/images/icon_nav_panel.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/css" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weui/dist/example/snapshot/grid.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weui/dist/example/snapshot/toast2.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weui/dist/example/index.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weui/dist/example/images/icon_nav_layout.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weui/dist/example/images/icon_nav_dialog.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weui/dist/style/weui.min.css" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/diary_statistics.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weui/dist/example/images/icon_nav_feedback.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weui/dist/example/images/icon_nav_progress.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weui/dist/example/images/icon_nav_flow.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weui/dist/example/images/icon_nav_zindex.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weui/dist/example/snapshot/icons.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weui/dist/example/snapshot/toast1.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weui/dist/example/images/icon_nav_article.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weui/dist/example/images/icon_nav_special.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/test.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weui/dist/example/images/logo.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weui/dist/example/images/icon_nav_cell.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weui/dist/style" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weui/dist/example/images/icon_nav_search.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/js/echarts.min.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weui/dist/example/images/icon_nav_msg.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weui/dist/example/snapshot" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weui/dist/example/images/icon_footer_link.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weui/dist/example/snapshot/button.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/weui/dist/example/zepto.min.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/BFTLeader.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="BFTLeader.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -112,64 +27,7 @@
     <favorites_list name="BFTLeader" />
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="diary_browse.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/diary_browse.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="93" column="10" selection-start-line="93" selection-start-column="10" selection-end-line="93" selection-end-column="10" />
-              <folding>
-                <element signature="n#style#0;n#div#7;n#body#0;n#html#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#a#0;n#div#0;n#div#7;n#body#0;n#html#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#div#9;n#body#0;n#html#0;n#!!top" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="index.js" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/js/index.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.02813599">
-              <caret line="20" column="0" selection-start-line="20" selection-start-column="0" selection-end-line="20" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="diary_sta.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/js/diary_sta.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="601" column="49" selection-start-line="601" selection-start-column="49" selection-end-line="601" selection-end-column="49" />
-              <folding>
-                <marker date="1488359433422" expanded="true" signature="1354:1454" placeholder="..." />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="poverty_situation.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/poverty_situation.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="96" column="78" selection-start-line="96" selection-start-column="78" selection-end-line="96" selection-end-column="78" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="poverst_sit.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/js/poverst_sit.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="201" column="24" selection-start-line="201" selection-start-column="12" selection-end-line="201" selection-end-column="24" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300" />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -249,6 +107,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -267,91 +126,8 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="BFTLeader" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="BFTLeader" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="weui" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="dist" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="style" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="BFTLeader" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="BFTLeader" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="weui" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="dist" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="BFTLeader" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="BFTLeader" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="js" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="BFTLeader" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="BFTLeader" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="images" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="BFTLeader" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="BFTLeader" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="css" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
       <pane id="Scratches" />
     </panes>
   </component>
@@ -361,7 +137,7 @@
     <property name="editor.config.accepted" value="true" />
     <property name="DefaultHtmlFileTemplate" value="HTML File" />
     <property name="list.type.of.created.stylesheet" value="CSS" />
-    <property name="settings.editor.selected.configurable" value="preferences.keymap" />
+    <property name="settings.editor.selected.configurable" value="vcs.Subversion" />
     <property name="settings.editor.splitter.proportion" value="0.2" />
   </component>
   <component name="RecentsManager">
@@ -445,16 +221,16 @@
     <option name="myMappingRoots">
       <list>
         <SvnCopyRootSimple>
-          <option name="myVcsRoot" value="C:\Users\Administrator\Desktop\内蒙古精准扶贫大数据平台\assaWeChatApp\src\main\webapp\BFTLeader" />
-          <option name="myCopyRoot" value="C:\Users\Administrator\Desktop\内蒙古精准扶贫大数据平台\assaWeChatApp\src\main\webapp\BFTLeader" />
+          <option name="myVcsRoot" value="E:\内蒙古精准扶贫大数据平台\assaWeChatApp\src\main\webapp\BFTLeader" />
+          <option name="myCopyRoot" value="E:\内蒙古精准扶贫大数据平台\assaWeChatApp\src\main\webapp\BFTLeader" />
         </SvnCopyRootSimple>
       </list>
     </option>
     <option name="myMoreRealMappingRoots">
       <list>
         <SvnCopyRootSimple>
-          <option name="myVcsRoot" value="C:\Users\Administrator\Desktop\内蒙古精准扶贫大数据平台\assaWeChatApp\src\main\webapp\BFTLeader" />
-          <option name="myCopyRoot" value="C:\Users\Administrator\Desktop\内蒙古精准扶贫大数据平台\assaWeChatApp\src\main\webapp\BFTLeader" />
+          <option name="myVcsRoot" value="E:\内蒙古精准扶贫大数据平台\assaWeChatApp\src\main\webapp\BFTLeader" />
+          <option name="myCopyRoot" value="E:\内蒙古精准扶贫大数据平台\assaWeChatApp\src\main\webapp\BFTLeader" />
         </SvnCopyRootSimple>
       </list>
     </option>
@@ -469,7 +245,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-3" y="0" width="1936" height="1040" extended-state="1" />
+    <frame x="-3" y="0" width="1936" height="1040" extended-state="0" />
     <editor active="false" />
     <layout>
       <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.1512118" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -848,48 +624,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/diary_browse.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="93" column="10" selection-start-line="93" selection-start-column="10" selection-end-line="93" selection-end-column="10" />
-          <folding>
-            <element signature="n#style#0;n#div#7;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#a#0;n#div#0;n#div#7;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#9;n#body#0;n#html#0;n#!!top" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/js/diary_bro.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.027617952">
           <caret line="31" column="28" selection-start-line="31" selection-start-column="28" selection-end-line="31" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/js/poverst_sit.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="201" column="24" selection-start-line="201" selection-start-column="12" selection-end-line="201" selection-end-column="24" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/poverty_situation.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="96" column="78" selection-start-line="96" selection-start-column="78" selection-end-line="96" selection-end-column="78" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/js/diary_sta.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="601" column="49" selection-start-line="601" selection-start-column="49" selection-end-line="601" selection-end-column="49" />
-          <folding>
-            <marker date="1488359433422" expanded="true" signature="1354:1454" placeholder="..." />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -901,9 +639,47 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/js/index.js">
+    <entry file="file://$PROJECT_DIR$/diary_browse.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.1262136">
+          <caret line="93" column="10" selection-start-line="93" selection-start-column="10" selection-end-line="93" selection-end-column="10" />
+          <folding>
+            <element signature="n#style#0;n#div#7;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#a#0;n#div#0;n#div#7;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#9;n#body#0;n#html#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/js/diary_sta.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.02813599">
+          <caret line="601" column="49" selection-start-line="601" selection-start-column="49" selection-end-line="601" selection-end-column="49" />
+          <folding>
+            <marker date="1488359433422" expanded="true" signature="1354:1454" placeholder="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/poverty_situation.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.029126214">
+          <caret line="96" column="78" selection-start-line="96" selection-start-column="78" selection-end-line="96" selection-end-column="78" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/js/poverst_sit.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.02813599">
+          <caret line="201" column="24" selection-start-line="201" selection-start-column="12" selection-end-line="201" selection-end-column="24" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/js/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.030480657">
           <caret line="20" column="0" selection-start-line="20" selection-start-column="0" selection-end-line="20" selection-end-column="0" />
           <folding />
         </state>
