@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+    <meta http-equiv="Pragma" content="no-cache"/>
+    <meta http-equiv="Expires" content="0"/>
+    <title>精准扶贫帮扶通领导版</title>
+    <link href="weui/dist/style/weui.min.css" rel="stylesheet">
+    <link href="weui/dist/example/example.css" rel="stylesheet">
+    <link href="css/index.css?version=1.0.4" rel="stylesheet">
+    <link href="css/public.css?version=1.0.4" rel="stylesheet">
+</head>
+<body ontouchstart> <!--页面标签-->
+
+<!--错误提示层-->
+<div id="tooltips_div" class="weui-toptips weui-toptips_warn js_tooltips">错误提示</div>
+<!--数据加载提示层-->
+<div id="loadingToast" class="loadingdiv">
+    <div class="weui-mask_transparent"></div>
+    <div class="weui-toast">
+        <i class="weui-loading weui-icon_toast"></i>
+        <p class="weui-toast__content">数据加载中</p>
+    </div>
+</div>
+<!--页面标签-->
+<div id="tj_title" class="weui-flex page_title"></div>
+<!--弹出选择地区和时间的悬浮框-->
+<div id="selector_div" class="weui-flex selectordiv">
+    <div class="weui-flex__item">
+        <div id="selector_head" class="selectorhead">
+            <div class="weui-flex">
+                <div class="weui-flex__item">
+                    <div id="select_ms" class="placeholder selectms">
+                    </div>
+                </div>
+                <div class="weui-flex__item">
+                    <div id="select_qx" class="placeholder selectms">
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class='vertical_parting' style="background: transparent"></div>
+
+    <div class="weui-flex__item">
+        <div id="selector_time" style="position: relative;opacity:0.9;height: 0">
+            <div class="weui-flex">
+                <div class="weui-flex__item">
+                    <div id="select_month" class="placeholder selectms">
+                    </div>
+                </div>
+                <div class="weui-flex__item">
+                    <div id="select_day" class="placeholder selectms">
+                    </div>
+                </div>
+                <div class="weui-flex__item">
+                    <div id="select_week" class="placeholder selectms">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--设置居中效果-->
+<div class="bigbox">
+    <div class="fpxzxx">
+        <!--内容块-->
+        <div class="subhead" style="height: 1.8em;padding-top: 0.8em">扶贫现状</div>
+        <div class="weui-flex">
+            <div class="weui-flex__item" style="text-align: center;">
+                <div class="poverty_header_right" style="padding-left: 2em">
+                    <div style="background-color: #138bf9;width: 0.8em;height: 0.8em;float: left;margin-top: 0.6em"></div>
+                    <div class="poverty_header_right" style="float: left">已脱贫</div>
+                </div>
+                <div class="poverty_header_right" style="padding: 0.8em"><font
+                        id="rid_poor" style="color: #138bf9;font-size: 21px;font-family: 黑体"></font>户
+                </div>
+                <div class="poverty_header_right" style="padding-left: 0"><font
+                        id="rid_pop" style="color: #138bf9;font-size: 21px;font-family: 黑体"></font>人
+                </div>
+            </div>
+            <div class="weui-flex__item">
+                <div id="rid_ratio" style="height:7em;"></div>
+            </div>
+
+            <div class="weui-flex__item" style="text-align: center;">
+                <div class="poverty_header_right" style="padding-left: 2em">
+                    <div style="background-color: #cee8ff;width: 0.8em;height: 0.8em;float: left;margin-top: 0.6em"></div>
+                    <div class="poverty_header_right" style="float: left">未脱贫</div>
+                </div>
+                <div class="poverty_header_right" style="padding: 0.8em"><font
+                        id="poor__sum" style="color: #138bf9;font-size: 21px;font-family: 黑体"></font>户
+                </div>
+                <div class="poverty_header_right" style="padding-left: 0"><font
+                        id="poor_pop_sum" style="color: #138bf9;font-size: 21px;font-family: 黑体"></font>人
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!--分割线-->
+    <div class="halving_box">
+        <div class="halving"></div>
+    </div>
+
+    <!--主要致贫原因-->
+    <!--<div class="subhead">主要致贫原因（顺位前四）</div>-->
+    <div class="zpyydiv">
+        <div class="weui-flex">
+            <div class="weui-flex__item">
+                <div id="cause_bar" style="height:12em;"></div>
+            </div>
+        </div>
+    </div>
+    <!--分割线-->
+    <div class="halving_box">
+        <div class="halving"></div>
+    </div>
+    <div class="fpbottom">
+        <div class="weui-flex" style="padding-top: 1em">
+            <div class="weui-flex__item">
+                <div class="head_box" style="padding: 0.1em 0;height: 5em;line-height: 5em">
+                    <div class="emphasis_data" style="height: 2.3em;line-height: 2.3em;font-size: 9px;color: #6f6f6f"><font id="general_poor" style="font-size: 21px;color: #138bf9" ></font>户</div>
+                    <div class="item_title" style="font-size: 11px">
+                        一般贫困户
+                    </div>
+                </div>
+            </div>
+
+            <div class="weui-flex__item">
+                <div class="head_box" style="padding: 0.1em 0;height: 5em;line-height: 5em">
+                    <div class="emphasis_data" style="height: 2.3em;line-height: 2.3em;font-size: 9px;color: #6f6f6f"><font id="low_poor" style="font-size: 21px;color: #138bf9" ></font>户</div>
+
+                    <div class="item_title" style="font-size: 11px">
+                        低保贫困户
+                    </div>
+                </div>
+            </div>
+
+            <div class="weui-flex__item">
+                <div class="head_box" style="padding: 0.1em 0;height: 5em;line-height: 5em">
+                    <div class="emphasis_data" style="height: 2.3em;line-height: 2.3em;font-size: 9px;color: #6f6f6f"><font id="five_poor" style="font-size: 21px;color: #138bf9" ></font>户</div>
+
+                    <div class="item_title" style="font-size: 11px">
+                        五保贫困户
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="js/jquery-2.1.4.js"></script>
+<script src="js/echarts.min.js"></script>
+<script src="weui/dist/example/zepto.min.js"></script>
+<script src="https://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<script src="https://res.wx.qq.com/open/libs/weuijs/1.0.0/weui.min.js"></script>
+<script src="js/poverst_sit.js?version=1.0.4"></script>
+
+</body>
+</html>

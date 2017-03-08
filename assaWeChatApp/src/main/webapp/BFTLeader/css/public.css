@@ -1,0 +1,74 @@
+html,body{
+    height: 100%;
+    width: 100%;
+}
+.halving{
+    width: 85%;
+    height: 1px;
+    background-color: #bfbfbf;
+    margin: 0 auto
+}
+.halving_box{
+    width:100%;
+    height:0.5em;
+    text-align: center
+}
+.subhead{
+    width:100%;
+    height:0.8em;
+    text-align: center;
+    color: #6f6f6f;
+    font-family: "黑体";
+    font-size: 15px;
+}
+.bottom_tab{
+    position:fixed;
+    bottom:0px;
+    left:0px;
+    background-color: #313131;
+    width: 100%;
+    height: 50px
+}
+.loadingdiv{
+    opacity: 1;
+    display: inline-block;
+    z-index: 1000
+}
+.page_title{
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 10
+}
+.selectordiv{
+    position:fixed;
+    z-index: 5;
+    top: 2.3em;
+    width: 100%
+}
+.selectorhead{
+    position: relative;
+    opacity:0.9;
+    height: 0
+}
+.selectms{
+    background: #138bf9;
+    height: 0
+}
+.bigbox{
+    height:90%;
+    line-height: 90%;
+    display: flex;
+    flex-direction:column;
+    justify-content: center;
+    align-items: stretch;
+    margin-top: 2em
+}
+.alowbtn{
+    background: #056BBF url("../images/alow.png") no-repeat;
+    background-position: 95% 50%;
+}
+.upward{
+    background: #056BBF url("../images/upward.png") no-repeat;
+    background-position: 95% 50%;
+}

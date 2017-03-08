@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <!-- <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+     <meta http-equiv="Pragma" content="no-cache" />
+     <meta http-equiv="Expires" content="0" />-->
+    <title>精准扶贫帮扶通领导版</title>
+
+    <link href="weui/dist/style/weui.min.css" rel="stylesheet">
+    <link href="weui/dist/example/example.css" rel="stylesheet">
+    <link href="css/index.css?version=1.0.4" rel="stylesheet">
+    <link href="css/public.css?version=1.0.4" rel="stylesheet">
+
+</head>
+<body ontouchstart>
+<div id="scrolldiv" class="scroll-wrapper">
+    <iframe id="if_content" name="f_page" value="0" src="diary_statistics.html?cType=1&xzqh=0&code=150000000000" frameborder="0"
+            scrolling="auto" width="100%"
+            height="100%"></iframe>
+</div>
+
+<!--底部导航-->
+<div class="weui-tabbar">
+    <a id="diary_sta" href="javascript:s_diary_sta()" class="weui-tabbar__item weui-bar__item_on">
+        <img id="bftjic" src="./images/bftj2.png" alt="" class="weui-tabbar__icon">
+        <p class="weui-tabbar__label">帮扶统计</p>
+    </a>
+    <a id="poverty_situation" href="javascript:s_poverty_situation()" class="weui-tabbar__item">
+        <img id="fpxzic" src="./images/fpxz.png" alt="" class="weui-tabbar__icon">
+        <p class="weui-tabbar__label">扶贫现状</p>
+    </a>
+    <a id="diary_bro" href="javascript:s_diary_bro()" class="weui-tabbar__item">
+        <img id="zfrjic" src="./images/zfrj.png" alt="" class="weui-tabbar__icon">
+        <p class="weui-tabbar__label">走访日记</p>
+    </a>
+    <a href="javascript:close_bft()" class="weui-tabbar__item">
+        <img  src="./images/tc.png" alt="" class="weui-tabbar__icon">
+        <p class="weui-tabbar__label">关闭</p>
+    </a>
+</div>
+<!--底部导航结束-->
+<script src="js/jquery-2.1.4.js"></script>
+<script src="js/echarts.min.js"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<script src="js/index.js?version=1.0.4"></script>
+</body>
+</html>
