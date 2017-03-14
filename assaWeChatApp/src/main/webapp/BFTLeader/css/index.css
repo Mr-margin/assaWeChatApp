@@ -1,3 +1,25 @@
+.mytab{
+    top: 4.5em;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    z-index: 1;
+    height: 100%;
+    width: 100%;
+    position: fixed;
+}
+.page_head{
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 500;
+    background-color: #056BBF;
+    height: 2.3em;
+    line-height: 2.3em;
+    text-align: center;
+    color: #FFFFFF;
+    font-size: 16px;
+    font-family: "黑体";
+}
 .placeholder {
     padding: 0 10px;
     background-color: #056BBF;
@@ -18,24 +40,23 @@
 .item_title{
     padding: 0 10px;
     text-align: center;
-    height: 2em;
-    line-height: 2em;
+    height: 2.3em;
+    line-height: 2.3em;
     color: #6f6f6f;
-    font-size: 13px;
+    font-size: 12px;
     font-family: "黑体";
 }
 .emphasis_data{
     text-align: center;
-    height: 2em;
-    line-height: 2em;
-    color: #138bf9;
-    font-size: 23px;
+    height: 2.3em;
+    line-height: 2.3em;
+    color: #6f6f6f;
+    font-size: 9px;
     font-family: "黑体";
 }
 .head_box{
     text-align: center;
-    height: 5em;
-    line-height: 5em;
+    padding-top: 1em;
 }
 .poverty_header_right{
     padding-left: 1em;
@@ -72,15 +93,19 @@
 .zfxq{
     display: none;
     position: fixed;
-    top: 0;
+    top: 4.3em;
     left: 0;
-    z-index: 1000;
-    background-color: #ffffff;
+    z-index: 100;
+    background-color: #dfdfdf;
     width: 100%;
     height: 100%;
+    overflow: auto;
 }
 .zftp{
-    text-align: center
+    text-align: center;
+    height: 15em;
+    background-color: #9f9f9f;
+    padding: 10px;
 }
 .detailtext{
     padding: 0 10px;
@@ -91,18 +116,14 @@
     font-family: "黑体";
 }
 .left_black{
-    z-index: 10;
-    position: fixed;
+    z-index: 500;
     height: 2.3em;
     line-height: 2.3em;
-    text-align: center;
-    top:0;
     left: 1em;
+    width: 60px;
 }
 
 .fpjcxx{
-    height:25%;
-    line-height: 25%;
     display: flex;
     flex-direction:column;
     justify-content: center;
@@ -147,7 +168,7 @@
     font-family: "黑体";
     font-size: 15px;
     position: fixed;
-    top: 2.3em;
+    top: 4em;
     padding-top: 0.6em;
     height: 2.3em;
     width: 100%;
@@ -158,7 +179,7 @@
     position: fixed;
     width: 100%;
     z-index: 3;
-    top: 4.4em
+    top: 8.8em
 }
 .rjcellsdiv{
     z-index: 1;
@@ -170,4 +191,8 @@
     overflow-y: scroll;
     height: 100%;
     z-index: 1
+}
+.emphasis_data font{
+    font-size: 21px;
+    color: #138bf9;
 }
