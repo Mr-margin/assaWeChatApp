@@ -13,8 +13,8 @@ var xzqhcode = 150000000000;//行政区划编号
 var xzqhname = "内蒙古自治区";//要查询的行政区划名称
 var xzqh = "内蒙古自治区";//顶部显示的行政地区名
 var cType = 1;//请求地区级别
-//var serviceurl = "http://115.29.42.107/";//服务器地址
-var serviceurl = "http://192.168.2.118:8888/";
+var serviceurl = "http://115.29.42.107/";//服务器地址
+//var serviceurl = "http://192.168.2.118:8888/";
 /*var stadate = "2014-1-1", enddate = "2017-12-31";//查询起止时间*/
 var rjtype = 0;
 /**
