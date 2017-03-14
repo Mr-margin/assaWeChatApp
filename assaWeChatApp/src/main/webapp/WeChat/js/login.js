@@ -3,6 +3,7 @@ window.onload = function () {
     var oUser = aInput[0];
     if (localStorage.bftusername != null && localStorage.bftusername != undefined) {
         aInput[0].value = localStorage.bftusername;
+        aInput[1].value = localStorage.bftpwd;
     }
     var oPwd = aInput[1];
     var aI = document.getElementsByTagName('i')[0];
@@ -48,9 +49,11 @@ function login() {
                 $("#tishi").html("账号不存在");
             } else if (data.message == '登录成功') {
                 localStorage.bftusername = $("#username").val();
+                localStorage.bftpwd = $("#password").val();
                 window.location.href = "w_home.html?phone=" + data.data.phone + "&name=" + data.data.name;
             } else if (data.message == '0') {
                 localStorage.bftusername = $("#username").val();
+                localStorage.bftpwd = $("#password").val();
                 window.location.href = "http://www.gistone.cn/assaWeChatApp/BFTLeader/index.html";
             }
         },
