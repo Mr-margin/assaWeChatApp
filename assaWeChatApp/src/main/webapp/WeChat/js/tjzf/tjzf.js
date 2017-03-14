@@ -29,6 +29,7 @@ var iszztj = false;
 var countdown = 10;//签到倒计时
 var isxcqd = false;//是否正在定位
 $('#zfjlwz').focus(kstxzfjl);
+$('#poor_type').change(xzzflx);
 $(function(){
 	var Request = new Object();
 	Request = GetRequest();
@@ -659,4 +660,7 @@ function kstxzfjl(){
 		$('#poor_type').focus();
 		alert("请先选择走访类型!");
 	}
+}
+function xzzflx(){
+	zftype = $('#poor_type').val();
 }
