@@ -22,13 +22,13 @@ var pkhadd = "";//贫困户家庭地址，用于解析坐标
 var pkhcm = "";//贫困户的村名-用于检索
 var qdtype = 1;//标记签到类型
 var poordata;
-$("#zftimediv").hide();//默认不让选择时间
+/*$("#zftimediv").hide();//默认不让选择时间*/
 var zftime = getNowFormatDate();
-
+var zftype = 0;
 var iszztj = false;
 var countdown = 10;//签到倒计时
 var isxcqd = false;//是否正在定位
-
+$('#zfjlwz').focus(kstxzfjl);
 $(function(){
 	var Request = new Object();
 	Request = GetRequest();
@@ -41,6 +41,7 @@ $(function(){
 		poor_name();
 	}
 	qm();
+
 });
 //帮扶人名下的贫困户
 function poor_name(){
@@ -224,9 +225,18 @@ function  addzfjl() {
 		alert("必须签到成功才可以提交！");
 		return;
 	}
+	if(pp == ''){
+		alert("必须上传图片才可以提交！");
+		return;
+	}
 	var zfjlwz = $("#zfjlwz").val();
 	if(zfjlwz.length > 300){
 		alert("走访记录文字不得超过300个，请重新输入!");
+		return;
+	}
+	zftype = $('#poor_type').val();
+	if (zftype == 0){
+		alert("请选择走访类型，并填写走访记录!");
 		return;
 	}
 	dingewi();
@@ -266,7 +276,8 @@ function  addzfjl() {
 			registerTime:zftime,
 			sendLat:sendlatitude,
 			sendLng:sendlongitude,
-			registerType:qdtype
+			registerType:qdtype,
+			zfTypr:zftype
 	    },
 	    success: function (data) {
 	    	if(data == "5"){
@@ -642,4 +653,10 @@ function dingewi(){
 		});
 	})
 
+}
+function kstxzfjl(){
+	if (0 == 0){
+		$('#poor_type').focus();
+		alert("请先选择走访类型!");
+	}
 }
