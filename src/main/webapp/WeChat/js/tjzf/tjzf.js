@@ -655,7 +655,7 @@ function dingewi(){
 
 }
 function kstxzfjl(){
-	if (0 == 0){
+	if (zftype == 0){
 		$('#poor_type').focus();
 		alert("请先选择走访类型!");
 	}
