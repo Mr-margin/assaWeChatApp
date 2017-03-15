@@ -1664,9 +1664,9 @@ public class AnController{
 	    String code = request.getParameter("code");
 	    String name = request.getParameter("name");//行政区划名称
 	    String level = request.getParameter("level");//2省 3市 4 县 5乡 6村
-	    int Zhs=242784;//总户数
-	    int lsHs=357724;//帮扶责任人落实户数
-	    int lsBl=100;//落实帮扶比例
+	    double Zhs=242784;//总户数
+	    double lsHs=357724;//帮扶责任人落实户数
+	    int lsBl=1;//落实帮扶比例
 	    JSONArray chartJson = new JSONArray();
 	    JSONArray tjJson = new JSONArray();
 	    JSONObject jb = new JSONObject();
@@ -1713,11 +1713,11 @@ public class AnController{
 	    	}
 	    	jb.put("ZhsTotal", Zhs);
     	    jb.put("lsHsTotal", lsHs);
-    	    jb.put("lsBlTotal", (lsHs/Zhs>1)?1:lsHs/Zhs);
+    	    jb.put("lsBlTotal", (lsHs/Zhs)>1?1:DateFormatUtil.formatDouble1(lsHs/Zhs));
 	    }else{
 	    	jb.put("ZhsTotal", Zhs);
     	    jb.put("lsHsTotal", lsHs);
-    	    jb.put("lsBlTotal", lsBl);
+    	    jb.put("lsBlTotal", (lsHs/Zhs)>1?1:DateFormatUtil.formatDouble1(lsHs/Zhs));
     	    for (int k = 0; k < str.length; k++) {
 				JSONObject ob = new JSONObject ();
 				ob.put("V0", str[k]);//区域名
@@ -1837,7 +1837,7 @@ public class AnController{
 		}
 		jb.put("pkhTotal", pkh);
 	    jb.put("zfpkhTotal", zfpkh);
-	    jb.put("zfblTotal", (zfpkh/pkh)>1?1:+DateFormatUtil.formatDouble1(zfpkh/pkh));
+	    jb.put("zfblTotal", (zfpkh/pkh)>1?1:DateFormatUtil.formatDouble1(zfpkh/pkh));
 	    
 		jb.put("drzfTotal", drzf);
 	    jb.put("bzzfTotal", bzzf);
