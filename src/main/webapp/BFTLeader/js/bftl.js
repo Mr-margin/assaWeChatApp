@@ -64,6 +64,7 @@ $(document).ready(function () {
      * 底部导航点击切换页面与自身样式
      */
     $(".weui-tabbar__item").click(function () {
+        $('#cir').show();
         isrjlb = false;
         if (!$(this).is(".weui-bar__item_on")) {//点击的按钮非正在选择状态
             $(".weui-tabbar__item").removeClass("weui-bar__item_on")//清除所有选择状态的按钮
@@ -172,20 +173,23 @@ function submitdq() {
     var qx = $("#xzqx").find("option:selected").text();
     xzqh = ms + qx;
     $("#xzqh").html(xzqh);
-    if (qx == ""){
+    if (qx == "") {
         xzqhname = ms;
-    }else {
+    } else {
         xzqhname = qx;
     }
     if (xzqh == "" || xzqh == null) {
         $("#xzqh").html("内蒙古自治区");
         xzqhname = "内蒙古自治区";
     }
-    if (isrjlb){
+    if (isrjlb) {
         counter = 1;
         rjoption = 0;
         $("#rjcells").html("");
-        getrjdata();
+        $('#loadingToast').fadeIn(80);
+        setTimeout(function(){
+            getrjdata();
+        },100);
         return;
     }
     initpage(option_tabbar);
@@ -341,7 +345,7 @@ function initjgg(option) {
             '<p class="weui-grid__label">贫困发生率</p>' +
             '</a>' +
             '</div>';
-    }else if(option == 1){
+    } else if (option == 1) {
         jgghtml = '<div id="bfdxcd" class="weui-grids">' +
             '<a href="javascript:tzpkgk();" class="weui-grid">' +
             ' <div class="weui-grid__icon">' +
@@ -434,15 +438,17 @@ function initfpdx() {
         $('#dxwh').html(formatNum(data.tjSum[0].eduFiveTotal));
         setwhcdbar(data);
     }
+
     function settdzy(data) {
         $('#gdmj').html(formatNum(parseInt(data.tjSum[0].landOneTotal) || 0));
-        $('#yxgg').html(formatNum(parseInt(data.tjSum[0].landTwoTotal)|| 0));
-        $('#ldmj').html(formatNum(parseInt(data.tjSum[0].landThreeTotal)|| 0));
-        $('#tghl').html(formatNum(parseInt(data.tjSum[0].landFourTotal)|| 0));
-        $('#lgmj').html(formatNum(parseInt(data.tjSum[0].landFiveTotal)|| 0));
-        $('#mcdmj').html(formatNum(parseInt(data.tjSum[0].landSixTotal)|| 0));
+        $('#yxgg').html(formatNum(parseInt(data.tjSum[0].landTwoTotal) || 0));
+        $('#ldmj').html(formatNum(parseInt(data.tjSum[0].landThreeTotal) || 0));
+        $('#tghl').html(formatNum(parseInt(data.tjSum[0].landFourTotal) || 0));
+        $('#lgmj').html(formatNum(parseInt(data.tjSum[0].landFiveTotal) || 0));
+        $('#mcdmj').html(formatNum(parseInt(data.tjSum[0].landSixTotal) || 0));
         settdzybar(data);
     }
+
     function setscsh(data) {
         $('#yskn').html(formatNum(data.tjSum[0].proLifeOneTotal));
         $('#waqys').html(formatNum(data.tjSum[0].proLifeTwoTotal));
@@ -452,6 +458,7 @@ function initfpdx() {
         $('#wwscs').html(formatNum(data.tjSum[0].proLifeSixTotal));
         setscshbar(data);
     }
+
     function setsljy(data) {
         $('#sljy1').html(formatNum(data.tjSum[0].ageEduOneTotal));
         $('#sljy2').html(formatNum(data.tjSum[0].ageEduTwoTotal));
@@ -460,6 +467,7 @@ function initfpdx() {
 
         setsljybar(data);
     }
+
     function setpkfsl(data) {
         $('#pkfsl1').html(formatNum(data.tjSum[0].fslZhsTotal));
         $('#pkfsl2').html(formatNum(data.tjSum[0].fslZrsTotal));
@@ -535,7 +543,7 @@ function initfpdx() {
                         }
                     },
                     barCategoryGap: '18px',
-                    barWidth:'16px',
+                    barWidth: '16px',
                     data: gkdatavalue.reverse(),
                     itemStyle: {
                         normal: {
@@ -555,11 +563,12 @@ function initfpdx() {
             ]
         };
         myBarChart.setOption(option1);
-        setTimeout(function (){
+        setTimeout(function () {
             getdatao();
-        },500);
+        }, 500);
     }
-    function getdatao(){//请求其他指标项数据
+
+    function getdatao() {//请求其他指标项数据
         $.ajax({//请求致贫原因数据
             url: serviceurl + 'assaWeChatApp/getFpdx2.do',
             type: 'POST',
@@ -705,6 +714,7 @@ function initfpdx() {
             }
         });
     }
+
     /**
      * 设置致贫原因柱状图
      */
@@ -770,7 +780,7 @@ function initfpdx() {
                         }
                     },
                     barCategoryGap: '18px',
-                    barWidth:'16px',
+                    barWidth: '16px',
                     data: zpyydatavalue.reverse(),
                     itemStyle: {
                         normal: {
@@ -857,7 +867,7 @@ function initfpdx() {
                         }
                     },
                     barCategoryGap: '18px',
-                    barWidth:'16px',
+                    barWidth: '16px',
                     data: nlfzdatavalue.reverse(),
                     itemStyle: {
                         normal: {
@@ -944,7 +954,7 @@ function initfpdx() {
                         }
                     },
                     barCategoryGap: '18px',
-                    barWidth:'16px',
+                    barWidth: '16px',
                     data: jkzkdatavalue.reverse(),
                     itemStyle: {
                         normal: {
@@ -1030,7 +1040,7 @@ function initfpdx() {
                         }
                     },
                     barCategoryGap: '18px',
-                    barWidth:'16px',
+                    barWidth: '16px',
                     data: whcddatavalue.reverse(),
                     itemStyle: {
                         normal: {
@@ -1051,6 +1061,7 @@ function initfpdx() {
         };
         myBarChart.setOption(option1);
     }
+
     /**
      * 设置土地资源柱状图
      */
@@ -1116,7 +1127,7 @@ function initfpdx() {
                         }
                     },
                     barCategoryGap: '18px',
-                    barWidth:'16px',
+                    barWidth: '16px',
                     data: tdzydatavalue.reverse(),
                     itemStyle: {
                         normal: {
@@ -1137,6 +1148,7 @@ function initfpdx() {
         };
         myBarChart.setOption(option1);
     }
+
     /**
      * 设置生产生活条件柱状图
      */
@@ -1202,7 +1214,7 @@ function initfpdx() {
                         }
                     },
                     barCategoryGap: '18px',
-                    barWidth:'16px',
+                    barWidth: '16px',
                     data: scshdatavalue.reverse(),
                     itemStyle: {
                         normal: {
@@ -1223,6 +1235,7 @@ function initfpdx() {
         };
         myBarChart.setOption(option1);
     }
+
     /**
      * 设置适龄教育柱状图
      */
@@ -1288,7 +1301,7 @@ function initfpdx() {
                         }
                     },
                     barCategoryGap: '18px',
-                    barWidth:'16px',
+                    barWidth: '16px',
                     data: sljydatavalue.reverse(),
                     itemStyle: {
                         normal: {
@@ -1309,6 +1322,7 @@ function initfpdx() {
         };
         myBarChart.setOption(option1);
     }
+
     /**
      * 设置贫困发生率柱状图
      */
@@ -1374,7 +1388,7 @@ function initfpdx() {
                         }
                     },
                     barCategoryGap: '18px',
-                    barWidth:'16px',
+                    barWidth: '16px',
                     data: pkfsldatavalue.reverse(),
                     itemStyle: {
                         normal: {
@@ -1400,7 +1414,7 @@ function initfpdx() {
 
 function tzpkgk() {
     $(".mytab").animate({scrollTop: 0}, 1000);
-    $('.andh').attr('background-image','url("../images/k1.gif")');
+    $('.andh').attr('background-image', 'url("../images/k1.gif")');
     $('.weui-mask').animate({opacity: '0'}, 500);
     $('#jgg').animate({width: '0'}, 500);
     setTimeout(function () {
@@ -1529,8 +1543,13 @@ function tzpkfsl() {
 function initfpzt() {
     $('#gdrj').click(function () {
         $('#loadingToast').fadeIn(20);
+        $('#cir').hide();
         setTimeout(function () {
             $(".mytab").animate({scrollTop: 0}, 1000);
+            rjtype = 0;
+            counter = 1;
+            rjoption = 0;
+            $("#rjcells").html("");
             jrrj();
         }, 110);
     });
@@ -1539,7 +1558,7 @@ function initfpzt() {
         type: 'POST',
         async: false,
         dataType: 'json',
-        data: {name: xzqhname,code:xzqhcode,level:cType},
+        data: {name: xzqhname, code: xzqhcode, level: cType},
         success: function (data) {
             fpztdata['bfgk'] = data;
             $('#loadingToast').fadeOut(400);
@@ -1561,16 +1580,18 @@ function initfpzt() {
         $('#bfhs_sum').html(formatNum(data.tjSum[0].bfhsTotal));
         setbfgkbar(data);
     }
+
     function setlsqk(data) {
-        $('#lszhs__sum').html(formatNum(data.tjSum[0].ZhsTotal  ));
+        $('#lszhs__sum').html(formatNum(data.tjSum[0].ZhsTotal));
         $('#bfzrrlshs__sum').html(formatNum(data.tjSum[0].lsHsTotal));
-        $('#lsbfbl__sum').html((data.tjSum[0].lsBlTotal*100)+'%');
+        $('#lsbfbl__sum').html((data.tjSum[0].lsBlTotal * 100) + '%');
         setlsqkbar(data);
     }
+
     function setrhbf(data) {
         $('#rh-pkh__sum').html(formatNum(data.tjSum[0].pkhTotal));
         $('#zfpkh__sum').html(formatNum(data.tjSum[0].zfpkhTotal));
-        $('#zfbl_rh').html((data.tjSum[0].zfblTotal*100)+'%');
+        $('#zfbl_rh').html((data.tjSum[0].zfblTotal * 100) + '%');
         $('#day_sum').html(formatNum(data.tjSum[0].drzfTotal));
         $('#week_sum').html(formatNum(data.tjSum[0].bzzfTotal));
         $('#month_sum').html(formatNum(data.tjSum[0].byzfTotal));
@@ -1578,6 +1599,7 @@ function initfpzt() {
         $('#qbzf_sum').html(formatNum(data.tjSum[0].zfAllTotal));
         setrhbfbar(data);
     }
+
     /**
      * 设置帮扶概况柱状图
      */
@@ -1642,7 +1664,7 @@ function initfpzt() {
                         }
                     },
                     barCategoryGap: '18px',
-                    barWidth:'16px',
+                    barWidth: '16px',
                     data: bfgkdatavalue.reverse(),
                     itemStyle: {
                         normal: {
@@ -1662,10 +1684,11 @@ function initfpzt() {
             ]
         };
         myBarChart.setOption(option1);
-        setTimeout(function (){
+        setTimeout(function () {
             getdataobfzt();
-        },500);
+        }, 500);
     }
+
     /**
      * 设置落实情况柱状图
      */
@@ -1730,7 +1753,7 @@ function initfpzt() {
                         }
                     },
                     barCategoryGap: '18px',
-                    barWidth:'16px',
+                    barWidth: '16px',
                     data: lsqkdatavalue.reverse(),
                     itemStyle: {
                         normal: {
@@ -1751,6 +1774,7 @@ function initfpzt() {
         };
         myBarChart.setOption(option1);
     }
+
     /**
      * 设置入户走访柱状图
      */
@@ -1815,7 +1839,7 @@ function initfpzt() {
                         }
                     },
                     barCategoryGap: '18px',
-                    barWidth:'16px',
+                    barWidth: '16px',
                     data: rhbfdatavalue.reverse(),
                     itemStyle: {
                         normal: {
@@ -1836,13 +1860,14 @@ function initfpzt() {
         };
         myBarChart.setOption(option1);
     }
-    function getdataobfzt(){
+
+    function getdataobfzt() {
         $.ajax({//请求落实情况数据
             url: serviceurl + 'assaWeChatApp/getFpdx11.do',
             type: 'POST',
             async: false,
             dataType: 'json',
-            data: {name: xzqhname,code:xzqhcode,level:cType},
+            data: {name: xzqhname, code: xzqhcode, level: cType},
             success: function (data) {
                 fpztdata['lsqk'] = data;
                 setlsqk(fpztdata['lsqk']);
@@ -1860,7 +1885,7 @@ function initfpzt() {
             type: 'POST',
             async: false,
             dataType: 'json',
-            data: {name: xzqhname,code:xzqhcode,level:cType},
+            data: {name: xzqhname, code: xzqhcode, level: cType},
             success: function (data) {
                 fpztdata['rhbf'] = data;
                 setrhbf(fpztdata['rhbf']);
@@ -1877,23 +1902,7 @@ function initfpzt() {
 
 
 }
-/**
- * 装配扶贫主体数据
- */
-function setfpztData() {
-    /*$('#bfdw__sum').html(formatNum(13654));
-    $('#bfgb__sum').html(formatNum(fpztdata[0].cadre_sum));
-    $('#jdqk__sum').html((fpztdata[0].assist_coverage * 100) + '%');
-    $('#d_poor__sum').html(formatNum(fpztdata[0].d_poor_sum));
-    $('#d_cadre__sum').html(formatNum(fpztdata[0].d_cadre_sum));
-    $('#diary__sum').html(formatNum(fpztdata[0].diary_sum));
-    $('#day__sum').html(formatNum(fpztdata[0].day_sum));
-    $('#week__sum').html(formatNum(fpztdata[0].week_sum));
-    $('#month__sum').html(formatNum(fpztdata[0].month_sum));*/
 
-    $('#loadingToast').fadeOut(600);
-
-}
 /**
  * 显示今日日记
  */
@@ -1902,40 +1911,73 @@ function jrrj() {
     $(".weui-tab__panel").children().eq(4).show();//显示对应的子页面
     isrjlb = true;
     getrjdata();
-    $('#jrrj').click(function (){
+    $('#jrrj').click(function () {
         rjtype = 1;
-        getrjdata();
+        counter = 1;
+        rjoption = 0;
+        $("#rjcells").html("");
+        $('#rjlbbq').children().removeClass('rjbqax');
+        $('#jrrj').addClass('rjbqax');
+        $('#loadingToast').fadeIn(80);
+        setTimeout(function(){
+            getrjdata();
+        },100);
     });
-    $('#bzrj').click(function (){
+    $('#bzrj').click(function () {
         rjtype = 2;
-        getrjdata();
+        $('#rjlbbq').children().removeClass('rjbqax');
+        $('#bzrj').addClass('rjbqax');
+        counter = 1;
+        rjoption = 0;
+        $("#rjcells").html("");
+        $('#loadingToast').fadeIn(80);
+        setTimeout(function(){
+            getrjdata();
+        },100);
     });
-    $('#byrj').click(function (){
+    $('#byrj').click(function () {
         rjtype = 3;
-        getrjdata();
+        $('#rjlbbq').children().removeClass('rjbqax');
+        $('#byrj').addClass('rjbqax');
+        counter = 1;
+        rjoption = 0;
+        $("#rjcells").html("");
+        $('#loadingToast').fadeIn(80);
+        setTimeout(function(){
+            getrjdata();
+        },100);
     });
-    $('#qbrj').click(function (){
+    $('#qbrj').click(function () {
+
+        $('#rjlbbq').children().removeClass('rjbqax');
+        $('#qbrj').addClass('rjbqax');
         rjtype = 0;
-        getrjdata();
+        counter = 1;
+        rjoption = 0;
+        $("#rjcells").html("");
+        $('#loadingToast').fadeIn(80);
+        setTimeout(function(){
+            getrjdata();
+        },100);
     });
     /*监听加载更多*/
     $("#jzgd").click(function () {
-        if(isxsxq == true){
+        if (isxsxq == true) {
             return;
         }
-        if(isEnd == true){
+        if (isEnd == true) {
 
             return;
         }
         $("#jzgd").addClass("weui-btn_loading");
-        $("#jzgd").html("<i class='weui-loading'></i>"+"加载中...");
-        counter ++;
+        $("#jzgd").html("<i class='weui-loading'></i>" + "加载中...");
+        counter++;
         $("#loadingToast").fadeIn(100);
         setTimeout(function () {
                 $("#loadingToast").fadeOut(600);
-                if (iscxdx == true){
+                if (iscxdx == true) {
                     start_search();
-                }else {
+                } else {
                     jrrj();
                 }
 
@@ -1994,14 +2036,14 @@ function jrrj() {
     });
 }
 
-function getrjdata(){
+function getrjdata() {
     /*请求日记列表*/
     $.ajax({
         url: serviceurl + 'assaWeChatApp/getRjll.do',
         type: 'POST',
         async: false,
         dataType: 'json',
-        data: {cType: cType, code: xzqhcode, pageNum: counter, type:rjtype},
+        data: {cType: cType, code: xzqhcode, pageNum: counter, type: rjtype},
         success: function (data) {
             console.log(data);
             if (counter == 1) {
