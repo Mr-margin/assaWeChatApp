@@ -1564,13 +1564,13 @@ function initfpzt() {
     function setlsqk(data) {
         $('#lszhs__sum').html(formatNum(data.tjSum[0].ZhsTotal  ));
         $('#bfzrrlshs__sum').html(formatNum(data.tjSum[0].lsHsTotal));
-        $('#lsbfbl__sum').html(formatNum(data.tjSum[0].lsBlTotal));
+        $('#lsbfbl__sum').html((data.tjSum[0].lsBlTotal*100)+'%');
         setlsqkbar(data);
     }
     function setrhbf(data) {
         $('#rh-pkh__sum').html(formatNum(data.tjSum[0].pkhTotal));
         $('#zfpkh__sum').html(formatNum(data.tjSum[0].zfpkhTotal));
-        $('#zfbl_rh').html(formatNum(data.tjSum[0].zfblTotal));
+        $('#zfbl_rh').html((data.tjSum[0].zfblTotal*100)+'%');
         $('#day_sum').html(formatNum(data.tjSum[0].drzfTotal));
         $('#week_sum').html(formatNum(data.tjSum[0].bzzfTotal));
         $('#month_sum').html(formatNum(data.tjSum[0].byzfTotal));
