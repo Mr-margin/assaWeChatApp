@@ -45,6 +45,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.gistone.WeChatApp;
 import com.gistone.MyBatis.config.GetBySqlMapper;
+import com.gistone.util.DateFormatUtil;
 import com.gistone.util.MapUtil;
 
 @RestController
@@ -1297,7 +1298,6 @@ public class AnController{
 		response.setContentType("text/html;charset=UTF-8");
 	    response.setCharacterEncoding("UTF-8");
 	    response.setHeader("Access-Control-Allow-Origin", "*");
-	    java.text.DecimalFormat   df   =new   java.text.DecimalFormat("#.00");  
 	    String name = request.getParameter("name");//行政区划名称
 	    double landOne=0;//耕地面积
 	    double landTwo=0;//有效灌溉面积
@@ -1337,12 +1337,12 @@ public class AnController{
 				
 				chartJson.add(obj);
 	    	}
-	    	jb.put("landOneTotal", df.format(landOne));
-	    	jb.put("landTwoTotal", df.format(landTwo));
-	    	jb.put("landThreeTotal", df.format(landThree));
-	    	jb.put("landFourTotal", df.format(landFour));
-	    	jb.put("landFiveTotal", df.format(landFive));
-	    	jb.put("landSixTotal", df.format(landSix));
+	    	jb.put("landOneTotal", DateFormatUtil.formatDouble1(landOne));
+	    	jb.put("landTwoTotal", DateFormatUtil.formatDouble1(landTwo));
+	    	jb.put("landThreeTotal", DateFormatUtil.formatDouble1(landThree));
+	    	jb.put("landFourTotal", DateFormatUtil.formatDouble1(landFour));
+	    	jb.put("landFiveTotal", DateFormatUtil.formatDouble1(landFive));
+	    	jb.put("landSixTotal", DateFormatUtil.formatDouble1(landSix));
 	    	tjJson.add(jb);
 	    	response.getWriter().write("{\"success\":\"0\",\"message\":\"成功\",\"chartData\":"+chartJson.toString()+",\"tjSum\":"+tjJson+"}");
 	    }else{
@@ -1748,8 +1748,8 @@ public class AnController{
 	    if(Integer.valueOf(Integer.valueOf(level)-1)>1){
 	    	code=this.getXjcode((Integer.valueOf(level)-1)+"",code);//根据当前传的行政区划code获取所有村级行政区划
 	    }
-	    int pkh=0;
-	    int zfpkh=0;
+	    double pkh=0;
+	    double zfpkh=0;
 	    int drzf=0;
 	    int bzzf=0;
 	    int byzf=0;
@@ -1837,7 +1837,7 @@ public class AnController{
 		}
 		jb.put("pkhTotal", pkh);
 	    jb.put("zfpkhTotal", zfpkh);
-	    jb.put("zfblTotal", (zfpkh/pkh>1)?1:zfpkh/pkh);
+	    jb.put("zfblTotal", (zfpkh/pkh)>1?1:+DateFormatUtil.formatDouble1(zfpkh/pkh));
 	    
 		jb.put("drzfTotal", drzf);
 	    jb.put("bzzfTotal", bzzf);
