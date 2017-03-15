@@ -53,7 +53,8 @@ function show_jbqk(){
 					'<img style="float: right;height: 2.9rem ;vertical-align: middle" src="images/uploaded.png"></div>';
 	    		html += ' <div class="panel-body"><div class="row">'
 				html += '<div class="col-sm-12"><div> 帮扶责任人：<strong>'+item.e+'</strong></div><div><p style="padding-left: 25px;">贫困户：'+item.v6+'</p></div>';
-	    		html += '<div><p style="padding-left: 12px;">走访记录：'+item.c+'</p></div>'
+				html += '<div><p style="padding-left: 12px;">走访类型：'+setzflx(item.t)+'</p></div>'
+				html += '<div><p style="padding-left: 12px;">走访记录：'+item.c+'</p></div>'
 	    		if(item.d == "" || item.d == null || item.d == undefined){
 				}else{
 					var pic = (item.d).split(",");
@@ -76,6 +77,28 @@ function show_jbqk(){
 	})
 	
 }
+function setzflx(p){
+	if (p == 1){
+		return '其他帮扶活动';
+	}else if(p ==2){
+		return '了解基本情况';
+	}else if(p ==3){
+		return '填写扶贫手册';
+	}
+	else if(p ==4){
+		return '制定脱贫计划';
+	}
+	else if(p ==5){
+		return '落实资金项目';
+	}
+	else if(p ==6){
+		return '宣传扶贫政策';
+	}
+	else if(p ==7){
+		return '节日假日慰问';
+	}
+}
+
 //图片的预览功能
 function yulan(p_name,pic){
 	if (iszzyl){
