@@ -14,8 +14,10 @@ import java.security.DigestException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -51,6 +53,24 @@ public class AnController{
 	
 	@Autowired
 	private GetBySqlMapper getBySqlMapper;
+	private JSONArray getPaixu(JSONArray jsa, String name) {
+		if (name.equals("内蒙古自治区")) {
+			JSONArray val = new JSONArray();
+			String str[] = { "呼和浩特市", "包头市", "呼伦贝尔市", "兴安盟", "通辽市", "赤峰市",
+					"锡林郭勒盟", "乌兰察布市", "鄂尔多斯市", "巴彦淖尔市", "乌海市", "阿拉善盟" };
+			for (int k = 0; k < str.length; k++) {
+				for (int i = 0; i < jsa.size(); i++) {
+					JSONObject jo = JSONObject.fromObject(jsa.get(i));
+					if (jo.get("V1").toString().equals(str[k])) {
+						val.add(jo);
+					}
+				}
+			}
+			return val;
+		} else {
+			return jsa;
+		}
+	}
 	/**
 	 * 安卓登录接口 
 	 * @author 太年轻
@@ -298,23 +318,23 @@ public class AnController{
 		
 		if ("".equals(personal_name) || personal_name == null ) {
 			
-			sql = " select REGISTERTIME,v3,address,pic_path,random_number,aa.household_name,aa.household_card,personal_name,REGISTERTYPE　from "+
+			sql = " select REGISTERTIME,v3,address,pic_path,random_number,aa.household_name,aa.household_card,personal_name,REGISTERTYPE,ZFTYPE　from "+
 					"(select RANDOM_NUMBER nn, personal_name,household_name,household_card,personal_phone from DA_HELP_VISIT where "+
 					" household_name='"+household_name+"' and household_card='"+household_cord+"')aa LEFT JOIN ( "+
-					"select REGISTERTIME,v3,ADDRESS,wmsys.wm_concat(PIC_PATH) PIC_PATH,a.RANDOM_number,household_name,household_card,REGISTERTYPE from "+
+					"select REGISTERTIME,v3,ADDRESS,wmsys.wm_concat(PIC_PATH) PIC_PATH,a.RANDOM_number,household_name,household_card,REGISTERTYPE,ZFTYPE from "+
 					"  (select * from DA_HELP_VISIT where household_name='"+household_name+"' AND household_card='"+household_cord+"') a left join "+
 					" (select * from DA_PIC_VISIT) b on a.RANDOM_NUMBER = b.RANDOM_NUMBER GROUP BY REGISTERTIME,v3,ADDRESS,a.RANDOM_number, "+
-					" household_name,household_card,REGISTERTYPE  )bb on aa.nn=bb.RANDOM_NUMBER ORDER BY REGISTERTIME DESC";
+					" household_name,household_card,REGISTERTYPE,ZFTYPE  )bb on aa.nn=bb.RANDOM_NUMBER ORDER BY REGISTERTIME DESC";
 			
 		} else if ("".equals(household_name) || household_name == null ) {
 			
-			sql = "select REGISTERTIME,v3,address,pic_path,random_number,aa.household_name,aa.household_card,personal_name,REGISTERTYPE　from "+
+			sql = "select REGISTERTIME,v3,address,pic_path,random_number,aa.household_name,aa.household_card,personal_name,REGISTERTYPE,ZFTYPE　from "+
 					"(select RANDOM_NUMBER nn,  personal_name,household_name,household_card,personal_phone from DA_HELP_VISIT where "+
 					"  personal_name='"+personal_name+"' and personal_phone='"+personal_phone+"')aa LEFT JOIN ( "+
-					"select REGISTERTIME,v3,ADDRESS,wmsys.wm_concat(PIC_PATH) PIC_PATH,a.RANDOM_number,household_name,household_card,REGISTERTYPE from "+
+					"select REGISTERTIME,v3,ADDRESS,wmsys.wm_concat(PIC_PATH) PIC_PATH,a.RANDOM_number,household_name,household_card,REGISTERTYPE,ZFTYPE from "+
 					"  (select * from DA_HELP_VISIT where PERSONAL_NAME='"+personal_name+"' AND PERSONAL_PHONE='"+personal_phone+"') a left join "+
 					" (select * from DA_PIC_VISIT) b on a.RANDOM_NUMBER = b.RANDOM_NUMBER GROUP BY REGISTERTIME,v3,ADDRESS,a.RANDOM_number, "+
-					" household_name,household_card,REGISTERTYPE  )bb on aa.nn=bb.RANDOM_NUMBER ORDER BY REGISTERTIME DESC";
+					" household_name,household_card,REGISTERTYPE,ZFTYPE  )bb on aa.nn=bb.RANDOM_NUMBER ORDER BY REGISTERTIME DESC";
 		} 
 		JSONArray jsonArray = new JSONArray();
 		try {
@@ -328,6 +348,7 @@ public class AnController{
 				obj.put("f", "".equals(list.get(i).get("ADDRESS")) || list.get(i).get("ADDRESS") == null ? "" : list.get(i).get("ADDRESS").toString());//地址
 				obj.put("e", "".equals(list.get(i).get("PERSONAL_NAME")) || list.get(i).get("PERSONAL_NAME") == null ? "" : list.get(i).get("PERSONAL_NAME").toString());//帮扶干部名称
 				obj.put("v6", "".equals(list.get(i).get("HOUSEHOLD_NAME")) || list.get(i).get("HOUSEHOLD_NAME") == null ? "" : list.get(i).get("HOUSEHOLD_NAME").toString());
+				obj.put("t", "".equals(list.get(i).get("ZFTYPE")) || list.get(i).get("ZFTYPE") == null ? "" : list.get(i).get("ZFTYPE").toString());
 				jsonArray.add(obj);
 			}
 			response.getWriter().write("{\"success\":\"0\",\"message\":\"成功\",\"data\":"+jsonArray.toString()+"}");
@@ -352,6 +373,18 @@ public class AnController{
 		String sendLat = request.getParameter("sendLat");//上传维度
 		String sendLng = request.getParameter("sendLng");//上传经度
 		String registerType  = request.getParameter("registerType");//签到类型
+		/*1、其他帮扶活动
+		2、了解基本情况
+		3、填写扶贫手册
+		4、制定脱贫计划
+		5、落实资金项目
+		6、宣传扶贫政策
+		7、节日假日慰问*/
+		String zfType = request.getParameter("zfType");//走访类型
+		if(zfType!=null&&!"".equals(zfType)){
+		}else{
+			zfType="1";
+		}
 		
 		String AAR008 = request.getParameter("AAR008");//村行政编码
 		String personal_name = request.getParameter("personal_name");//帮扶人姓名
@@ -369,8 +402,8 @@ public class AnController{
 			SimpleDateFormat sf = new SimpleDateFormat("yyyyMMddhhmmss");
 			SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy-MM-dd"); 
 //	        String random_number = sf.format(date)+"_"+new Random().nextInt(1000);//时间戳+随机数
-			String insert_sql = "insert into DA_HELP_VISIT (household_name,personal_name,v1,v3,lng,lat,address,household_card,personal_phone,random_number,AAR008,REGISTERTIME,SENDLAT,SENDLNG,REGISTERTYPE)"+
-					" values ('"+household_name+"','"+personal_name+"','"+simpleDate.format(new Date())+"','"+v3+"','"+lng+"','"+lat+"','"+address+"','"+household_card+"','"+personal_phone+"','"+random_number+"','"+AAR008+"','"+registerTime+"','"+sendLat+"','"+sendLng+"','"+registerType+"')";
+			String insert_sql = "insert into DA_HELP_VISIT (household_name,personal_name,v1,v3,lng,lat,address,household_card,personal_phone,random_number,AAR008,REGISTERTIME,SENDLAT,SENDLNG,REGISTERTYPE,TYPE,ZFTYPE)"+
+					" values ('"+household_name+"','"+personal_name+"','"+simpleDate.format(new Date())+"','"+v3+"','"+lng+"','"+lat+"','"+address+"','"+household_card+"','"+personal_phone+"','"+random_number+"','"+AAR008+"','"+registerTime+"','"+sendLat+"','"+sendLng+"','"+registerType+"','手机APP','"+zfType+"')";
 			try {
 				this.getBySqlMapper.findRecords(insert_sql);
 				response.getWriter().write("{\"success\":\"0\",\"message\":\"成功\",\"data\":{\"random_number\":\""+random_number+"\"}}");
@@ -724,6 +757,15 @@ public class AnController{
 		String latitude = request.getParameter("latitude");//维度
 		String longitude = request.getParameter("longitude");//经度
 		String[] photo = request.getParameterValues("photo");//图片
+		/*1、其他帮扶活动
+		2、了解基本情况
+		3、填写扶贫手册
+		4、制定脱贫计划
+		5、落实资金项目
+		6、宣传扶贫政策
+		7、节日假日慰问*/
+		String zfType = request.getParameter("zfType");//走访类型
+		
 		Date date = new Date();
 		SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy-MM-dd"); 
 		SimpleDateFormat sf = new SimpleDateFormat("yyyyMMddhhmmss");
@@ -781,8 +823,8 @@ public class AnController{
 		    	AAR008 = cha_list.get(0).get("AAR008").toString();
 		    }
 		    //添加走访记录文字信息
-			String hql = "INSERT INTO DA_HELP_VISIT(HOUSEHOLD_NAME,PERSONAL_NAME,V1,V3,LNG,LAT,HOUSEHOLD_CARD,PERSONAL_PHONE,RANDOM_NUMBER,AAR008,REGISTERTIME,SENDLAT,SENDLNG,REGISTERTYPE,TYPE)"+
-					" VALUES('"+household_name+"','"+personal_name+"','"+simpleDate.format(new Date())+"','"+zfjl+"','"+longitude+"','"+latitude+"','"+household_card+"','"+personal_phone+"','"+random_number+"','"+AAR008+"','"+registerTime+"','"+sendLat+"','"+sendLng+"','"+registerType+"','微信')";
+			String hql = "INSERT INTO DA_HELP_VISIT(HOUSEHOLD_NAME,PERSONAL_NAME,V1,V3,LNG,LAT,HOUSEHOLD_CARD,PERSONAL_PHONE,RANDOM_NUMBER,AAR008,REGISTERTIME,SENDLAT,SENDLNG,REGISTERTYPE,TYPE,ZFTYPE)"+
+					" VALUES('"+household_name+"','"+personal_name+"','"+simpleDate.format(new Date())+"','"+zfjl+"','"+longitude+"','"+latitude+"','"+household_card+"','"+personal_phone+"','"+random_number+"','"+AAR008+"','"+registerTime+"','"+sendLat+"','"+sendLng+"','"+registerType+"','微信','"+zfType+"')";
 			int insert_num = this.getBySqlMapper.insert(hql);
 			response.getWriter().write("5");
 		} catch (Exception e) {
@@ -897,8 +939,917 @@ public class AnController{
 		}
 	}
 	
-	
-	/***************************精准扶贫帮扶通领导版接口*******************************/
+	/*帮扶通领导版本第二版接口--扶贫对象*/
+	/**
+	 * @param request
+	 * @param response 获取扶贫对象菜单栏统计数据--1.贫困概况
+	 * @throws IOException
+	 */
+	@RequestMapping("getFpdx1.do")
+	public void getFpdx1(HttpServletRequest request,HttpServletResponse response ) throws IOException {
+		response.setContentType("text/html;charset=UTF-8");
+	    response.setCharacterEncoding("UTF-8");
+	    response.setHeader("Access-Control-Allow-Origin", "*");
+	    String name = request.getParameter("name");//行政区划名称
+	    int pkrk=0;
+	    int pkh=0;
+	    int pkc=0;
+	    int ybpkh=0;
+	    int dbpkh=0;
+	    int wbpkh=0;
+	    //查询贫困人口
+	    String sqlPkr = "";
+	    //查询贫困户
+	    String sqlPkh = "";
+	    //查询贫困村
+	    String sqlPkc = "";
+	    
+	    JSONArray chartJson = new JSONArray();
+	    JSONArray tjJson = new JSONArray();
+	    JSONObject jb = new JSONObject();
+	    if(name!=null&&!"".equals(name)){//判断是否为空
+	    	//贫困人口
+	    	sqlPkr = "SELECT a1.V1,a1.V2,a2.com_level FROM("
+					+ "SELECT * FROM SYS_COMPANY WHERE COM_F_PKID=("
+					+ "SELECT PKID FROM SYS_COMPANY WHERE COM_NAME='" + name + "'"
+					+ ")) a2 LEFT JOIN PKC_1_1_0 a1 ON a1.V10=A2.COM_CODE where V9=0";
+	    	//贫困户
+	    	sqlPkh="SELECT a1.com_name,a1.z_hu,a1.z_ren,a1.v1,a1.v5,a1.v9  FROM("
+					+ "SELECT * FROM SYS_COMPANY WHERE COM_F_PKID=("
+					+ "SELECT PKID FROM SYS_COMPANY WHERE COM_NAME='"+name+"'"
+					+ ")) a2 LEFT JOIN PKC_1_2_1 a1 ON a1.COM_CODE=A2.COM_CODE  WHERE  TYPE = '0' ";
+	    	//贫困村
+	    	sqlPkc = "select v1,v3 from PKC_1_3_1 c join (select * from SYS_COMPANY where COM_F_PKID=(SELECT PKID from SYS_COMPANY where COM_NAME='"+name+"') ) "+
+ 					"b on c.V10=b.COM_CODE WHERE  COM_PIN = '0' ";
+	    }else{//如果都为空则查询自治区统计数据
+	    	name="内蒙古自治区";
+	    	//贫困人口
+	    	sqlPkr = "SELECT a1.V1,a1.V2,a2.com_level FROM("
+					+ "SELECT * FROM SYS_COMPANY WHERE COM_F_PKID=("
+					+ "SELECT PKID FROM SYS_COMPANY WHERE COM_NAME='内蒙古自治区'"
+					+ ")) a2 LEFT JOIN PKC_1_1_0 a1 ON a1.V10=A2.COM_CODE where V9=0";
+	    	//贫困户
+	    	sqlPkh="SELECT a1.com_name,a1.z_hu,a1.z_ren,a1.v1,a1.v5,a1.v9  FROM("
+					+ "SELECT * FROM SYS_COMPANY WHERE COM_F_PKID=("
+					+ "SELECT PKID FROM SYS_COMPANY WHERE COM_NAME='内蒙古自治区'"
+					+ ")) a2 LEFT JOIN PKC_1_2_1 a1 ON a1.COM_CODE=A2.COM_CODE  WHERE  TYPE = '0' ";
+	    	//贫困村
+	    	sqlPkc = "select v1,v3 from PKC_1_3_1 c join (select * from SYS_COMPANY where COM_F_PKID=(SELECT PKID from SYS_COMPANY where COM_NAME='内蒙古自治区') ) "+
+ 					"b on c.V10=b.COM_CODE WHERE  COM_PIN = '0' ";
+	    }
+	    List<Map> listPkr = this.getBySqlMapper.findRecords(sqlPkr);
+	    List<Map> listPkh = this.getBySqlMapper.findRecords(sqlPkh);
+	    List<Map> listPkc = this.getBySqlMapper.findRecords(sqlPkc);
+	    if(listPkr.size()>0){
+			for (int i = 0; i < listPkr.size(); i++) {
+				Map Pkr_map = listPkr.get(i);
+				JSONObject obj = new JSONObject();
+				for (Object key : Pkr_map.keySet()) {
+					if(key.equals("COM_LEVEL")){
+					}else{
+						obj.put(key, Pkr_map.get(key));
+					}
+				}
+				pkrk+=(listPkr.get(i).get("V2")!=null)&&(listPkr.get(i).get("V2")!="")?Integer.valueOf(listPkr.get(i).get("V2").toString()):0;//总贫困人口
+				chartJson.add(obj);
+			}
+			if(Integer.valueOf(listPkr.get(0).get("COM_LEVEL").toString())-1==1){//静态获取全区统计数据
+		    	jb.put("pkc", 2834);
+				jb.put("pkh", 249506);
+				jb.put("pkr", 555563);
+				jb.put("ybpkh", 147081);
+				jb.put("dbpkh", 92930);
+				jb.put("wbpkh", 5684);
+		    }else{//动态查询
+		    	for (int i = 0; i < listPkh.size(); i++) {
+		    		pkh+=(listPkh.get(i).get("Z_HU")!=null)&&(listPkh.get(i).get("Z_HU")!="")?Integer.valueOf(listPkh.get(i).get("Z_HU").toString()):0;
+		    		ybpkh+=(listPkh.get(i).get("V1")!=null)&&(listPkh.get(i).get("V1")!="")?Integer.valueOf(listPkh.get(i).get("V1").toString()):0;
+		    		dbpkh+=(listPkh.get(i).get("V5")!=null)&&(listPkh.get(i).get("V5")!="")?Integer.valueOf(listPkh.get(i).get("V5").toString()):0;
+		    		wbpkh+=(listPkh.get(i).get("V9")!=null)&&(listPkh.get(i).get("V9")!="")?Integer.valueOf(listPkh.get(i).get("V9").toString()):0;
+		    	}
+		    	for (int j = 0; j < listPkc.size(); j++) {
+		    		pkc+=(listPkc.get(j).get("V3")!=null)&&(listPkc.get(j).get("V3")!="")?Integer.valueOf(listPkc.get(j).get("V3").toString()):0;
+		    	}
+		    	jb.put("pkc", pkc);
+				jb.put("pkh", pkh);
+				jb.put("pkr", pkrk);
+				jb.put("ybpkh", ybpkh);
+				jb.put("dbpkh", dbpkh);
+				jb.put("wbpkh", wbpkh);
+		    }
+			tjJson.add(jb);
+			response.getWriter().write("{\"success\":\"0\",\"message\":\"成功\",\"chartData\":"+getPaixu(chartJson, name).toString()+",\"tjSum\":"+tjJson+"}");
+	    }else{
+	    	response.getWriter().write("0");
+	    }
+	}
+	/**
+	 * @param request
+	 * @param response 获取扶贫对象菜单栏统计数据--2.致贫原因
+	 * @throws IOException
+	 */
+	@RequestMapping("getFpdx2.do")
+	public void getFpdx2(HttpServletRequest request,HttpServletResponse response ) throws IOException {
+		response.setContentType("text/html;charset=UTF-8");
+	    response.setCharacterEncoding("UTF-8");
+	    response.setHeader("Access-Control-Allow-Origin", "*");
+	    String name = request.getParameter("name");//行政区划名称
+	    int ybzp=0;//因病致贫
+	    int qzj=0;//缺资金
+	    int yxzp=0;//因学致贫
+	    
+	    int ybzpCh=0;//因病致贫
+	    int yczpCh=0;//因残致贫
+	    int yxzpCh=0;//因学致贫
+	    int yzzpCh=0;//因灾致贫
+	    int qtdCh=0;//缺土地
+	    int qsCh=0;//缺水
+	    int qjsCh=0;//缺技术
+	    int qllCh=0;//缺劳力
+	    int qzjCh=0;//缺资金
+	    int jtlhCh=0;//交通条件落后
+	    int zsfzCh=0;//自身发展力不足
+	    String sqlZpyy = "";
+	    JSONArray chartJson = new JSONArray();
+	    JSONArray tjJson = new JSONArray();
+	    JSONObject jb = new JSONObject();
+	    JSONObject obj = new JSONObject();
+	    if(name!=null&&!"".equals(name)){//判断是否为空
+	    	sqlZpyy="SELECT a1.* FROM(SELECT * FROM SYS_COMPANY WHERE COM_F_PKID=(SELECT PKID FROM SYS_COMPANY WHERE COM_NAME='"+name+"')) a2 LEFT JOIN PKC_1_2_2 a1 ON a1.COM_CODE=A2.COM_CODE  WHERE  TYPE = '0' ";
+	    }else{
+	    	sqlZpyy="SELECT a1.* FROM(SELECT * FROM SYS_COMPANY WHERE COM_F_PKID=(SELECT PKID FROM SYS_COMPANY WHERE COM_NAME='内蒙古自治区')) a2 LEFT JOIN PKC_1_2_2 a1 ON a1.COM_CODE=A2.COM_CODE  WHERE  TYPE = '0' ";
+	    }
+	    List<Map> listZpyy = this.getBySqlMapper.findRecords(sqlZpyy);
+	    if(listZpyy.size()>0){
+	    	for (int i = 0; i < listZpyy.size(); i++) {
+	    		Map Zpyy_map = listZpyy.get(i);
+	    		
+				/*obj.put("V0", Zpyy_map.get("COM_NAME"));//区域名
+				obj.put("V1", Zpyy_map.get("V1"));//因病致贫
+				obj.put("V2", Zpyy_map.get("V3"));//因残致贫
+				obj.put("V3", Zpyy_map.get("V5"));//因学致贫
+				obj.put("V4", Zpyy_map.get("V7"));//因灾致贫
+				obj.put("V5", Zpyy_map.get("V9"));//缺土地
+				obj.put("V6", Zpyy_map.get("V11"));//缺水
+				obj.put("V7", Zpyy_map.get("V13"));//缺技术
+				obj.put("V8", Zpyy_map.get("V15"));//缺劳力
+				obj.put("V9", Zpyy_map.get("V17"));//缺资金
+				obj.put("V10", Zpyy_map.get("V19"));//交通条件落后
+				obj.put("V11", Zpyy_map.get("V21"));//自身发展力不足*/
+				
+				ybzpCh+=(Zpyy_map.get("V1")!=null)&&(Zpyy_map.get("V1")!="")?Integer.valueOf(Zpyy_map.get("V1").toString()):0;
+				yczpCh+=(Zpyy_map.get("V3")!=null)&&(Zpyy_map.get("V3")!="")?Integer.valueOf(Zpyy_map.get("V3").toString()):0;
+				yxzpCh+=(Zpyy_map.get("V5")!=null)&&(Zpyy_map.get("V5")!="")?Integer.valueOf(Zpyy_map.get("V5").toString()):0;
+				yzzpCh+=(Zpyy_map.get("V7")!=null)&&(Zpyy_map.get("V7")!="")?Integer.valueOf(Zpyy_map.get("V7").toString()):0;
+				qtdCh+=(Zpyy_map.get("V9")!=null)&&(Zpyy_map.get("V9")!="")?Integer.valueOf(Zpyy_map.get("V9").toString()):0;
+				qsCh+=(Zpyy_map.get("V11")!=null)&&(Zpyy_map.get("V11")!="")?Integer.valueOf(Zpyy_map.get("V11").toString()):0;
+				qjsCh+=(Zpyy_map.get("V13")!=null)&&(Zpyy_map.get("V13")!="")?Integer.valueOf(Zpyy_map.get("V13").toString()):0;
+				qllCh+=(Zpyy_map.get("V15")!=null)&&(Zpyy_map.get("V15")!="")?Integer.valueOf(Zpyy_map.get("V15").toString()):0;
+				qzjCh+=(Zpyy_map.get("V17")!=null)&&(Zpyy_map.get("V17")!="")?Integer.valueOf(Zpyy_map.get("V17").toString()):0;
+				jtlhCh+=(Zpyy_map.get("V19")!=null)&&(Zpyy_map.get("V19")!="")?Integer.valueOf(Zpyy_map.get("V19").toString()):0;
+				zsfzCh+=(Zpyy_map.get("V21")!=null)&&(Zpyy_map.get("V21")!="")?Integer.valueOf(Zpyy_map.get("V21").toString()):0;
+				
+				
+				ybzp+=(Zpyy_map.get("V1")!=null)&&(Zpyy_map.get("V1")!="")?Integer.valueOf(Zpyy_map.get("V1").toString()):0;
+				qzj+=(Zpyy_map.get("V17")!=null)&&(Zpyy_map.get("V17")!="")?Integer.valueOf(Zpyy_map.get("V17").toString()):0;
+				yxzp+=(Zpyy_map.get("V5")!=null)&&(Zpyy_map.get("V5")!="")?Integer.valueOf(Zpyy_map.get("V5").toString()):0;
+				
+	    	}
+	    	obj.put("V1", ybzpCh);//因病致贫
+			obj.put("V2", yczpCh);//因残致贫
+			obj.put("V3", yxzpCh);//因学致贫
+			obj.put("V4", yzzpCh);//因灾致贫
+			obj.put("V5", qtdCh);//缺土地
+			obj.put("V6", qsCh);//缺水
+			obj.put("V7", qjsCh);//缺技术
+			obj.put("V8", qllCh);//缺劳力
+			obj.put("V9", qzjCh);//缺资金
+			obj.put("V10", jtlhCh);//交通条件落后
+			obj.put("V11", zsfzCh);//自身发展力不足
+	    	chartJson.add(obj);
+	    	
+	    	jb.put("ybzpTotal", ybzp);
+	    	jb.put("qzjTotal", qzj);
+	    	jb.put("yxzpTotal", yxzp);
+	    	tjJson.add(jb);
+	    	response.getWriter().write("{\"success\":\"0\",\"message\":\"成功\",\"chartData\":"+chartJson.toString()+",\"tjSum\":"+tjJson+"}");
+	    }else{
+	    	response.getWriter().write("0");
+	    }
+	}
+	/**
+	 * @param request
+	 * @param response 获取扶贫对象菜单栏统计数据--3.年龄分组
+	 * @throws IOException
+	 */
+	@RequestMapping("getFpdx3.do")
+	public void getFpdx3(HttpServletRequest request,HttpServletResponse response ) throws IOException {
+		response.setContentType("text/html;charset=UTF-8");
+	    response.setCharacterEncoding("UTF-8");
+	    response.setHeader("Access-Control-Allow-Origin", "*");
+	    String name = request.getParameter("name");//行政区划名称
+	    int ageOne=0;//16岁以下
+	    int ageTwo=0;//16-30岁
+	    int ageThree=0;//30-40岁
+	    int ageFour=0;//40-50岁
+	    int ageFive=0;//50-60岁
+	    int ageSix=0;//60岁以上
+	    String sqlAge = "";
+	    JSONArray chartJson = new JSONArray();
+	    JSONArray tjJson = new JSONArray();
+	    JSONObject jb = new JSONObject();
+	    if(name!=null&&!"".equals(name)){//判断是否为空
+	    	sqlAge="SELECT a1.* FROM(SELECT * FROM SYS_COMPANY WHERE COM_F_PKID=(SELECT PKID FROM SYS_COMPANY WHERE COM_NAME='"+name+"')) a2 LEFT JOIN PKC_1_1_1 a1 ON a1.V10=A2.COM_CODE  WHERE  V9 = '0'  ";
+	    }else{
+	    	sqlAge="SELECT a1.* FROM(SELECT * FROM SYS_COMPANY WHERE COM_F_PKID=(SELECT PKID FROM SYS_COMPANY WHERE COM_NAME='内蒙古自治区')) a2 LEFT JOIN PKC_1_1_1 a1 ON a1.V10=A2.COM_CODE  WHERE  V9 = '0' ";
+	    }
+	    List<Map> listAge = this.getBySqlMapper.findRecords(sqlAge);
+	    if(listAge.size()>0){
+	    	for (int i = 0; i < listAge.size(); i++) {
+	    		Map Age_map = listAge.get(i);
+				JSONObject obj = new JSONObject();
+				obj.put("V0", Age_map.get("V1"));//区域名
+				obj.put("V1", (Age_map.get("V8")!=null)&&(Age_map.get("V8")!="")?Age_map.get("V8"):0);//60岁以上
+				
+				ageOne+=(Age_map.get("V3")!=null)&&(Age_map.get("V3")!="")?Integer.valueOf(Age_map.get("V3").toString()):0;
+				ageTwo+=(Age_map.get("V4")!=null)&&(Age_map.get("V4")!="")?Integer.valueOf(Age_map.get("V4").toString()):0;
+				ageThree+=(Age_map.get("V5")!=null)&&(Age_map.get("V5")!="")?Integer.valueOf(Age_map.get("V5").toString()):0;
+				ageFour+=(Age_map.get("V6")!=null)&&(Age_map.get("V6")!="")?Integer.valueOf(Age_map.get("V6").toString()):0;
+				ageFive+=(Age_map.get("V7")!=null)&&(Age_map.get("V7")!="")?Integer.valueOf(Age_map.get("V7").toString()):0;
+				ageSix+=(Age_map.get("V8")!=null)&&(Age_map.get("V8")!="")?Integer.valueOf(Age_map.get("V8").toString()):0;
+				chartJson.add(obj);
+	    	}
+	    	jb.put("ageOneTotal", ageOne);
+	    	jb.put("ageTwoTotal", ageTwo);
+	    	jb.put("ageThreeTotal", ageThree);
+	    	jb.put("ageFourTotal", ageFour);
+	    	jb.put("ageFiveTotal", ageFive);
+	    	jb.put("ageSixTotal", ageSix);
+	    	tjJson.add(jb);
+	    	response.getWriter().write("{\"success\":\"0\",\"message\":\"成功\",\"chartData\":"+chartJson.toString()+",\"tjSum\":"+tjJson+"}");
+	    }else{
+	    	response.getWriter().write("0");
+	    }
+	}
+	/**
+	 * @param request
+	 * @param response 获取扶贫对象菜单栏统计数据--5.健康状况
+	 * @throws IOException
+	 */
+	@RequestMapping("getFpdx4.do")
+	public void getFpdx4(HttpServletRequest request,HttpServletResponse response ) throws IOException {
+		response.setContentType("text/html;charset=UTF-8");
+	    response.setCharacterEncoding("UTF-8");
+	    response.setHeader("Access-Control-Allow-Origin", "*");
+	    String name = request.getParameter("name");//行政区划名称
+	    int illC=0;//长期慢性病
+	    int illD=0;//大病
+	    int illCJ=0;//残疾
+	    String sqlIll = "";
+	    JSONArray chartJson = new JSONArray();
+	    JSONArray tjJson = new JSONArray();
+	    JSONObject jb = new JSONObject();
+	    if(name!=null&&!"".equals(name)){//判断是否为空
+	    	sqlIll="SELECT a1.* FROM(SELECT * FROM SYS_COMPANY WHERE COM_F_PKID=(SELECT PKID FROM SYS_COMPANY WHERE COM_NAME='"+name+"')) a2 LEFT JOIN PKC_1_1_2 a1 ON a1.V10=A2.COM_CODE  WHERE  V9 = '0' ";
+	    }else{
+	    	sqlIll="SELECT a1.* FROM(SELECT * FROM SYS_COMPANY WHERE COM_F_PKID=(SELECT PKID FROM SYS_COMPANY WHERE COM_NAME='内蒙古自治区')) a2 LEFT JOIN PKC_1_1_2 a1 ON a1.V10=A2.COM_CODE  WHERE  V9 = '0' ";
+	    }
+	    List<Map> listIll = this.getBySqlMapper.findRecords(sqlIll);
+	    if(listIll.size()>0){
+	    	for (int i = 0; i < listIll.size(); i++) {
+	    		Map Ill_map = listIll.get(i);
+				JSONObject obj = new JSONObject();
+				obj.put("V0", Ill_map.get("V1"));//区域名
+				obj.put("V1", (Ill_map.get("V4")!=null)&&(Ill_map.get("V4")!="")?Ill_map.get("V4"):0);//长期慢性病
+				
+				illC+=(Ill_map.get("V4")!=null)&&(Ill_map.get("V4")!="")?Integer.valueOf(Ill_map.get("V4").toString()):0;
+				illD+=(Ill_map.get("V5")!=null)&&(Ill_map.get("V5")!="")?Integer.valueOf(Ill_map.get("V5").toString()):0;
+				illCJ+=(Ill_map.get("V6")!=null)&&(Ill_map.get("V6")!="")?Integer.valueOf(Ill_map.get("V6").toString()):0;
+				chartJson.add(obj);
+	    	}
+	    	jb.put("illCTotal", illC);
+	    	jb.put("illDTotal", illD);
+	    	jb.put("illCJTotal", illCJ);
+	    	tjJson.add(jb);
+	    	response.getWriter().write("{\"success\":\"0\",\"message\":\"成功\",\"chartData\":"+chartJson.toString()+",\"tjSum\":"+tjJson+"}");
+	    }else{
+	    	response.getWriter().write("0");
+	    }
+	}
+	/**
+	 * @param request
+	 * @param response 获取扶贫对象菜单栏统计数据--5.文化程度
+	 * @throws IOException
+	 */
+	@RequestMapping("getFpdx5.do")
+	public void getFpdx5(HttpServletRequest request,HttpServletResponse response ) throws IOException {
+		response.setContentType("text/html;charset=UTF-8");
+	    response.setCharacterEncoding("UTF-8");
+	    response.setHeader("Access-Control-Allow-Origin", "*");
+	    String name = request.getParameter("name");//行政区划名称
+	    int eduOne=0;//文盲
+	    int eduTwo=0;//小学文化程度
+	    int eduThree=0;//初中文化程度
+	    int eduFour=0;//高中文化程度
+	    int eduFive=0;//大专以上文化程度
+	    String sqlEdu = "";
+	    JSONArray chartJson = new JSONArray();
+	    JSONArray tjJson = new JSONArray();
+	    JSONObject jb = new JSONObject();
+	    if(name!=null&&!"".equals(name)){//判断是否为空
+	    	sqlEdu="SELECT a1.* FROM(SELECT * FROM SYS_COMPANY WHERE COM_F_PKID=(SELECT PKID FROM SYS_COMPANY WHERE COM_NAME='"+name+"')) a2 LEFT JOIN PKC_1_1_3 a1 ON a1.V10=A2.COM_CODE  WHERE  V9 = '0'  ";
+	    }else{
+	    	sqlEdu="SELECT a1.* FROM(SELECT * FROM SYS_COMPANY WHERE COM_F_PKID=(SELECT PKID FROM SYS_COMPANY WHERE COM_NAME='内蒙古自治区')) a2 LEFT JOIN PKC_1_1_3 a1 ON a1.V10=A2.COM_CODE  WHERE  V9 = '0' ";
+	    }
+	    List<Map> listEdu = this.getBySqlMapper.findRecords(sqlEdu);
+	    if(listEdu.size()>0){
+	    	for (int i = 0; i < listEdu.size(); i++) {
+	    		Map Edu_map = listEdu.get(i);
+				JSONObject obj = new JSONObject();
+				obj.put("V0", Edu_map.get("V1"));//区域名
+				obj.put("V1", (Edu_map.get("V4")!=null)&&(Edu_map.get("V4")!="")?Edu_map.get("V4"):0);//文盲
+				
+				eduOne+=(Edu_map.get("V4")!=null)&&(Edu_map.get("V4")!="")?Integer.valueOf(Edu_map.get("V4").toString()):0;
+				eduTwo+=(Edu_map.get("V5")!=null)&&(Edu_map.get("V5")!="")?Integer.valueOf(Edu_map.get("V5").toString()):0;
+				eduThree+=(Edu_map.get("V6")!=null)&&(Edu_map.get("V6")!="")?Integer.valueOf(Edu_map.get("V6").toString()):0;
+				eduFour+=(Edu_map.get("V7")!=null)&&(Edu_map.get("V7")!="")?Integer.valueOf(Edu_map.get("V7").toString()):0;
+				eduFive+=(Edu_map.get("V8")!=null)&&(Edu_map.get("V8")!="")?Integer.valueOf(Edu_map.get("V8").toString()):0;
+				chartJson.add(obj);
+	    	}
+	    	jb.put("eduOneTotal", eduOne);
+	    	jb.put("eduTwoTotal", eduTwo);
+	    	jb.put("eduThreeTotal", eduThree);
+	    	jb.put("eduFourTotal", eduFour);
+	    	jb.put("eduFiveTotal", eduFive);
+	    	tjJson.add(jb);
+	    	response.getWriter().write("{\"success\":\"0\",\"message\":\"成功\",\"chartData\":"+chartJson.toString()+",\"tjSum\":"+tjJson+"}");
+	    }else{
+	    	response.getWriter().write("0");
+	    }
+	}
+	/**
+	 * @param request
+	 * @param response 获取扶贫对象菜单栏统计数据--6.	土地资源
+	 * @throws IOException
+	 */
+	@RequestMapping("getFpdx6.do")
+	public void getFpdx6(HttpServletRequest request,HttpServletResponse response ) throws IOException {
+		response.setContentType("text/html;charset=UTF-8");
+	    response.setCharacterEncoding("UTF-8");
+	    response.setHeader("Access-Control-Allow-Origin", "*");
+	    java.text.DecimalFormat   df   =new   java.text.DecimalFormat("#.00");  
+	    String name = request.getParameter("name");//行政区划名称
+	    double landOne=0;//耕地面积
+	    double landTwo=0;//有效灌溉面积
+	    double landThree=0;//林地面积
+	    double landFour=0;//退耕还林面积
+	    double landFive=0;//林果面积
+	    double landSix=0;//牧草地面积
+	    String sqlLand = "";
+	    String sqlRjLand = "";//人均耕地面积
+	    JSONArray chartJson = new JSONArray();
+	    JSONArray tjJson = new JSONArray();
+	    JSONObject jb = new JSONObject();
+	    if(name!=null&&!"".equals(name)){//判断是否为空
+	    	sqlLand="SELECT a1.* FROM(SELECT * FROM SYS_COMPANY WHERE COM_F_PKID=(SELECT PKID FROM SYS_COMPANY WHERE COM_NAME='"+name+"')) a2 LEFT JOIN PKC_1_2_6 a1 ON a1.COM_CODE=A2.COM_CODE  WHERE  TYPE = '0'  ";
+	    	sqlRjLand="SELECT a1.* FROM(SELECT * FROM SYS_COMPANY WHERE COM_F_PKID=(SELECT PKID FROM SYS_COMPANY WHERE COM_NAME='"+name+"')) a2 LEFT JOIN PKC_1_2_6 a1 ON a1.COM_CODE=A2.COM_CODE  WHERE  TYPE = '0' ";
+	    }else{
+	    	sqlLand="SELECT a1.* FROM(SELECT * FROM SYS_COMPANY WHERE COM_F_PKID=(SELECT PKID FROM SYS_COMPANY WHERE COM_NAME='内蒙古自治区')) a2 LEFT JOIN PKC_1_2_6 a1 ON a1.COM_CODE=A2.COM_CODE  WHERE  TYPE = '0' ";
+	    	sqlRjLand="SELECT a1.* FROM(SELECT * FROM SYS_COMPANY WHERE COM_F_PKID=(SELECT PKID FROM SYS_COMPANY WHERE COM_NAME='内蒙古自治区')) a2 LEFT JOIN PKC_1_2_6 a1 ON a1.COM_CODE=A2.COM_CODE  WHERE  TYPE = '0' ";
+	    }
+	    List<Map> listLand = this.getBySqlMapper.findRecords(sqlLand);
+	    List<Map> listRjLand = this.getBySqlMapper.findRecords(sqlRjLand);
+	    if(listRjLand.size()>0){
+	    	for (int i = 0; i < listRjLand.size(); i++) {
+	    		Map RjLand_map = listRjLand.get(i);
+	    		Map Land_map = listLand.get(i);
+				JSONObject obj = new JSONObject();
+				obj.put("V0", RjLand_map.get("COM_NAME"));//区域名
+				obj.put("V1", (RjLand_map.get("V2")!=null)&&(RjLand_map.get("V2")!="")?RjLand_map.get("V2"):0);//人均耕地面积
+				
+				landOne+=(Land_map.get("V1")!=null)&&(Land_map.get("V1")!="")?Double.parseDouble(Land_map.get("V1").toString()):0;
+				landTwo+=(Land_map.get("V3")!=null)&&(Land_map.get("V3")!="")?Double.valueOf(Land_map.get("V3").toString()):0;
+				landThree+=(Land_map.get("V5")!=null)&&(Land_map.get("V5")!="")?Double.valueOf(Land_map.get("V5").toString()):0;
+				landFour+=(Land_map.get("V7")!=null)&&(Land_map.get("V7")!="")?Double.valueOf(Land_map.get("V7").toString()):0;
+				landFive+=(Land_map.get("V9")!=null)&&(Land_map.get("V9")!="")?Double.valueOf(Land_map.get("V9").toString()):0;
+				landFive+=(Land_map.get("V11")!=null)&&(Land_map.get("V11")!="")?Double.valueOf(Land_map.get("V11").toString()):0;
+				landSix+=(Land_map.get("V13")!=null)&&(Land_map.get("V13")!="")?Double.valueOf(Land_map.get("V13").toString()):0;
+				
+				chartJson.add(obj);
+	    	}
+	    	jb.put("landOneTotal", df.format(landOne));
+	    	jb.put("landTwoTotal", df.format(landTwo));
+	    	jb.put("landThreeTotal", df.format(landThree));
+	    	jb.put("landFourTotal", df.format(landFour));
+	    	jb.put("landFiveTotal", df.format(landFive));
+	    	jb.put("landSixTotal", df.format(landSix));
+	    	tjJson.add(jb);
+	    	response.getWriter().write("{\"success\":\"0\",\"message\":\"成功\",\"chartData\":"+chartJson.toString()+",\"tjSum\":"+tjJson+"}");
+	    }else{
+	    	response.getWriter().write("0");
+	    }
+	}
+	/**
+	 * @param request
+	 * @param response 获取扶贫对象菜单栏统计数据--7.	生产生活条件
+	 * @throws IOException
+	 */
+	@RequestMapping("getFpdx7.do")
+	public void getFpdx7(HttpServletRequest request,HttpServletResponse response ) throws IOException {
+		response.setContentType("text/html;charset=UTF-8");
+	    response.setCharacterEncoding("UTF-8");
+	    response.setHeader("Access-Control-Allow-Origin", "*");
+	    String name = request.getParameter("name");//行政区划名称
+	    int proLifeOne=0;//饮水困难
+	    int proLifeTwo=0;//无安全饮水
+	    int proLifeThree=0;//未通生活用电
+	    int proLifeFour=0;//未通广播电视
+	    int proLifeFive=0;//住房是危房
+	    int proLifeSix=0;//无卫生厕所
+	    String sqlProLife = "";
+	    JSONArray chartJson = new JSONArray();
+	    JSONArray tjJson = new JSONArray();
+	    JSONObject jb = new JSONObject();
+	    if(name!=null&&!"".equals(name)){//判断是否为空
+	    	sqlProLife="SELECT a1.* FROM(SELECT * FROM SYS_COMPANY WHERE COM_F_PKID=(SELECT PKID FROM SYS_COMPANY WHERE COM_NAME='"+name+"')) a2 LEFT JOIN PKC_1_2_5 a1 ON a1.COM_CODE=A2.COM_CODE  WHERE  TYPE = '0' ";
+	    }else{
+	    	sqlProLife="SELECT a1.* FROM(SELECT * FROM SYS_COMPANY WHERE COM_F_PKID=(SELECT PKID FROM SYS_COMPANY WHERE COM_NAME='内蒙古自治区')) a2 LEFT JOIN PKC_1_2_5 a1 ON a1.COM_CODE=A2.COM_CODE  WHERE  TYPE = '0' ";
+	    }
+	    List<Map> listProLife = this.getBySqlMapper.findRecords(sqlProLife);
+	    if(listProLife.size()>0){
+	    	for (int i = 0; i < listProLife.size(); i++) {
+	    		Map ProLife_map = listProLife.get(i);
+				JSONObject obj = new JSONObject();
+				obj.put("V0", ProLife_map.get("COM_NAME"));//区域名
+				obj.put("V1", (ProLife_map.get("V13")!=null)&&(ProLife_map.get("V13")!="")?ProLife_map.get("V13"):0);//人均住房面积
+				
+				proLifeOne+=(ProLife_map.get("V1")!=null)&&(ProLife_map.get("V1")!="")?Integer.valueOf(ProLife_map.get("V1").toString()):0;
+				proLifeTwo+=(ProLife_map.get("V3")!=null)&&(ProLife_map.get("V3")!="")?Integer.valueOf(ProLife_map.get("V3").toString()):0;
+				proLifeThree+=(ProLife_map.get("V5")!=null)&&(ProLife_map.get("V5")!="")?Integer.valueOf(ProLife_map.get("V5").toString()):0;
+				proLifeFour+=(ProLife_map.get("V7")!=null)&&(ProLife_map.get("V7")!="")?Integer.valueOf(ProLife_map.get("V7").toString()):0;
+				proLifeFive+=(ProLife_map.get("V9")!=null)&&(ProLife_map.get("V9")!="")?Integer.valueOf(ProLife_map.get("V9").toString()):0;
+				proLifeSix+=(ProLife_map.get("V11")!=null)&&(ProLife_map.get("V11")!="")?Integer.valueOf(ProLife_map.get("V11").toString()):0;
+				
+				chartJson.add(obj);
+	    	}
+	    	jb.put("proLifeOneTotal", proLifeOne);
+	    	jb.put("proLifeTwoTotal", proLifeTwo);
+	    	jb.put("proLifeThreeTotal", proLifeThree);
+	    	jb.put("proLifeFourTotal", proLifeFour);
+	    	jb.put("proLifeFiveTotal", proLifeFive);
+	    	jb.put("proLifeSixTotal", proLifeSix);
+	    	tjJson.add(jb);
+	    	response.getWriter().write("{\"success\":\"0\",\"message\":\"成功\",\"chartData\":"+chartJson.toString()+",\"tjSum\":"+tjJson+"}");
+	    }else{
+	    	response.getWriter().write("0");
+	    }
+	}
+	/**
+	 * @param request
+	 * @param response 获取扶贫对象菜单栏统计数据--8.	适龄教育
+	 * @throws IOException
+	 */
+	@RequestMapping("getFpdx8.do")
+	public void getFpdx8(HttpServletRequest request,HttpServletResponse response ) throws IOException {
+		response.setContentType("text/html;charset=UTF-8");
+	    response.setCharacterEncoding("UTF-8");
+	    response.setHeader("Access-Control-Allow-Origin", "*");
+	    String name = request.getParameter("name");//行政区划名称
+	    double ageEduOne=0;//3-6岁
+	    double ageEduTwo=0;//6-15岁
+	    double ageEduThree=0;//15-18岁
+	    double ageEduFour=0;//18-22岁
+	    String sqlAgeEdu = "";
+	    JSONArray chartJson = new JSONArray();
+	    JSONArray tjJson = new JSONArray();
+	    JSONObject jb = new JSONObject();
+	    if(name!=null&&!"".equals(name)){//判断是否为空
+	    	sqlAgeEdu="SELECT a1.*,GJZDQX,ZZQZDQX,GMLQQX,MYQX,BJQX FROM(SELECT * FROM SYS_COMPANY WHERE COM_F_PKID=(SELECT PKID FROM SYS_COMPANY WHERE COM_NAME='"+name+"')) a2 LEFT JOIN PKC_1_1_9 a1 ON a1.V10=A2.COM_CODE  WHERE  V9 = '0'  ";
+	    }else{
+	    	sqlAgeEdu="SELECT a1.*,GJZDQX,ZZQZDQX,GMLQQX,MYQX,BJQX FROM(SELECT * FROM SYS_COMPANY WHERE COM_F_PKID=(SELECT PKID FROM SYS_COMPANY WHERE COM_NAME='内蒙古自治区')) a2 LEFT JOIN PKC_1_1_9 a1 ON a1.V10=A2.COM_CODE  WHERE  V9 = '0' ";
+	    }
+	    List<Map> listAgeEdu = this.getBySqlMapper.findRecords(sqlAgeEdu);
+	    if(listAgeEdu.size()>0){
+	    	for (int i = 0; i < listAgeEdu.size(); i++) {
+	    		Map AgeEdu_map = listAgeEdu.get(i);
+				JSONObject obj = new JSONObject();
+				obj.put("V0", AgeEdu_map.get("V1"));//区域名
+				obj.put("V1", (AgeEdu_map.get("V4")!=null)&&(AgeEdu_map.get("V4")!="")?AgeEdu_map.get("V4").toString():0);//6-15岁
+				
+				ageEduOne+=(AgeEdu_map.get("V3")!=null)&&(AgeEdu_map.get("V3")!="")?Integer.valueOf(AgeEdu_map.get("V3").toString()):0;
+				ageEduTwo+=(AgeEdu_map.get("V4")!=null)&&(AgeEdu_map.get("V4")!="")?Integer.valueOf(AgeEdu_map.get("V4").toString()):0;
+				ageEduThree+=(AgeEdu_map.get("V5")!=null)&&(AgeEdu_map.get("V5")!="")?Integer.valueOf(AgeEdu_map.get("V5").toString()):0;
+				ageEduFour+=(AgeEdu_map.get("V6")!=null)&&(AgeEdu_map.get("V6")!="")?Integer.valueOf(AgeEdu_map.get("V6").toString()):0;
+				
+				chartJson.add(obj);
+	    	}
+	    	jb.put("ageEduOneTotal", ageEduOne);
+	    	jb.put("ageEduTwoTotal", ageEduTwo);
+	    	jb.put("ageEduThreeTotal", ageEduThree);
+	    	jb.put("ageEduFourTotal", ageEduFour);
+	    	tjJson.add(jb);
+	    	response.getWriter().write("{\"success\":\"0\",\"message\":\"成功\",\"chartData\":"+chartJson.toString()+",\"tjSum\":"+tjJson+"}");
+	    }else{
+	    	response.getWriter().write("0");
+	    }
+	}
+	/**
+	 * @param request
+	 * @param response 获取扶贫对象菜单栏统计数据--9.	贫困发生率
+	 * @throws IOException
+	 */
+	@RequestMapping("getFpdx9.do")
+	public void getFpdx9(HttpServletRequest request,HttpServletResponse response ) throws IOException {
+		response.setContentType("text/html;charset=UTF-8");
+	    response.setCharacterEncoding("UTF-8");
+	    response.setHeader("Access-Control-Allow-Origin", "*");
+	    String name = request.getParameter("name");//行政区划名称
+	    int fslZhs=0;//总户数
+	    int fslZrs=0;//总人数
+	    int fslChs=0;//贫困村户数
+	    int fslCrs=0;//贫困村人数
+	    int fslFchs=0;//非贫困村户数
+	    int fslFcrs=0;//非贫困村人数
+	    String sqlFsl = "";
+	    JSONArray chartJson = new JSONArray();
+	    JSONArray tjJson = new JSONArray();
+	    JSONObject jb = new JSONObject();
+	    if(name!=null&&!"".equals(name)){//判断是否为空
+	    	sqlFsl="select vf1,vf2,vf3,vf4,NVL(vf41, '0') vf41,vf5,(vf2-vf4) as vf6,(vf3-vf5) as vf7 from PKC_1_3_3 c join (select * from SYS_COMPANY where COM_F_PKID=(SELECT PKID from SYS_COMPANY where COM_NAME='"+name+"') ) b on c.v10=b.COM_CODE  WHERE  COM_PIN = '0' ";
+	    }else{
+	    	sqlFsl="select vf1,vf2,vf3,vf4,NVL(vf41, '0') vf41,vf5,(vf2-vf4) as vf6,(vf3-vf5) as vf7 from PKC_1_3_3 c join (select * from SYS_COMPANY where COM_F_PKID=(SELECT PKID from SYS_COMPANY where COM_NAME='内蒙古自治区') ) b on c.v10=b.COM_CODE  WHERE  COM_PIN = '0' ";
+	    }
+	    List<Map> listFsl = this.getBySqlMapper.findRecords(sqlFsl);
+	    if(listFsl.size()>0){
+	    	for (int i = 0; i < listFsl.size(); i++) {
+	    		Map Fsl_map = listFsl.get(i);
+				JSONObject obj = new JSONObject();
+				obj.put("V0", Fsl_map.get("VF1"));//区域名
+				obj.put("V1", (Fsl_map.get("VF41")!=null)&&(Fsl_map.get("VF41")!="")?Fsl_map.get("VF41").toString():0);//长期慢性病
+				
+				fslZhs+=(Fsl_map.get("VF2")!=null)&&(Fsl_map.get("VF2")!="")?Integer.valueOf(Fsl_map.get("VF2").toString()):0;
+				fslZrs+=(Fsl_map.get("VF3")!=null)&&(Fsl_map.get("VF3")!="")?Integer.valueOf(Fsl_map.get("VF3").toString()):0;
+				fslChs+=(Fsl_map.get("VF4")!=null)&&(Fsl_map.get("VF4")!="")?Integer.valueOf(Fsl_map.get("VF4").toString()):0;
+				fslCrs+=(Fsl_map.get("VF5")!=null)&&(Fsl_map.get("VF5")!="")?Integer.valueOf(Fsl_map.get("VF5").toString()):0;
+				fslFchs+=(Fsl_map.get("VF6")!=null)&&(Fsl_map.get("VF6")!="")?Integer.valueOf(Fsl_map.get("VF6").toString()):0;
+				fslFcrs+=(Fsl_map.get("VF7")!=null)&&(Fsl_map.get("VF7")!="")?Integer.valueOf(Fsl_map.get("VF7").toString()):0;
+				chartJson.add(obj);
+	    	}
+	    	jb.put("fslZhsTotal", fslZhs);
+	    	jb.put("fslZrsTotal", fslZrs);
+	    	jb.put("fslChsTotal", fslChs);
+	    	jb.put("fslCrsTotal", fslCrs);
+	    	jb.put("fslFchsTotal", fslFchs);
+	    	jb.put("fslFcrsTotal", fslFcrs);
+	    	tjJson.add(jb);
+	    	response.getWriter().write("{\"success\":\"0\",\"message\":\"成功\",\"chartData\":"+chartJson.toString()+",\"tjSum\":"+tjJson+"}");
+	    }else{
+	    	response.getWriter().write("0");
+	    }
+	}
+	/**
+	 * @param request
+	 * @param response 获取扶贫对象菜单栏统计数据--10.	帮扶概况
+	 * @throws IOException
+	 * 
+	 * 帮扶单位、驻村工作队、驻村工作干部、落实帮扶责任人（分行政化区划）、帮扶户数
+	 */
+	@RequestMapping("getFpdx10.do")
+	public void getFpdx10(HttpServletRequest request,HttpServletResponse response ) throws IOException {
+		response.setContentType("text/html;charset=UTF-8");
+	    response.setCharacterEncoding("UTF-8");
+	    response.setHeader("Access-Control-Allow-Origin", "*");
+	    String code = request.getParameter("code");
+		String level = request.getParameter("level");//2省 3市 4 县 5乡 6村
+		
+	    
+	    JSONArray chartJson = new JSONArray();
+	    JSONArray tjJson = new JSONArray();
+	    JSONObject jb = new JSONObject();
+	    
+	    //省级固定数据
+	    int bfdw = 6099;
+	    int zcgzd = 3159;
+	    int zcgzgb = 14134;
+	    int lsbfzrr = 152041;
+	    int bfhs = 357724;
+	    
+	    
+	    String dw_sql="";
+	    String zcd_sql="";
+	    String zcgb_sql="";
+	    String sql = "";
+	    
+	    List<Map> dw_list;
+	    List<Map> zcd_list;
+	    List<Map> zcgb_list;
+	    List<Map> list;
+	    
+	    String str[] = { "呼和浩特市", "包头市", "呼伦贝尔市", "兴安盟", "通辽市", "赤峰市",
+				"锡林郭勒盟", "乌兰察布市", "鄂尔多斯市", "巴彦淖尔市", "乌海市", "阿拉善盟" };
+	    String val[] = { "25359", "4470", "14575", "19235", "5411", "39080",
+				"3510", "25345", "4508", "8826", "606", "1148" };
+	    //判断参数是否为空
+	    if(code!=null&&!"".equals(code)&&level!=null&&!"".equals(level)){
+	    	if(Integer.valueOf(level)>1){//省级以下
+	    		level=Integer.valueOf(level)+1+"";
+	    		int v1 = Integer.parseInt(level)+1;
+	    		int v3 = Integer.parseInt(level)*2;
+	    		int v2 = v3 -1;
+	    		bfdw = 0;
+	    	    zcgzd = 0;
+	    	    zcgzgb = 0;
+	    	    lsbfzrr = 0;
+	    	    bfhs = 0;
+	    		//帮扶单位数
+				dw_sql = "select count(*) num  from (select AP110 from  (select AAR008 from NEIMENG0117_AC01  where AAR100= '1' and AAR040='2016' and AAR00"+level+" ='"+code+"' GROUP BY AAR008  ) a "+
+								" LEFT JOIN ( select AAD001,AAP110 from AD07 ) b on a.AAR008=b.AAD001  left join ( "+
+								" select AAP110 Ap110,AAP001 from AP11)c ON b.AAP110=c.AP110 where AAD001 is not null and AP110 is not null  GROUP BY AP110)"; 
+				dw_list = this.getBySqlMapper.findRecords(dw_sql);
+				//驻村对
+				zcd_sql = "SELECT count(*) num from (select * from ( "+
+								" select AP110,AAP001 from  (select AAR008 from NEIMENG0117_AC01  where AAR100= '1' and AAR040='2016'and AAR00"+level+" ='"+code+"' GROUP BY AAR008   ) a "+
+								" LEFT JOIN ( select AAD001,AAP110 from AD07 ) b on a.AAR008=b.AAD001  left join ( "+
+								" select AAP110 Ap110,AAP001 from AP11)c ON b.AAP110=c.AP110 where AAD001 is not null and AP110 is not null  GROUP BY AP110,AAP001"+
+								") aa LEFT JOIN (select AAP001 p001 from NEIMENG0117_ap01 ) bb on aa.AAP001=bb.p001 where p001 is not null)";
+				zcd_list = this.getBySqlMapper.findRecords(zcd_sql);
+				//驻村干部
+				zcgb_sql = "select count(*) num from (select AAB002,AAK030,p011 from (select * from ("+
+									"select AP110,AAP001 from  (select AAR008 from NEIMENG0117_AC01  where AAR100= '1' and AAR040='2016' and AAR00"+level+" ='"+code+"' GROUP BY AAR008   ) a "+
+									" LEFT JOIN ( select AAD001,AAP110 from AD07 ) b on a.AAR008=b.AAD001  left join ("+
+									" select AAP110 Ap110,AAP001 from AP11)c ON b.AAP110=c.AP110 where AAD001 is not null and AP110 is not null  GROUP BY AP110,AAP001"+
+									") aa LEFT JOIN (select AAP001 p001,AAP011 from NEIMENG0117_ap01 ) bb on aa.AAP001=bb.p001 where p001 is not null) w0"+
+									" left join (select  AAK030,AAB002,AAP011 p011 from NEIMENG0117_AK03)w1 on w0.AAP011=W1.p011 where p011 is not null)";
+				zcgb_list = this.getBySqlMapper.findRecords(zcgb_sql);
+				//帮扶户数
+				sql ="select num ,xzqh,bfr from  ";
+				sql+= " ( SELECT NUM,AAR00"+v1+" xz,xzqh FROM (  select  COUNT(*) NUM,AAR00"+v1+" from NEIMENG0117_AC01  where AAR100= '1'  and AAR040='2016' and AAR00"+level+"='"+code+"' GROUP BY AAR00"+v1+"  )AA left join ( ";
+				sql += "  select v"+v2+" xzqh,v"+v3+" from SYS_COM GROUP BY v"+v2+",v"+v3+" )bb ON AA.AAR00"+v1+"=bb.v"+v3+"  where xzqh is not null)w0 LEFT JOIN (";
+				sql +=" select count(AAC001) bfr ,AAR00"+v1+" from (select a.AAC001,AAR00"+v1+" from (select AAC001,AAR00"+v1+" from NEIMENG0117_AC01 where AAR100= '1' and AAR040='2016' ";
+				sql +=") a left join (select * from NEIMENG0117_AC08)  b on a.AAC001=b.AAC001 where SUBSTR(b.AAR020, 0, 4) <='2016' AND SUBSTR(b.AAR021, 0, 4) >='2016' ";
+				sql+=" )t1 group BY AAR00"+v1+" )w1 on w0.xz=w1.AAR00"+v1+"";
+				
+				list = this.getBySqlMapper.findRecords(sql);
+				
+				if( dw_list.size() > 0 ) {
+			    	jb.put("bfdwTotal", "".equals(dw_list.get(0).get("NUM")) || dw_list.get(0).get("NUM") == null ? "0" : dw_list.get(0).get("NUM").toString());
+				} else {
+					jb.put("bfdwTotal", "0");
+				}
+				if( zcd_list.size() > 0 ) {
+					jb.put("zcgzdTotal", "".equals(zcd_list.get(0).get("NUM")) || zcd_list.get(0).get("NUM") == null ? "0" : zcd_list.get(0).get("NUM").toString());
+				} else {
+					jb.put("zcgzdTotal", "0");
+				}
+				if( zcgb_list.size() > 0 ) {
+					jb.put("zcgzgbTotal", "".equals(zcgb_list.get(0).get("NUM")) || zcgb_list.get(0).get("NUM") == null ? "0" : zcgb_list.get(0).get("NUM").toString());
+				} else {
+					jb.put("zcgzgbTotal", "0");
+				}
+				if ( list.size() > 0 ) {
+					for ( int i = 0 ; i < list.size() ; i++ ) {
+						JSONObject ob = new JSONObject ();
+						bfhs+=(list.get(i).get("NUM")!=null)&&(list.get(i).get("NUM")!="")?Integer.valueOf(list.get(i).get("NUM").toString()):0;
+						lsbfzrr+=(list.get(i).get("BFR")!=null)&&(list.get(i).get("BFR")!="")?Integer.valueOf(list.get(i).get("BFR").toString()):0;
+					
+						ob.put("V0", list.get(i).get("XZQH"));//区域名
+						ob.put("V1", (list.get(i).get("BFR")!=null)&&(list.get(i).get("BFR")!="")?Integer.valueOf(list.get(i).get("BFR").toString()):0);//帮扶责任人数量
+						chartJson.add(ob);
+					}
+					jb.put("lsbfzrrTotal", lsbfzrr);
+					jb.put("bfhsTotal", bfhs);
+				}
+	    	}else{
+	    		jb.put("bfdwTotal", bfdw);
+	    	    jb.put("zcgzdTotal", zcgzd);
+	    	    jb.put("zcgzgbTotal", zcgzgb);
+	    	    jb.put("lsbfzrrTotal", lsbfzrr);
+	    	    jb.put("bfhsTotal", bfhs);
+	    	    
+				for (int k = 0; k < str.length; k++) {
+					JSONObject ob = new JSONObject ();
+					ob.put("V0", str[k]);//区域名
+					ob.put("V1", val[k]);//帮扶责任人数量
+					chartJson.add(ob);
+				}
+	    	}
+	    }else{
+	    	jb.put("bfdwTotal", bfdw);
+    	    jb.put("zcgzdTotal", zcgzd);
+    	    jb.put("zcgzgbTotal", zcgzgb);
+    	    jb.put("lsbfzrrTotal", lsbfzrr);
+    	    jb.put("bfhsTotal", bfhs);
+    	    for (int k = 0; k < str.length; k++) {
+				JSONObject ob = new JSONObject ();
+				ob.put("V0", str[k]);//区域名
+				ob.put("V1", val[k]);//值
+				chartJson.add(ob);
+			}
+	    }
+	    tjJson.add(jb);
+	    response.getWriter().write("{\"success\":\"0\",\"message\":\"成功\",\"chartData\":"+chartJson.toString()+",\"tjSum\":"+tjJson+"}");
+	}
+	/**
+	 * @param request
+	 * @param response 获取扶贫对象菜单栏统计数据--11.	落实情况
+	 * @throws IOException
+	 * 
+	 * 总户数、帮扶责任人落实户数、落实帮扶比例
+	 */
+	@RequestMapping("getFpdx11.do")
+	public void getFpdx11(HttpServletRequest request,HttpServletResponse response ) throws IOException {
+		response.setContentType("text/html;charset=UTF-8");
+	    response.setCharacterEncoding("UTF-8");
+	    response.setHeader("Access-Control-Allow-Origin", "*");
+	    String code = request.getParameter("code");
+	    String name = request.getParameter("name");//行政区划名称
+	    String level = request.getParameter("level");//2省 3市 4 县 5乡 6村
+	    int Zhs=242784;//总户数
+	    int lsHs=357724;//帮扶责任人落实户数
+	    int lsBl=100;//落实帮扶比例
+	    JSONArray chartJson = new JSONArray();
+	    JSONArray tjJson = new JSONArray();
+	    JSONObject jb = new JSONObject();
+	    String str[] = { "呼和浩特市", "包头市", "呼伦贝尔市", "兴安盟", "通辽市", "赤峰市",
+				"锡林郭勒盟", "乌兰察布市", "鄂尔多斯市", "巴彦淖尔市", "乌海市", "阿拉善盟" };
+	    String val[] = { "25357", "4469", "606", "39070", "5406", "4508",
+				"14571", "8825", "25337", "19230", "3499", "1147" };
+	    String zhsSql = "";String bfhsSql = "";
+	    if(name!=null&&!"".equals(name)){//判断是否为空
+	    	zhsSql="select vf1,vf2,vf3,vf4,NVL(vf41, '0') vf41,vf5,(vf2-vf4) as vf6,(vf3-vf5) as vf7 from PKC_1_3_3 c join (select * from SYS_COMPANY where COM_F_PKID=(SELECT PKID from SYS_COMPANY where COM_NAME='"+name+"') ) b on c.v10=b.COM_CODE  WHERE  COM_PIN = '0' ";
+	    }else{
+	    	zhsSql="select vf1,vf2,vf3,vf4,NVL(vf41, '0') vf41,vf5,(vf2-vf4) as vf6,(vf3-vf5) as vf7 from PKC_1_3_3 c join (select * from SYS_COMPANY where COM_F_PKID=(SELECT PKID from SYS_COMPANY where COM_NAME='内蒙古自治区') ) b on c.v10=b.COM_CODE  WHERE  COM_PIN = '0' ";
+	    }
+		
+	    if(Integer.valueOf(level)>1){//省级以下
+	    	level=Integer.valueOf(level)+1+"";
+	    	
+	    	int v1 = Integer.parseInt(level)+1;
+			int v3 = Integer.parseInt(level)*2;
+			int v2 = v3 -1;
+			
+			 //帮扶户数
+		    bfhsSql ="select num ,xzqh,bfr from  ";
+		    bfhsSql+= " ( SELECT NUM,AAR00"+v1+" xz,xzqh FROM (  select  COUNT(*) NUM,AAR00"+v1+" from NEIMENG0117_AC01  where AAR100= '1'  and AAR040='2016' and AAR00"+level+"='"+code+"' GROUP BY AAR00"+v1+"  )AA left join ( ";
+		    bfhsSql += "  select v"+v2+" xzqh,v"+v3+" from SYS_COM GROUP BY v"+v2+",v"+v3+" )bb ON AA.AAR00"+v1+"=bb.v"+v3+"  where xzqh is not null)w0 LEFT JOIN (";
+		    bfhsSql +=" select count(AAC001) bfr ,AAR00"+v1+" from (select a.AAC001,AAR00"+v1+" from (select AAC001,AAR00"+v1+" from NEIMENG0117_AC01 where AAR100= '1' and AAR040='2016' ";
+		    bfhsSql +=") a left join (select * from NEIMENG0117_AC08)  b on a.AAC001=b.AAC001 where SUBSTR(b.AAR020, 0, 4) <='2016' AND SUBSTR(b.AAR021, 0, 4) >='2016' ";
+		    bfhsSql+=" )t1 group BY AAR00"+v1+" )w1 on w0.xz=w1.AAR00"+v1+"";
+		    
+	    	Zhs=0;
+	    	lsHs=0;
+	    	lsBl=0;
+	    	List<Map> listBfhs = this.getBySqlMapper.findRecords(bfhsSql);
+		    List<Map> listZhs = this.getBySqlMapper.findRecords(zhsSql);
+	    	for (int i = 0; i < listZhs.size(); i++) {
+	    		Map Fsl_map = listZhs.get(i);
+				JSONObject obj = new JSONObject();
+				obj.put("V0", listBfhs.get(i).get("XZQH"));//区域名
+				obj.put("V1", (listBfhs.get(i).get("BFR")!=null)&&(listBfhs.get(i).get("BFR")!="")?Integer.valueOf(listBfhs.get(i).get("BFR").toString()):0);//帮扶责任人数量
+				
+				Zhs+=(Fsl_map.get("VF2")!=null)&&(Fsl_map.get("VF2")!="")?Integer.valueOf(Fsl_map.get("VF2").toString()):0;
+				lsHs+=(listBfhs.get(i).get("NUM")!=null)&&(listBfhs.get(i).get("NUM")!="")?Integer.valueOf(listBfhs.get(i).get("NUM").toString()):0;
+				chartJson.add(obj);
+	    	}
+	    	jb.put("ZhsTotal", Zhs);
+    	    jb.put("lsHsTotal", lsHs);
+    	    jb.put("lsBlTotal", (lsHs/Zhs>1)?1:lsHs/Zhs);
+	    }else{
+	    	jb.put("ZhsTotal", Zhs);
+    	    jb.put("lsHsTotal", lsHs);
+    	    jb.put("lsBlTotal", lsBl);
+    	    for (int k = 0; k < str.length; k++) {
+				JSONObject ob = new JSONObject ();
+				ob.put("V0", str[k]);//区域名
+				ob.put("V1", val[k]);//值
+				chartJson.add(ob);
+			}
+	    }
+	    
+	    tjJson.add(jb);
+    	response.getWriter().write("{\"success\":\"0\",\"message\":\"成功\",\"chartData\":"+chartJson.toString()+",\"tjSum\":"+tjJson+"}");
+	    
+	}
+	/**
+	 * @param request
+	 * @param response 获取扶贫对象菜单栏统计数据--12.	入户帮扶
+	 * @throws IOException
+	 * 
+	 * 贫困户、走访贫困户、走访比例、当日走访、本周走访、本月走访、近三月走访、全部走访（分行政区划）
+	 */
+	@RequestMapping("getFpdx12.do")
+	public void getFpdx12(HttpServletRequest request,HttpServletResponse response ) throws IOException {
+		response.setContentType("text/html;charset=UTF-8");
+	    response.setCharacterEncoding("UTF-8");
+	    response.setHeader("Access-Control-Allow-Origin", "*");
+	    String name = request.getParameter("name");
+	    String level = request.getParameter("level");//2省 3市 4 县 5乡 6村
+	    String code = request.getParameter("code");//当前查询的区域范围如默认内蒙古自治区
+	    if(Integer.valueOf(Integer.valueOf(level)-1)>1){
+	    	code=this.getXjcode((Integer.valueOf(level)-1)+"",code);//根据当前传的行政区划code获取所有村级行政区划
+	    }
+	    int pkh=0;
+	    int zfpkh=0;
+	    int drzf=0;
+	    int bzzf=0;
+	    int byzf=0;
+	    int jsyzf=0;
+	    int zfAll=0;
+	    
+	    JSONArray chartJson = new JSONArray();
+	    JSONArray tjJson = new JSONArray();
+	    JSONObject jb = new JSONObject();
+	    
+	    int t = 0;//用于截取行政区划code时的长度
+		String sqlTj = "select * from (";//拼接的sql条件
+		//查询行政区划,获取行政区划code
+		String sql = "SELECT * FROM SYS_COMPANY WHERE COM_F_PKID=("
+		+ "SELECT PKID FROM SYS_COMPANY WHERE COM_NAME='" + name + "'"
+		+ ") ";
+		
+		 //查询贫困户
+	    String sqlPkh = "";
+	    
+	    //贫困户
+    	sqlPkh="SELECT a1.z_hu  FROM("
+				+ "SELECT * FROM SYS_COMPANY WHERE COM_F_PKID=("
+				+ "SELECT PKID FROM SYS_COMPANY WHERE COM_NAME='"+name+"'"
+				+ ")) a2 LEFT JOIN PKC_1_2_1 a1 ON a1.COM_CODE=A2.COM_CODE  WHERE  TYPE = '0' ";
+    	
+    	 //走访贫困户总数
+	    String sqlx1 = "SELECT	COUNT (DISTINCT(household_card)) AS d_poor_sum	FROM	DA_HELP_VISIT  WHERE 1=1";
+	    if(code!=null&&!"".equals(code)&&Integer.valueOf(level)-1>1){//按区域查
+	    	sqlx1+=" and AAR008 like('"+code+"%')";
+	    }
+	    List<Map> listx1 = this.getBySqlMapper.findRecords(sqlx1);
+	    List<Map> listPkh = this.getBySqlMapper.findRecords(sqlPkh);
+	    if(listx1.size()>0){
+	    	zfpkh=listx1.get(0).get("D_POOR_SUM")==null?0:Integer.valueOf(listx1.get(0).get("D_POOR_SUM").toString());
+	    }else{
+	    	zfpkh=0;
+	    }
+	    for (int i = 0; i < listPkh.size(); i++) {
+    		pkh+=(listPkh.get(i).get("Z_HU")!=null)&&(listPkh.get(i).get("Z_HU")!="")?Integer.valueOf(listPkh.get(i).get("Z_HU").toString()):0;
+    	}
+	    
+		List l = new ArrayList();//存储地区名
+		List lev = new ArrayList();//存储地区所属层级
+		List<Map> list = this.getBySqlMapper.findRecords(sql);
+		for (int i = 0; i < list.size(); i++) {
+			Map Patient_st_map = list.get(i);
+			l.add(Patient_st_map.get("COM_NAME"));
+			lev.add(Patient_st_map.get("COM_LEVEL"));
+			//判断当前下钻层级，截取code
+			if(Integer.valueOf(Patient_st_map.get("COM_LEVEL").toString())==2){
+				t=4;
+			}else if(Integer.valueOf(Patient_st_map.get("COM_LEVEL").toString())==3){
+				t=7;
+			}else if(Integer.valueOf(Patient_st_map.get("COM_LEVEL").toString())==4){
+				t=9;
+			}else if(Integer.valueOf(Patient_st_map.get("COM_LEVEL").toString())==5){
+				t=12;
+			}else{
+				t=4;
+			}
+			if(i<list.size()-1){
+				sqlTj+="SELECT	count(*) AS THE_ALL,COUNT (		CASE		WHEN TO_CHAR (			TO_DATE (				registertime,				'yyyy-mm-dd hh24:mi:ss'			),			'yyyy-mm-dd'		) = TO_CHAR (SYSDATE, 'yyyy-mm-dd') THEN			'a00'		END	) the_day,	COUNT (		CASE		WHEN TO_CHAR(TO_DATE (	registertime,	'yyyy-mm-dd hh24:mi:ss'	),'yyyy-mm-dd')> TO_CHAR (trunc(sysdate-7), 'yyyy-mm-dd') and TO_CHAR(TO_DATE (registertime,'yyyy-mm-dd hh24:mi:ss'),'yyyy-mm-dd')<= TO_CHAR (sysdate, 'yyyy-mm-dd') THEN			'a01'		END	) the_one_week,	COUNT (		CASE		WHEN TO_CHAR(TO_DATE (	registertime,	'yyyy-mm-dd hh24:mi:ss'	),'yyyy-mm-dd')> TO_CHAR (trunc(sysdate-14), 'yyyy-mm-dd') and TO_CHAR(TO_DATE (registertime,'yyyy-mm-dd hh24:mi:ss'),'yyyy-mm-dd')<= TO_CHAR (sysdate, 'yyyy-mm-dd') THEN			'a02'		END	) the_two_week,	COUNT (		CASE		WHEN TO_CHAR(TO_DATE (	registertime,	'yyyy-mm-dd hh24:mi:ss'	),'yyyy-mm-dd')> TO_CHAR (trunc(sysdate-30), 'yyyy-mm-dd') and TO_CHAR(TO_DATE (registertime,'yyyy-mm-dd hh24:mi:ss'),'yyyy-mm-dd')<= TO_CHAR (sysdate, 'yyyy-mm-dd') THEN			'a03'		END	) the_one_month,	COUNT (		CASE		WHEN TO_CHAR(TO_DATE (	registertime,	'yyyy-mm-dd hh24:mi:ss'	),'yyyy-mm-dd')> TO_CHAR (trunc(sysdate-90), 'yyyy-mm-dd') and TO_CHAR(TO_DATE (registertime,'yyyy-mm-dd hh24:mi:ss'),'yyyy-mm-dd')<= TO_CHAR (sysdate, 'yyyy-mm-dd') THEN			'a04'		END	) the_three_month FROM	DA_HELP_VISIT where 1=1  and aar008 like '"+Patient_st_map.get("COM_CODE").toString().substring(0, t)+"%' union all ";
+			}else{
+				sqlTj+="SELECT	count(*) AS THE_ALL,COUNT (		CASE		WHEN TO_CHAR (			TO_DATE (				registertime,				'yyyy-mm-dd hh24:mi:ss'			),			'yyyy-mm-dd'		) = TO_CHAR (SYSDATE, 'yyyy-mm-dd') THEN			'a00'		END	) the_day,	COUNT (		CASE		WHEN TO_CHAR(TO_DATE (	registertime,	'yyyy-mm-dd hh24:mi:ss'	),'yyyy-mm-dd')> TO_CHAR (trunc(sysdate-7), 'yyyy-mm-dd') and TO_CHAR(TO_DATE (registertime,'yyyy-mm-dd hh24:mi:ss'),'yyyy-mm-dd')<= TO_CHAR (sysdate, 'yyyy-mm-dd') THEN			'a01'		END	) the_one_week,	COUNT (		CASE		WHEN TO_CHAR(TO_DATE (	registertime,	'yyyy-mm-dd hh24:mi:ss'	),'yyyy-mm-dd')> TO_CHAR (trunc(sysdate-14), 'yyyy-mm-dd') and TO_CHAR(TO_DATE (registertime,'yyyy-mm-dd hh24:mi:ss'),'yyyy-mm-dd')<= TO_CHAR (sysdate, 'yyyy-mm-dd') THEN			'a02'		END	) the_two_week,	COUNT (		CASE		WHEN TO_CHAR(TO_DATE (	registertime,	'yyyy-mm-dd hh24:mi:ss'	),'yyyy-mm-dd')> TO_CHAR (trunc(sysdate-30), 'yyyy-mm-dd') and TO_CHAR(TO_DATE (registertime,'yyyy-mm-dd hh24:mi:ss'),'yyyy-mm-dd')<= TO_CHAR (sysdate, 'yyyy-mm-dd') THEN			'a03'		END	) the_one_month,	COUNT (		CASE		WHEN TO_CHAR(TO_DATE (	registertime,	'yyyy-mm-dd hh24:mi:ss'	),'yyyy-mm-dd')> TO_CHAR (trunc(sysdate-90), 'yyyy-mm-dd') and TO_CHAR(TO_DATE (registertime,'yyyy-mm-dd hh24:mi:ss'),'yyyy-mm-dd')<= TO_CHAR (sysdate, 'yyyy-mm-dd') THEN			'a04'		END	) the_three_month FROM	DA_HELP_VISIT where 1=1  and aar008 like '"+Patient_st_map.get("COM_CODE").toString().substring(0, t)+"%' ";
+			}
+		}
+		sqlTj+=")";
+		List<Map> listAll = this.getBySqlMapper.findRecords(sqlTj);
+		for(int a =0;a<listAll.size();a++){
+			JSONObject obj = new JSONObject();
+			obj.put("V0", l.get(a));
+//			obj.put("V8", lev.get(a));
+			
+			//按日期条件过滤
+			obj.put("V1", listAll.get(a).get("THE_ALL"));//所有
+			
+			drzf+=(listAll.get(a).get("THE_DAY")!=null)&&(listAll.get(a).get("THE_DAY")!="")?Integer.valueOf(listAll.get(a).get("THE_DAY").toString()):0;
+		    bzzf+=(listAll.get(a).get("THE_ONE_WEEK")!=null)&&(listAll.get(a).get("THE_ONE_WEEK")!="")?Integer.valueOf(listAll.get(a).get("THE_ONE_WEEK").toString()):0;
+		    byzf+=(listAll.get(a).get("THE_TWO_WEEK")!=null)&&(listAll.get(a).get("THE_TWO_WEEK")!="")?Integer.valueOf(listAll.get(a).get("THE_TWO_WEEK").toString()):0;
+		    jsyzf+=(listAll.get(a).get("THE_ONE_MONTH")!=null)&&(listAll.get(a).get("THE_ONE_MONTH")!="")?Integer.valueOf(listAll.get(a).get("THE_ONE_MONTH").toString()):0;
+		    zfAll+=(listAll.get(a).get("THE_ALL")!=null)&&(listAll.get(a).get("THE_ALL")!="")?Integer.valueOf(listAll.get(a).get("THE_ALL").toString()):0;
+		    
+		    chartJson.add(obj);
+		}
+		jb.put("pkhTotal", pkh);
+	    jb.put("zfpkhTotal", zfpkh);
+	    jb.put("zfblTotal", (zfpkh/pkh>1)?1:zfpkh/pkh);
+	    
+		jb.put("drzfTotal", drzf);
+	    jb.put("bzzfTotal", bzzf);
+	    jb.put("byzfTotal", byzf);
+	    jb.put("jsyzfTotal", jsyzf);
+	    jb.put("zfAllTotal", zfAll);
+	   
+	    tjJson.add(jb);
+	    response.getWriter().write("{\"success\":\"0\",\"message\":\"成功\",\"chartData\":"+chartJson.toString()+",\"tjSum\":"+tjJson+"}");
+	    
+	}
+	/***************************精准扶贫帮扶通领导版第一版接口*******************************/
 	
 	/**行政区划获取接口，cType:1、获取省份及code2、获取市级3、获取县区，此时需要带上市级code参数获取该市级下的县
 	 * @param request
@@ -1018,7 +1969,7 @@ public class AnController{
 	    //不跟随传递的时间变，当天日记数、本周日记数、本月日记数 DA_HELP_VISIT
 	    String sqlx = "SELECT	count(case when to_char(to_date(registertime,'yyyy-mm-dd hh24:mi:ss'),'yyyy-mm-dd')=to_char(sysdate,'yyyy-mm-dd') then 'a00' end)day,	count(	CASE when to_char(to_date(registertime,'yyyy-mm-dd hh24:mi:ss'),'iw')=to_char(sysdate,'iw') and TO_NUMBER(sysdate-to_date(registertime,'yyyy-mm-dd hh24:mi:ss'))<10 THEN 'a01' end)week,	count(	CASE when to_char(to_date(registertime,'yyyy-mm-dd hh24:mi:ss'),'yyyy-mm')=to_char(sysdate,'yyyy-mm') THEN 'a02' end)month	FROM	DA_HELP_VISIT  WHERE 1=1";
 	    //跟随传递的时间变 日记总条数、走访贫困户总数、上传走访记录干部总数、
-	    String sqlx1 = "SELECT	COUNT (*) AS diary_sum,	COUNT (DISTINCT(household_card)) AS d_poor_sum,	COUNT (DISTINCT(personal_phone)) AS d_cadre_sum,	count(case when to_char(to_date(registertime,'yyyy-mm-dd hh24:mi:ss'),'yyyy-mm-dd')=to_char(sysdate,'yyyy-mm-dd') then 'a00' end)day,	count(	CASE when to_char(to_date(registertime,'yyyy-mm-dd hh24:mi:ss'),'iw')=to_char(sysdate,'iw') and TO_NUMBER(sysdate-to_date(registertime,'yyyy-mm-dd hh24:mi:ss'))<10 THEN 'a01' end)week,	count(	CASE when to_char(to_date(registertime,'yyyy-mm-dd hh24:mi:ss'),'yyyy-mm')=to_char(sysdate,'yyyy-mm') THEN 'a02' end)month	FROM	DA_HELP_VISIT  WHERE 1=1";
+	    String sqlx1 = "SELECT	COUNT (*) AS diary_sum,	COUNT (DISTINCT(household_card)) AS d_poor_sum,	COUNT (DISTINCT(personal_phone)) AS d_cadre_sum	FROM	DA_HELP_VISIT  WHERE 1=1";
 	  //不跟随传递的时间变
 	    String sql1 = "select count(*) as poor_sum from NEIMENG0117_AC01 WHERE 1=1";//总贫困户数
 	  //不跟随传递的时间变 总帮扶干部数
@@ -1026,12 +1977,12 @@ public class AnController{
 	    String sqlc = "select * from DA_HELP_VISIT where 1=1 ";//计算走访覆盖率子查询语句
 	    String sqlc3 = "select * from DA_HELP_VISIT where 1=1 ";//计算走访覆盖率子查询语句
 	    if(code!=null&&!"".equals(code)&&Integer.valueOf(cType)>1){//按区域查
-	    	sqlx+=" and AAR008 like('%"+code+"%')";
-	    	sqlx1+=" and AAR008 like('%"+code+"%')";
-	    	sql1+=" and AAR008 like('%"+code+"%')";
-	    	sql2+=" and T1.AAR008 like('%"+code+"%')";
-	    	sqlc+=" and AAR008 like('%"+code+"%')";
-	    	sqlc3+=" and AAR008 like('%"+code+"%')";
+	    	sqlx+=" and AAR008 like('"+code+"%')";
+	    	sqlx1+=" and AAR008 like('"+code+"%')";
+	    	sql1+=" and AAR008 like('"+code+"%')";
+	    	sql2+=" and T1.AAR008 like('"+code+"%')";
+	    	sqlc+=" and AAR008 like('"+code+"%')";
+	    	sqlc3+=" and AAR008 like('"+code+"%')";
 	    }
 	    if(sTime!=null&&!"".equals(sTime)){//按时间查
 	    	sqlx1+=" and to_date(REGISTERTIME,'yyyy-mm-dd hh24:mi:ss') >= to_date('"+sTime+"','yyyy-mm-dd')";
@@ -1046,13 +1997,19 @@ public class AnController{
 		//计算走访覆盖率 分组后
 	    String sql4 = "select count(count(*))  as summ from ("+sqlc+") tt left join SYS_PERSONAL_HOUSEHOLD_MANY ti  on tt.PERSONAL_NAME = ti.PERSONAL_NAME and tt.HOUSEHOLD_NAME = ti.HOUSEHOLD_NAME and tt.PERSONAL_PHONE = ti.PERSONAL_PHONE and tt.HOUSEHOLD_CARD = ti.HOUSEHOLD_CARD GROUP BY tt.PERSONAL_NAME,tt.PERSONAL_PHONE,tt.HOUSEHOLD_NAME,tt.HOUSEHOLD_CARD";
 	    sql1+=" and AAR010 IN (0,3) and AAR100=1";//未脱贫 有效性
-		JSONObject jb = new JSONObject();
+		//合并查询
+	    String sqlUnion = sql1+" union all "+sql2+" union all "+sql3+" union all "+sql4;
+	    
+	    JSONObject jb = new JSONObject();
 	    List<Map> listx = this.getBySqlMapper.findRecords(sqlx);
 	    List<Map> listx1 = this.getBySqlMapper.findRecords(sqlx1);
-	    List<Map> list1 = this.getBySqlMapper.findRecords(sql1);
+	    
+	    List<Map> listUnion = this.getBySqlMapper.findRecords(sqlUnion);
+	    
+	    /*List<Map> list1 = this.getBySqlMapper.findRecords(sql1);
 	    List<Map> list2 = this.getBySqlMapper.findRecords(sql2);
 	    List<Map> list3 = this.getBySqlMapper.findRecords(sql3);
-	    List<Map> list4 = this.getBySqlMapper.findRecords(sql4);
+	    List<Map> list4 = this.getBySqlMapper.findRecords(sql4);*/
 	    //统计数
 	    if(listx.size()>0){
 	    	jb.put("day_sum", listx.get(0).get("DAY")==null?0:listx.get(0).get("DAY"));//当天日记条数
@@ -1072,30 +2029,31 @@ public class AnController{
 	    	jb.put("d_poor_sum", 0);
 	    	jb.put("d_cadre_sum", 0);
 	    }
+	    
 	    //总贫困户数  不跟随时间变化
-	    if(list1.size()>0){
-	    	jb.put("poor_sum", list1.get(0).get("POOR_SUM")==null?0:list1.get(0).get("POOR_SUM"));
+	    if(listUnion.size()>0){
+	    	jb.put("poor_sum", listUnion.get(0).get("POOR_SUM")==null?0:listUnion.get(0).get("POOR_SUM"));
 	    }else{
 	    	jb.put("poor_sum", 0);
 	    }
 	    //总帮扶干部数 不跟随时间变化
-	    if(list2.size()>0){
-	    	jb.put("cadre_sum", list2.get(0).get("CADRE_SUM")==null?0:list2.get(0).get("CADRE_SUM"));
+	    if(listUnion.size()>0){
+	    	jb.put("cadre_sum", listUnion.get(1).get("POOR_SUM")==null?0:listUnion.get(1).get("POOR_SUM"));
 	    }else{
 	    	jb.put("cadre_sum", 0);
 	    }
 	    DecimalFormat df = new DecimalFormat("0.00");//格式化小数，不足的补0
 	    //落实责任人比例 帮扶贫困户/总贫困户
-	    if(list1.size()>0){
+	    if(listUnion.size()>0){
 	    	String d = "0";
-	    	if(Integer.valueOf(list1.get(0).get("POOR_SUM").toString())>0){
-	    		d=df.format((float)Integer.valueOf(list3.get(0).get("SUMM").toString())/Integer.valueOf(list1.get(0).get("POOR_SUM").toString()));
+	    	if(Integer.valueOf(listUnion.get(0).get("POOR_SUM").toString())>0){
+	    		d=df.format((float)Integer.valueOf(listUnion.get(2).get("POOR_SUM").toString())/Integer.valueOf(listUnion.get(0).get("POOR_SUM").toString()));
 	    	}
 	    	if(Double.parseDouble(d)>1){
 	    		jb.put("assist_coverage",  1);//listx.get(0).get("D_POOR_SUM").toString()
 	    	}else{
-	    		if(Integer.valueOf(list1.get(0).get("POOR_SUM").toString())>0){
-	    			jb.put("assist_coverage",  df.format((float)Integer.valueOf(list3.get(0).get("SUMM").toString())/Integer.valueOf(list1.get(0).get("POOR_SUM").toString())));//listx.get(0).get("D_POOR_SUM").toString()
+	    		if(Integer.valueOf(listUnion.get(0).get("POOR_SUM").toString())>0){
+	    			jb.put("assist_coverage",  df.format((float)Integer.valueOf(listUnion.get(2).get("POOR_SUM").toString())/Integer.valueOf(listUnion.get(0).get("POOR_SUM").toString())));//listx.get(0).get("D_POOR_SUM").toString()
 		    	}else{
 		    		jb.put("assist_coverage",  0);//listx.get(0).get("D_POOR_SUM").toString()
 		    	}
@@ -1104,18 +2062,18 @@ public class AnController{
 	    }
 	    
 	    //走访覆盖率   登录表（即结对表）关联除以  走访表=走访覆盖率
-	    if(Integer.valueOf(list3.get(0).get("SUMM").toString())>0){
-	    	jb.put("d_poor_coverage",  df.format((float)Integer.valueOf(list4.get(0).get("SUMM").toString())/Integer.valueOf(list3.get(0).get("SUMM").toString())));
+	    if(Integer.valueOf(listUnion.get(2).get("POOR_SUM").toString())>0){
+	    	jb.put("d_poor_coverage",  df.format((float)Integer.valueOf(listUnion.get(3).get("POOR_SUM").toString())/Integer.valueOf(listUnion.get(2).get("POOR_SUM").toString())));
 	    }else{
 	    	jb.put("d_poor_coverage",  0);
 	    }
 	    
 	    //上传走访记录干部占总数比 走访干部/总干部
 	    
-	    jb.put("d_cadre_proportion",  df.format((float)Integer.valueOf(listx1.get(0).get("D_CADRE_SUM").toString())/Integer.valueOf(list2.get(0).get("CADRE_SUM").toString())));
+	    jb.put("d_cadre_proportion",  df.format((float)Integer.valueOf(listx1.get(0).get("D_CADRE_SUM").toString())/Integer.valueOf(listUnion.get(1).get("POOR_SUM").toString())));
 	    jn.add(jb);
 	    long endTime = System.currentTimeMillis();    //获取结束时间
-//	    System.out.println("程序运行时间：" + (endTime - startTime) + "ms");    //输出程序运行时间
+//	    System.out.println("程序运行时间：" + (endTime - startTime)/1000 + "s");    //输出程序运行时间
 	    response.getWriter().write(jn.toString());
 	}
 	
@@ -1131,12 +2089,28 @@ public class AnController{
 	    response.setHeader("Access-Control-Allow-Origin", "*");
 	    String cType = request.getParameter("cType");//查询类别1、省2、市3、县
 	    String code = request.getParameter("code");//当前查询的区域范围如默认内蒙古自治区
+	    String type = request.getParameter("type");
 	    if(Integer.valueOf(cType)>1){
 	    	code=this.getXjcode(cType,code);//根据当前传的行政区划code获取所有村级行政区划
 	    }
 	    String pageNum = request.getParameter("pageNum");//分页页码
 	    String sTime = request.getParameter("stime");//开始时间
 	    String eTime = request.getParameter("etime");//结束时间
+	    
+	    Date date;
+	    Calendar cal = null;
+	    if(eTime!=null&&!"".equals(eTime)){
+	    	try {
+				date = (new SimpleDateFormat("yyyy-MM-dd")).parse(eTime);
+				cal = Calendar.getInstance();
+			    cal.setTime(date);
+			    cal.add(Calendar.DATE, 1);//加一天
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+	    }
+		
+	    
 	    String phone = request.getParameter("phone");//干部电话
 	    String name = request.getParameter("name");//干部名称
 	    int start =0;
@@ -1153,23 +2127,32 @@ public class AnController{
 	    int end = 20*Integer.valueOf(pageNum);
 	    JSONArray jn = new JSONArray();
 	    String sqlX="select * from (select rownum as num,ts.* from (";
-	    String sql = "SELECT	PERSONAL_NAME,	HOUSEHOLD_NAME,	PERSONAL_PHONE,	V3,	REGISTERTIME,	t2.pic_path FROM	DA_HELP_VISIT t1 LEFT JOIN (select DISTINCT(random_number),pic_path from DA_PIC_VISIT) t2 ON t1.random_number = t2.random_number WHERE	1 = 1 ";//DA_HELP_VISIT
+	    String sql = "SELECT	PERSONAL_NAME,	HOUSEHOLD_NAME,	PERSONAL_PHONE,	V3,	REGISTERTIME,	max(t2.PIC_PATH) as PIC_PATH FROM	DA_HELP_VISIT t1 LEFT JOIN (select DISTINCT(random_number),pic_path from DA_PIC_VISIT) t2 ON t1.random_number = t2.random_number WHERE	1 = 1 ";//DA_HELP_VISIT
 	    if(code!=null&&!"".equals(code)&&Integer.valueOf(cType)>1){
-	    	sql+=" and AAR008 like('%"+code+"%')";
+	    	sql+=" and AAR008 like('"+code+"%')";
 	    }
 	    if(sTime!=null&&!"".equals(sTime)){
 	    	sql+=" and to_date(REGISTERTIME,'yyyy-mm-dd hh24:mi:ss') >= to_date('"+sTime+"','yyyy-mm-dd')";
 	    }
 		if(eTime!=null&&!"".equals(eTime)){
-			sql+=" AND to_date(REGISTERTIME,'yyyy-mm-dd hh24:mi:ss') <= to_date('"+eTime+"','yyyy-mm-dd')";	
+			sql+=" AND to_date(REGISTERTIME,'yyyy-mm-dd hh24:mi:ss') < to_date('"+(new SimpleDateFormat("yyyy-MM-dd")).format(cal.getTime())+"','yyyy-mm-dd')";	
 	    }
 		if(phone!=null&&!"".equals(phone)){
-			sql+=" and PERSONAL_PHONE LIKE '%"+phone+"%'";	
+			sql+=" and PERSONAL_PHONE LIKE '"+phone+"%'";	
 		}
 		if(name!=null&&!"".equals(name)){
-			sql+=" and PERSONAL_NAME LIKE '%"+name+"%'";	
+			sql+=" and PERSONAL_NAME LIKE '"+name+"%'";	
 		}
-		sql+=" and t1.registertime is not null ORDER BY TO_DATE (REGISTERTIME,'yyyy-mm-dd hh24:mi:ss') desc";
+		String sqlC="";
+		if(Integer.valueOf(type)==0){//全部
+		}else if(Integer.valueOf(type)==1){//今日
+			sqlC=" and to_char(to_date(t1.registertime,'yyyy-mm-dd hh24:mi:ss'),'yyyy-mm-dd')=to_char(sysdate,'yyyy-mm-dd')";
+		}else if(Integer.valueOf(type)==2){//本周
+			sqlC=" and to_char(to_date(registertime,'yyyy-mm-dd hh24:mi:ss'),'iw')=to_char(sysdate,'iw') and TO_NUMBER(sysdate-to_date(registertime,'yyyy-mm-dd hh24:mi:ss'))<10";
+		}else if(Integer.valueOf(type)==3){//本月
+			sqlC=" and to_char(to_date(registertime,'yyyy-mm-dd hh24:mi:ss'),'yyyy-mm')=to_char(sysdate,'yyyy-mm')";
+		}
+		sql+=" and t1.registertime is not null "+sqlC+" GROUP BY PERSONAL_NAME,HOUSEHOLD_NAME,PERSONAL_PHONE,V3,REGISTERTIME ORDER BY TO_DATE (REGISTERTIME,'yyyy-mm-dd hh24:mi:ss') desc";
 		sqlX+=sql +") ts )tt";
 		sqlX+=" where tt.num <="+end+" and tt.num>"+start+"";
 		
@@ -1203,10 +2186,10 @@ public class AnController{
 	    String phone = request.getParameter("phone");//干部名称
 	    String sqlc = "select personal_phone,personal_name from SYS_PERSONAL_HOUSEHOLD_MANY where 1=1 ";
 	    if(name!=null&&!"".equals(name)){
-	    	sqlc+=" and PERSONAL_NAME like '%"+name+"%' ";
+	    	sqlc+=" and PERSONAL_NAME like '"+name+"%' ";
 	    }
 	    if(phone!=null&&!"".equals(phone)){
-	    	sqlc+=" and PERSONAL_PHONE like '%"+phone+"%' ";
+	    	sqlc+=" and PERSONAL_PHONE like '"+phone+"%' ";
 	    }
 	    sqlc+=" GROUP BY personal_phone,personal_name ";
 	    String sql = "select personal_phone,personal_name,AAP001 from (select t1.personal_phone,t1.personal_name,t2.AAP001  from("+sqlc+") t1 left join (select AAR012,AAP001 from NEIMENG0117_AK11 where AAP001 is not null) t2 on t1.personal_phone=t2.AAR012)GROUP BY personal_phone,personal_name,AAP001";
@@ -1250,11 +2233,11 @@ public class AnController{
 	    String sqlct = "select AAC001 from NEIMENG0117_Ac01  where AAR010 in (1) and AAR100=1 ";//已脱贫贫困人口
 	    String sqlpkc = "select count(*) as pkc from NEIMENG0117_AD01 where 1=1 and aar010 in(1) ";//贫困村
 	    if(code!=null&&!"".equals(code)&&Integer.valueOf(cType)>1){
-	    	sql1+=" and AAR008 like('%"+code+"%')";
-	    	sqlc+=" and AAR008 like('%"+code+"%')";
-	    	sqlct+=" and AAR008 like('%"+code+"%')";
-	    	sqltph+=" and AAR008 like('%"+code+"%')";
-	    	sqlpkc+=" and AAR008 like('%"+code+"%')";
+	    	sql1+=" and AAR008 like('"+code+"%')";
+	    	sqlc+=" and AAR008 like('"+code+"%')";
+	    	sqlct+=" and AAR008 like('"+code+"%')";
+	    	sqltph+=" and AAR008 like('"+code+"%')";
+	    	sqlpkc+=" and AAR008 like('"+code+"%')";
 	    }
 	    sql1+=" and AAR010 IN(0,3) and AAR100=1";
 	    String sql0 = "select count(*) as pkrk from( select q1.AAC001 from ("+sqlc+")q left JOIN  ( select AAC001 from  NEIMENG0117_AB01 where aab015=1 )q1 on q.AAC001= q1.AAC001)";//贫困人口
