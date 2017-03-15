@@ -35,6 +35,7 @@ var isxsxq = false;//正在显示详情
 var iscxbfr = false;//是否来至查询的帮扶人
 var iscxdx = false;//是否是要查询帮扶人
 var search_text;//查询关键字
+var isrjlb = false;//正在显示日记
 /**
  * 帮扶措施变量
  */
@@ -63,6 +64,7 @@ $(document).ready(function () {
      * 底部导航点击切换页面与自身样式
      */
     $(".weui-tabbar__item").click(function () {
+        isrjlb = false;
         if (!$(this).is(".weui-bar__item_on")) {//点击的按钮非正在选择状态
             $(".weui-tabbar__item").removeClass("weui-bar__item_on")//清除所有选择状态的按钮
             $(this).addClass("weui-bar__item_on");//设置点击的按钮为选择状态
@@ -170,13 +172,21 @@ function submitdq() {
     var qx = $("#xzqx").find("option:selected").text();
     xzqh = ms + qx;
     $("#xzqh").html(xzqh);
-    if (xzqh == "" || xzqh == null) {
-        $("#xzqh").html("内蒙古自治区");
-    }
     if (qx == ""){
         xzqhname = ms;
     }else {
         xzqhname = qx;
+    }
+    if (xzqh == "" || xzqh == null) {
+        $("#xzqh").html("内蒙古自治区");
+        xzqhname = "内蒙古自治区";
+    }
+    if (isrjlb){
+        counter = 1;
+        rjoption = 0;
+        $("#rjcells").html("");
+        getrjdata();
+        return;
     }
     initpage(option_tabbar);
 }
@@ -212,7 +222,11 @@ document.getElementById("cir").addEventListener("touchend", function (e) {//手�
     var _y_end = e.changedTouches[0].pageY;
     if (ismove) {//没有移动
         if (iszk) {
-            $('#cir').html('+');
+            //$('#cir').html('+');
+            $('#anzk').removeClass('andh');
+            $('#anzk').removeClass('andhgb');
+            $('#anzk').removeClass('andhzk');
+            $('#anzk').addClass('andhgb');
             $('.weui-mask').animate({opacity: '0'}, 500);
             $('#jgg').animate({width: '0'}, 500);
             setTimeout(function () {
@@ -221,7 +235,11 @@ document.getElementById("cir").addEventListener("touchend", function (e) {//手�
             }, 500);
             iszk = false;
         } else {
-            $('#cir').html('—');
+            //$('#cir').html('-');
+            $('#anzk').removeClass('andh');
+            $('#anzk').removeClass('andhgb');
+            $('#anzk').removeClass('andhzk');
+            $('#anzk').addClass('andhzk');
             iszk = true;
             $('.weui-mask').show();
             $('#jgg').show();
@@ -1382,7 +1400,7 @@ function initfpdx() {
 
 function tzpkgk() {
     $(".mytab").animate({scrollTop: 0}, 1000);
-    $('#cir').html('+');
+    $('.andh').attr('background-image','url("../images/k1.gif")');
     $('.weui-mask').animate({opacity: '0'}, 500);
     $('#jgg').animate({width: '0'}, 500);
     setTimeout(function () {
@@ -1393,7 +1411,10 @@ function tzpkgk() {
 }
 function tzzpyy() {
     $(".mytab").animate({scrollTop: zpyytop}, 1000);
-    $('#cir').html('+');
+    $('#anzk').removeClass('andh');
+    $('#anzk').removeClass('andhgb');
+    $('#anzk').removeClass('andhzk');
+    $('#anzk').addClass('andhgb');
     $('.weui-mask').animate({opacity: '0'}, 500);
     $('#jgg').animate({width: '0'}, 500);
     setTimeout(function () {
@@ -1404,7 +1425,10 @@ function tzzpyy() {
 }
 function tznlfz() {
     $(".mytab").animate({scrollTop: nlfztop}, 1000);
-    $('#cir').html('+');
+    $('#anzk').removeClass('andh');
+    $('#anzk').removeClass('andhgb');
+    $('#anzk').removeClass('andhzk');
+    $('#anzk').addClass('andhgb');
     $('.weui-mask').animate({opacity: '0'}, 500);
     $('#jgg').animate({width: '0'}, 500);
     setTimeout(function () {
@@ -1415,7 +1439,10 @@ function tznlfz() {
 }
 function tzjkzk() {
     $(".mytab").animate({scrollTop: jkzktop}, 1000);
-    $('#cir').html('+');
+    $('#anzk').removeClass('andh');
+    $('#anzk').removeClass('andhgb');
+    $('#anzk').removeClass('andhzk');
+    $('#anzk').addClass('andhgb');
     $('.weui-mask').animate({opacity: '0'}, 500);
     $('#jgg').animate({width: '0'}, 500);
     setTimeout(function () {
@@ -1426,7 +1453,10 @@ function tzjkzk() {
 }
 function tzwhcd() {
     $(".mytab").animate({scrollTop: whcdtop}, 1000);
-    $('#cir').html('+');
+    $('#anzk').removeClass('andh');
+    $('#anzk').removeClass('andhgb');
+    $('#anzk').removeClass('andhzk');
+    $('#anzk').addClass('andhgb');
     $('.weui-mask').animate({opacity: '0'}, 500);
     $('#jgg').animate({width: '0'}, 500);
     setTimeout(function () {
@@ -1437,7 +1467,10 @@ function tzwhcd() {
 }
 function tztdzy() {
     $(".mytab").animate({scrollTop: tdzytop}, 1000);
-    $('#cir').html('+');
+    $('#anzk').removeClass('andh');
+    $('#anzk').removeClass('andhgb');
+    $('#anzk').removeClass('andhzk');
+    $('#anzk').addClass('andhgb');
     $('.weui-mask').animate({opacity: '0'}, 500);
     $('#jgg').animate({width: '0'}, 500);
     setTimeout(function () {
@@ -1448,7 +1481,10 @@ function tztdzy() {
 }
 function tzscsh() {
     $(".mytab").animate({scrollTop: scshtop}, 1000);
-    $('#cir').html('+');
+    $('#anzk').removeClass('andh');
+    $('#anzk').removeClass('andhgb');
+    $('#anzk').removeClass('andhzk');
+    $('#anzk').addClass('andhgb');
     $('.weui-mask').animate({opacity: '0'}, 500);
     $('#jgg').animate({width: '0'}, 500);
     setTimeout(function () {
@@ -1459,7 +1495,10 @@ function tzscsh() {
 }
 function tzsljy() {
     $(".mytab").animate({scrollTop: sljytop}, 1000);
-    $('#cir').html('+');
+    $('#anzk').removeClass('andh');
+    $('#anzk').removeClass('andhgb');
+    $('#anzk').removeClass('andhzk');
+    $('#anzk').addClass('andhgb');
     $('.weui-mask').animate({opacity: '0'}, 500);
     $('#jgg').animate({width: '0'}, 500);
     setTimeout(function () {
@@ -1470,7 +1509,10 @@ function tzsljy() {
 }
 function tzpkfsl() {
     $(".mytab").animate({scrollTop: pkfsltop}, 1000);
-    $('#cir').html('+');
+    $('#anzk').removeClass('andh');
+    $('#anzk').removeClass('andhgb');
+    $('#anzk').removeClass('andhzk');
+    $('#anzk').addClass('andhgb');
     $('.weui-mask').animate({opacity: '0'}, 500);
     $('#jgg').animate({width: '0'}, 500);
     setTimeout(function () {
@@ -1858,6 +1900,7 @@ function setfpztData() {
 function jrrj() {
     $(".weui-tab__panel").children().hide();//隐藏所有子页面
     $(".weui-tab__panel").children().eq(4).show();//显示对应的子页面
+    isrjlb = true;
     getrjdata();
     $('#jrrj').click(function (){
         rjtype = 1;
@@ -1961,13 +2004,12 @@ function getrjdata(){
         data: {cType: cType, code: xzqhcode, pageNum: counter, type:rjtype},
         success: function (data) {
             console.log(data);
-            initRJcells(data);
             if (counter == 1) {
                 zfdata = data;
             } else {
                 zfdata = zfdata.concat(data);
             }
-
+            initRJcells(data);
         },
         error: function (msg) {
             $("#tooltips_div").css("display", "block");
@@ -2034,7 +2076,7 @@ function lookdetail() {
         var zfsj = (zfdata[option].time != undefined) ? zfdata[option].time : "未填写";
         var zfjl = (zfdata[option].content != undefined) ? zfdata[option].content : "未填写";
         var detailhtml = "<div class='weui-flex'><div class='left_black'><img src='images/black.png' style='text-align: center' height='100%'></div>";
-        detailhtml += "<div class='weui-flex__item subhead' style='padding-top: 0;height: 2.3em;line-height: 2.5em'>走访详情</div>";
+        detailhtml += "<div class='weui-flex__item subhead' style='padding-top: 0;height: 2.3em;line-height: 2.5em;background: transparent;color: #6f6f6f'>走访详情</div>";
         detailhtml += "<div style='width: 60px'></div></div>"
         detailhtml += "<div class='zftp'><img style='border: 3px solid ghostwhite' height='100%' src='http://www.gistone.cn" + zfdata[option].pic + "'></div>";
         detailhtml += "<div class='weui-cells' style='margin-top: 0'><div class='weui-cell'><div class='detailtext'>帮扶人：" + bfrname + "</div></div>";
