@@ -278,7 +278,7 @@ function  addzfjl() {
 			sendLat:sendlatitude,
 			sendLng:sendlongitude,
 			registerType:qdtype,
-			zfTypr:zftype
+			zfType:zftype
 	    },
 	    success: function (data) {
 	    	if(data == "5"){
