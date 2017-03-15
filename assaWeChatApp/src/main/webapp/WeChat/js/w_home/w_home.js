@@ -1,3 +1,21 @@
+window.onload = onloaded;
+function onloaded(){
+	$("#topspinner").animate({
+		margin:"0px",
+		height:"0px",
+		opacity:"1"
+	},1000);
+	$("#cube1").animate({
+		opacity:"0"
+	},100);
+	$("#cube2").animate({
+		opacity:"0"
+	},100);
+	/*setTimeout(function (){
+		$("#topspinner").hide();
+	},2000)*/
+	//
+}
 $(function(){
 	var Request = new Object();
 	Request = GetRequest();
