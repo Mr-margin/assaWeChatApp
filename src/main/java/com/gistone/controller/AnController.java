@@ -92,7 +92,7 @@ public class AnController{
 		String str = phone.substring(5,11);
 		String sqlLd = "select * from SYS_PERSONAL_LD where PERSONAL_PHONE ='"+phone+"'";
 		if(this.getBySqlMapper.findRecords(sqlLd).size()>0){
-			System.out.println(this.getBySqlMapper.findRecords(sqlLd).get(0).get("PASSWORD"));
+//			System.out.println(this.getBySqlMapper.findRecords(sqlLd).get(0).get("PASSWORD"));
 			if (this.getBySqlMapper.findRecords(sqlLd).get(0).get("PASSWORD")!=null&&!"".equals(this.getBySqlMapper.findRecords(sqlLd).get(0).get("PASSWORD"))){
 				if (password!=null&&!"".equals(password)&&password.equals(this.getBySqlMapper.findRecords(sqlLd).get(0).get("PASSWORD"))){
 					response.getWriter().write("{\"success\":0,\"message\":\"0\",\"data\":\"\"}");//登录成功
@@ -2127,7 +2127,7 @@ public class AnController{
 	    int end = 20*Integer.valueOf(pageNum);
 	    JSONArray jn = new JSONArray();
 	    String sqlX="select * from (select rownum as num,ts.* from (";
-	    String sql = "SELECT	PERSONAL_NAME,	HOUSEHOLD_NAME,	PERSONAL_PHONE,	V3,	REGISTERTIME,	max(t2.PIC_PATH) as PIC_PATH FROM	DA_HELP_VISIT t1 LEFT JOIN (select DISTINCT(random_number),pic_path from DA_PIC_VISIT) t2 ON t1.random_number = t2.random_number WHERE	1 = 1 ";//DA_HELP_VISIT
+	    String sql = "SELECT	PERSONAL_NAME,	HOUSEHOLD_NAME,	PERSONAL_PHONE,	V3,zftype,	REGISTERTIME,	max(t2.PIC_PATH) as PIC_PATH FROM	DA_HELP_VISIT t1 LEFT JOIN (select DISTINCT(random_number),pic_path from DA_PIC_VISIT) t2 ON t1.random_number = t2.random_number WHERE	1 = 1 ";//DA_HELP_VISIT
 	    if(code!=null&&!"".equals(code)&&Integer.valueOf(cType)>1){
 	    	sql+=" and AAR008 like('"+code+"%')";
 	    }
@@ -2152,7 +2152,7 @@ public class AnController{
 		}else if(Integer.valueOf(type)==3){//本月
 			sqlC=" and to_char(to_date(registertime,'yyyy-mm-dd hh24:mi:ss'),'yyyy-mm')=to_char(sysdate,'yyyy-mm')";
 		}
-		sql+=" and t1.registertime is not null "+sqlC+" GROUP BY PERSONAL_NAME,HOUSEHOLD_NAME,PERSONAL_PHONE,V3,REGISTERTIME ORDER BY TO_DATE (REGISTERTIME,'yyyy-mm-dd hh24:mi:ss') desc";
+		sql+=" and t1.registertime is not null "+sqlC+" GROUP BY PERSONAL_NAME,HOUSEHOLD_NAME,PERSONAL_PHONE,V3,zftype,REGISTERTIME ORDER BY TO_DATE (REGISTERTIME,'yyyy-mm-dd hh24:mi:ss') desc";
 		sqlX+=sql +") ts )tt";
 		sqlX+=" where tt.num <="+end+" and tt.num>"+start+"";
 		
@@ -2165,6 +2165,7 @@ public class AnController{
 	    		jb.put("phone", list.get(l).get("PERSONAL_PHONE"));//帮扶人电话
 	    		jb.put("content", list.get(l).get("V3"));//帮扶内容
 	    		jb.put("time", list.get(l).get("REGISTERTIME"));//帮扶日期
+	    		jb.put("zftype", list.get(l).get("ZFTYPE"));//走访类型
 	    		jb.put("pic", list.get(l).get("PIC_PATH")==null?"":list.get(l).get("PIC_PATH"));//帮扶照片
 	    		jn.add(jb);
 	    	}
@@ -2547,7 +2548,7 @@ public class AnController{
 	}
 	@RequestMapping("fei_url.do")
 	public void fei_url(HttpServletRequest request,HttpServletResponse response) throws IOException {
-		
+		long startTime = System.currentTimeMillis();    //获取开始时间
 		String  sql = " select pic_path from DA_PIC_VISIT";
 		List<Map> list = this.getBySqlMapper.findRecords(sql);
 		
@@ -2573,7 +2574,9 @@ public class AnController{
 				  }
 			}
 		}
-		response.getWriter().write("111111111111111111111");
+		long endTime = System.currentTimeMillis();    //获取结束时间
+	    System.out.println("程序运行时间：" + (endTime - startTime)/1000 + "s");    //输出程序运行时间
+		response.getWriter().write("程序运行时间：" + (endTime - startTime)/1000 + "s");
 
 	}
 	
