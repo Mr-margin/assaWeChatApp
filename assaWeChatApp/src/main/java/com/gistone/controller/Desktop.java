@@ -136,7 +136,7 @@ public class Desktop {
 	}
 	/**
 	 * 到帮扶人数据
-	 * @param request
+	 * @param request    and AAR010 in ('0','3')  过滤贫困户是否脱贫
 	 * @param response
 	 * @throws IOException 
 	 */
@@ -145,7 +145,7 @@ public class Desktop {
 		String sql = "select household_name,household_card,personal_name,personal_phone from  "+
 					"(select AAK110,AAC001 from NEIMENG0117_AC08 where AAR100='1') aa LEFT JOIN "+
 					" (select AAK110,AAB002 personal_name,AAR012 personal_phone from  NEIMENG0117_AK11 ) bb on aa.AAK110=bb.AAK110 LEFT JOIN ( "+
-					" select AAB002 household_name,AAB004 household_card,q1.AAC001 from  (select AAC001 from  NEIMENG0117_AC01 where AAR100='1' and AAR010 in ('0','3')) q1 LEFT JOIN ( "+
+					" select AAB002 household_name,AAB004 household_card,q1.AAC001 from  (select AAC001 from  NEIMENG0117_AC01 where AAR100='1') q1 LEFT JOIN ( "+
 					" select AAC001,AAB002,AAB004 from NEIMENG0117_AB01 where AAB006='01' ) q2 on  q1.aac001=q2.aac001 "+
 					" where AAB002 is not null) cc on aa.AAc001 =cc.AAc001  where household_name is not null and household_card is not null  and personal_name is not null "+
 					" GROUP BY household_name,household_card,personal_name,personal_phone";
@@ -155,10 +155,11 @@ public class Desktop {
 			String  household_card = "".equals(list.get(i).get("HOUSEHOLD_CARD")) || list.get(i).get("HOUSEHOLD_CARD") == null ? "": list.get(i).get("HOUSEHOLD_CARD").toString().replace("'","");
 			String  personal_name = "".equals(list.get(i).get("PERSONAL_NAME")) || list.get(i).get("PERSONAL_NAME") == null ? "": list.get(i).get("PERSONAL_NAME").toString();
 			String  personal_phone = "".equals(list.get(i).get("PERSONAL_PHONE")) || list.get(i).get("PERSONAL_PHONE") == null ? "": list.get(i).get("PERSONAL_PHONE").toString();
-			String  insert_sql = " insert into SYS_PERSONAL_HOUSEHOLD_MANY (PERSONAL_NAME,HOUSEHOLD_NAME,PERSONAL_PHONE,HOUSEHOLD_CARD) VALUES "+
+			String  insert_sql = " insert into SYS_HOUSEHOLD_MANY_TEST (PERSONAL_NAME,HOUSEHOLD_NAME,PERSONAL_PHONE,HOUSEHOLD_CARD) VALUES "+
 									"('"+personal_name+"','"+household_name+"','"+personal_phone+"','"+household_card+"')";
 			this.getBySqlMapper.insert(insert_sql);			
+			System.out.println("共有记录："+list.size()+"条，已插入："+(i+1)+"条");
 		}
-		response.getWriter().write("1111111111111111111111111111");
+		response.getWriter().write("共有记录："+list.size()+"条，已插入："+list.size()+"条");
 	}
 }
