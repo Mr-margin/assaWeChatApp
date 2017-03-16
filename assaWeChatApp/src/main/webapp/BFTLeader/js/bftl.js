@@ -227,7 +227,6 @@ document.getElementById("cir").addEventListener("touchend", function (e) {//手�
     if (ismove) {//没有移动
         if (iszk) {
             //$('#cir').html('+');
-            $('#anzk').removeClass('andh');
             $('#anzk').removeClass('andhgb');
             $('#anzk').removeClass('andhzk');
             $('#anzk').addClass('andhgb');
@@ -240,7 +239,6 @@ document.getElementById("cir").addEventListener("touchend", function (e) {//手�
             iszk = false;
         } else {
             //$('#cir').html('-');
-            $('#anzk').removeClass('andh');
             $('#anzk').removeClass('andhgb');
             $('#anzk').removeClass('andhzk');
             $('#anzk').addClass('andhzk');
@@ -720,12 +718,22 @@ function initfpdx() {
      */
     function setzpyybar(data) {
         //行政区划贫困人口数统计****************************************
+        var zpyybt = ['因病致贫', '因残致贫', '因学致贫', '因灾致贫', '缺土地', '缺水', '缺技术', '缺劳力', '缺资金', '交通条件落后', '自身发展力不足'];
+        var zpyyval = [data.chartData[0].V1,data.chartData[0].V2,data.chartData[0].V3,data.chartData[0].V4,data.chartData[0].V5,data.chartData[0].V6,
+            data.chartData[0].V7,data.chartData[0].V8,data.chartData[0].V9,data.chartData[0].V10,data.chartData[0].V11];
+        var zpyydata = new Array();
+        for(var i = 0;i < zpyybt.length; i++){
+            zpyydata[i] = {'V0':zpyybt[i],'V1':zpyyval[i]};
+        }
+        zpyydata = sortByKey(zpyydata,'V1')
         var myBarChart = echarts.init(document.getElementById('cause_bar'));
         var yaxisdata = new Array();
         var zpyydatavalue = new Array;
-        yaxisdata = ['因病致贫', '因残致贫', '因学致贫', '因灾致贫', '缺土地', '缺水', '缺技术', '缺劳力', '缺资金', '交通条件落后', '自身发展力不足'];
-        zpyydatavalue = [data.chartData[0].V1, data.chartData[0].V2, data.chartData[0].V3, data.chartData[0].V4, data.chartData[0].V5,
-            data.chartData[0].V6, data.chartData[0].V7, data.chartData[0].V8, data.chartData[0].V9, data.chartData[0].V10, data.chartData[0].V11,];
+        for (var tmp in zpyydata) {
+            yaxisdata.push(zpyydata[tmp].V0);
+            zpyydatavalue.push(zpyydata[tmp].V1)
+
+        }
         option1 = {
             title: {
                 text: '主要致贫原因',
@@ -1425,7 +1433,6 @@ function tzpkgk() {
 }
 function tzzpyy() {
     $(".mytab").animate({scrollTop: zpyytop}, 1000);
-    $('#anzk').removeClass('andh');
     $('#anzk').removeClass('andhgb');
     $('#anzk').removeClass('andhzk');
     $('#anzk').addClass('andhgb');
@@ -1439,7 +1446,6 @@ function tzzpyy() {
 }
 function tznlfz() {
     $(".mytab").animate({scrollTop: nlfztop}, 1000);
-    $('#anzk').removeClass('andh');
     $('#anzk').removeClass('andhgb');
     $('#anzk').removeClass('andhzk');
     $('#anzk').addClass('andhgb');
@@ -1453,7 +1459,6 @@ function tznlfz() {
 }
 function tzjkzk() {
     $(".mytab").animate({scrollTop: jkzktop}, 1000);
-    $('#anzk').removeClass('andh');
     $('#anzk').removeClass('andhgb');
     $('#anzk').removeClass('andhzk');
     $('#anzk').addClass('andhgb');
@@ -1467,7 +1472,6 @@ function tzjkzk() {
 }
 function tzwhcd() {
     $(".mytab").animate({scrollTop: whcdtop}, 1000);
-    $('#anzk').removeClass('andh');
     $('#anzk').removeClass('andhgb');
     $('#anzk').removeClass('andhzk');
     $('#anzk').addClass('andhgb');
@@ -1481,7 +1485,6 @@ function tzwhcd() {
 }
 function tztdzy() {
     $(".mytab").animate({scrollTop: tdzytop}, 1000);
-    $('#anzk').removeClass('andh');
     $('#anzk').removeClass('andhgb');
     $('#anzk').removeClass('andhzk');
     $('#anzk').addClass('andhgb');
@@ -1495,7 +1498,6 @@ function tztdzy() {
 }
 function tzscsh() {
     $(".mytab").animate({scrollTop: scshtop}, 1000);
-    $('#anzk').removeClass('andh');
     $('#anzk').removeClass('andhgb');
     $('#anzk').removeClass('andhzk');
     $('#anzk').addClass('andhgb');
@@ -1509,7 +1511,6 @@ function tzscsh() {
 }
 function tzsljy() {
     $(".mytab").animate({scrollTop: sljytop}, 1000);
-    $('#anzk').removeClass('andh');
     $('#anzk').removeClass('andhgb');
     $('#anzk').removeClass('andhzk');
     $('#anzk').addClass('andhgb');
@@ -1523,7 +1524,6 @@ function tzsljy() {
 }
 function tzpkfsl() {
     $(".mytab").animate({scrollTop: pkfsltop}, 1000);
-    $('#anzk').removeClass('andh');
     $('#anzk').removeClass('andhgb');
     $('#anzk').removeClass('andhzk');
     $('#anzk').addClass('andhgb');
@@ -2110,13 +2110,15 @@ function lookdetail() {
         counter = 1;
         start_search();
     } else if (option != undefined && option < 1000) {
-
         console.log(zfdata[option].name);
-
         var bfrname = (zfdata[option].name != undefined) ? zfdata[option].name : "未填写";
         var pkhname = (zfdata[option].hname != undefined) ? zfdata[option].hname : "未填写";
         var zfsj = (zfdata[option].time != undefined) ? zfdata[option].time : "未填写";
         var zfjl = (zfdata[option].content != undefined) ? zfdata[option].content : "未填写";
+        var zflx = zfdata[option].zftype;
+        if (zflx != undefined){
+            zflx = getzflx(zflx);
+        }
         var detailhtml = "<div class='weui-flex'><div class='left_black'><img src='images/black.png' style='text-align: center' height='100%'></div>";
         detailhtml += "<div class='weui-flex__item subhead' style='padding-top: 0;height: 2.3em;line-height: 2.5em;background: transparent;color: #6f6f6f'>走访详情</div>";
         detailhtml += "<div style='width: 60px'></div></div>"
@@ -2124,6 +2126,9 @@ function lookdetail() {
         detailhtml += "<div class='weui-cells' style='margin-top: 0'><div class='weui-cell'><div class='detailtext'>帮扶人：" + bfrname + "</div></div>";
         detailhtml += "<div class='weui-cell'><div class='detailtext' >贫困户：" + pkhname + "</div></div>";
         detailhtml += "<div class='weui-cell'><div class='detailtext' >走访时间：" + zfsj + "</div></div>";
+        if (zflx != undefined){
+            detailhtml += "<div class='weui-cell'><div class='detailtext' >走访类型：" + zflx + "</div></div>";
+        }
         detailhtml += "<div class='weui-cell'><div class='detailtext' style='_height:200px; min-height:200px;padding-left: 10px' >走访记录：" + zfjl + "</div> </div></div>";
 
         detailhtml += "<div style='height: 100px'></div>"
@@ -2142,6 +2147,29 @@ function lookdetail() {
         }, 2000);
     }
 }
+
+function getzflx(p){
+    if (p == 1){
+        return '其他帮扶活动';
+    }else if(p ==2){
+        return '了解基本情况';
+    }else if(p ==3){
+        return '填写扶贫手册';
+    }
+    else if(p ==4){
+        return '制定脱贫计划';
+    }
+    else if(p ==5){
+        return '落实资金项目';
+    }
+    else if(p ==6){
+        return '宣传扶贫政策';
+    }
+    else if(p ==7){
+        return '节日假日慰问';
+    }
+}
+
 function start_search() {
     if (checkNum(search_text)) {
         if (checkMobile(search_text)) {//如果输入的是手机号

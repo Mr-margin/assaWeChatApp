@@ -120,16 +120,6 @@ html, body {
     opacity: 0.8;
     /* 宽度和高度需要相等 */
 }
-.andh{
-    width: 30px;
-    height: 30px;
-    background-image: url("../images/k1/k1_1.jpeg");
-    background-size: 100% 100%;
-    margin: auto;
-    position: absolute;
-    top: 0; left: 0; bottom: 0; right: 0;
-    opacity: 0.8;
-}
 .andhzk{
     width: 30px;
     height: 30px;
@@ -145,8 +135,8 @@ html, body {
     animation-fill-mode: forwards;
 }
 .andhgb{
-    width: 40px;
-    height: 40px;
+    width: 30px;
+    height: 30px;
     background-size: 100% 100%;
     opacity: 0.8;
     margin: auto;
