@@ -1978,7 +1978,7 @@ function jrrj() {
                 if (iscxdx == true) {
                     start_search();
                 } else {
-                    jrrj();
+                    getrjdata();
                 }
 
                 window.parent.code = xzqhcode;
