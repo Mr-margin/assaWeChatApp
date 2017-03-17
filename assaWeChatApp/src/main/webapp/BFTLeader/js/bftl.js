@@ -14,7 +14,7 @@ var xzqhname = "内蒙古自治区";//要查询的行政区划名称
 var xzqh = "内蒙古自治区";//顶部显示的行政地区名
 var cType = 1;//请求地区级别
 var serviceurl = "http://115.29.42.107/";//服务器地址
-//var serviceurl = "http://192.168.2.118:8888/";
+//var serviceurl = "http://192.168.2.103:8888/";
 /*var stadate = "2014-1-1", enddate = "2017-12-31";//查询起止时间*/
 var rjtype = 0;
 /**
@@ -175,8 +175,10 @@ function submitdq() {
     $("#xzqh").html(xzqh);
     if (qx == "") {
         xzqhname = ms;
+        xzqhcode = $("#xzms").val();
     } else {
         xzqhname = qx;
+        xzqhcode = $("#xzqx").val();
     }
     if (xzqh == "" || xzqh == null) {
         $("#xzqh").html("内蒙古自治区");
@@ -387,7 +389,7 @@ function initfpdx() {
         },
         error: function (msg) {
             $("#tooltips_div").css("display", "block");
-            $("#tooltips_div").html("服务器异常，错误码：" + msg.status);
+            $("#tooltips_div").html("请求扶贫概况数据失败！服务器异常，错误码：" + msg.status);
             setTimeout(function () {
                 $("#tooltips_div").css("display", "none");
             }, 2000);
@@ -579,7 +581,7 @@ function initfpdx() {
             },
             error: function (msg) {
                 $("#tooltips_div").css("display", "block");
-                $("#tooltips_div").html("服务器异常，错误码：" + msg.status);
+                $("#tooltips_div").html("请求致贫原因数据失败！服务器异常，错误码：" + msg.status);
                 setTimeout(function () {
                     $("#tooltips_div").css("display", "none");
                 }, 2000);
@@ -597,7 +599,7 @@ function initfpdx() {
             },
             error: function (msg) {
                 $("#tooltips_div").css("display", "block");
-                $("#tooltips_div").html("服务器异常，错误码：" + msg.status);
+                $("#tooltips_div").html("请求年龄分组数据失败！服务器异常，错误码：" + msg.status);
                 setTimeout(function () {
                     $("#tooltips_div").css("display", "none");
                 }, 2000);
@@ -615,7 +617,7 @@ function initfpdx() {
             },
             error: function (msg) {
                 $("#tooltips_div").css("display", "block");
-                $("#tooltips_div").html("服务器异常，错误码：" + msg.status);
+                $("#tooltips_div").html("请求健康状况数据失败！服务器异常，错误码：" + msg.status);
                 setTimeout(function () {
                     $("#tooltips_div").css("display", "none");
                 }, 2000);
@@ -1422,7 +1424,9 @@ function initfpdx() {
 
 function tzpkgk() {
     $(".mytab").animate({scrollTop: 0}, 1000);
-    $('.andh').attr('background-image', 'url("../images/k1.gif")');
+    $('#anzk').removeClass('andhgb');
+    $('#anzk').removeClass('andhzk');
+    $('#anzk').addClass('andhgb');
     $('.weui-mask').animate({opacity: '0'}, 500);
     $('#jgg').animate({width: '0'}, 500);
     setTimeout(function () {
