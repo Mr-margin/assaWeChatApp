@@ -970,33 +970,33 @@ public class AnController{
 	    JSONObject jb = new JSONObject();
 	    if(name!=null&&!"".equals(name)){//判断是否为空
 	    	//贫困人口
-	    	sqlPkr = "SELECT a1.V1,a1.V2,a2.com_level FROM("
+	    	sqlPkr = "SELECT a2.com_name as V1,a1.V2,a2.com_level FROM("
 					+ "SELECT * FROM SYS_COMPANY WHERE COM_F_PKID=("
 					+ "SELECT PKID FROM SYS_COMPANY WHERE COM_NAME='" + name + "'"
-					+ ")) a2 LEFT JOIN PKC_1_1_0 a1 ON a1.V10=A2.COM_CODE where V9=0";
+					+ ")) a2 LEFT JOIN (select * from PKC_1_1_0 where V9=0 ) a1 ON a1.V10=A2.COM_CODE ";
 	    	//贫困户
-	    	sqlPkh="SELECT a1.com_name,a1.z_hu,a1.z_ren,a1.v1,a1.v5,a1.v9  FROM("
+	    	sqlPkh="SELECT a2.com_name,a1.z_hu,a1.z_ren,a1.v1,a1.v5,a1.v9  FROM("
 					+ "SELECT * FROM SYS_COMPANY WHERE COM_F_PKID=("
 					+ "SELECT PKID FROM SYS_COMPANY WHERE COM_NAME='"+name+"'"
-					+ ")) a2 LEFT JOIN PKC_1_2_1 a1 ON a1.COM_CODE=A2.COM_CODE  WHERE  TYPE = '0' ";
+					+ ")) a2 LEFT JOIN (SELECT * FROM PKC_1_2_1  WHERE  TYPE = '0') a1 ON a1.COM_CODE=A2.COM_CODE  ";
 	    	//贫困村
-	    	sqlPkc = "select v1,v3 from PKC_1_3_1 c join (select * from SYS_COMPANY where COM_F_PKID=(SELECT PKID from SYS_COMPANY where COM_NAME='"+name+"') ) "+
- 					"b on c.V10=b.COM_CODE WHERE  COM_PIN = '0' ";
+	    	sqlPkc = "select b.com_name as v1,v3 from  (select * from SYS_COMPANY where COM_F_PKID=(SELECT PKID from SYS_COMPANY where COM_NAME='"+name+"') ) "+
+ 					"b left join (select * from PKC_1_3_1 WHERE  COM_PIN = '0') c on c.V10=b.COM_CODE ";
 	    }else{//如果都为空则查询自治区统计数据
 	    	name="内蒙古自治区";
 	    	//贫困人口
-	    	sqlPkr = "SELECT a1.V1,a1.V2,a2.com_level FROM("
+	    	sqlPkr = "SELECT a2.com_name as V1,a1.V2,a2.com_level FROM("
 					+ "SELECT * FROM SYS_COMPANY WHERE COM_F_PKID=("
 					+ "SELECT PKID FROM SYS_COMPANY WHERE COM_NAME='内蒙古自治区'"
-					+ ")) a2 LEFT JOIN PKC_1_1_0 a1 ON a1.V10=A2.COM_CODE where V9=0";
+					+ ")) a2 LEFT JOIN (select * from PKC_1_1_0 where V9=0 ) a1 ON a1.V10=A2.COM_CODE";
 	    	//贫困户
-	    	sqlPkh="SELECT a1.com_name,a1.z_hu,a1.z_ren,a1.v1,a1.v5,a1.v9  FROM("
+	    	sqlPkh="SELECT a2.com_name,a1.z_hu,a1.z_ren,a1.v1,a1.v5,a1.v9  FROM("
 					+ "SELECT * FROM SYS_COMPANY WHERE COM_F_PKID=("
 					+ "SELECT PKID FROM SYS_COMPANY WHERE COM_NAME='内蒙古自治区'"
-					+ ")) a2 LEFT JOIN PKC_1_2_1 a1 ON a1.COM_CODE=A2.COM_CODE  WHERE  TYPE = '0' ";
+					+ ")) a2 LEFT JOIN (SELECT * FROM PKC_1_2_1  WHERE  TYPE = '0') a1 ON a1.COM_CODE=A2.COM_CODE ";
 	    	//贫困村
-	    	sqlPkc = "select v1,v3 from PKC_1_3_1 c join (select * from SYS_COMPANY where COM_F_PKID=(SELECT PKID from SYS_COMPANY where COM_NAME='内蒙古自治区') ) "+
- 					"b on c.V10=b.COM_CODE WHERE  COM_PIN = '0' ";
+	    	sqlPkc = "select b.com_name as v1,v3 from (select * from SYS_COMPANY where COM_F_PKID=(SELECT PKID from SYS_COMPANY where COM_NAME='内蒙古自治区') ) "+
+ 					"b left join (select * from PKC_1_3_1 WHERE  COM_PIN = '0') c  on c.V10=b.COM_CODE  ";
 	    }
 	    List<Map> listPkr = this.getBySqlMapper.findRecords(sqlPkr);
 	    List<Map> listPkh = this.getBySqlMapper.findRecords(sqlPkh);
@@ -1040,7 +1040,7 @@ public class AnController{
 		    }
 			tjJson.add(jb);
 			response.getWriter().write("{\"success\":\"0\",\"message\":\"成功\",\"chartData\":"+getPaixu(chartJson, name).toString()+",\"tjSum\":"+tjJson+"}");
-	    }else{
+	    }else{//返回缺省值0
 	    	response.getWriter().write("0");
 	    }
 	}
@@ -1076,9 +1076,9 @@ public class AnController{
 	    JSONObject jb = new JSONObject();
 	    JSONObject obj = new JSONObject();
 	    if(name!=null&&!"".equals(name)){//判断是否为空
-	    	sqlZpyy="SELECT a1.* FROM(SELECT * FROM SYS_COMPANY WHERE COM_F_PKID=(SELECT PKID FROM SYS_COMPANY WHERE COM_NAME='"+name+"')) a2 LEFT JOIN PKC_1_2_2 a1 ON a1.COM_CODE=A2.COM_CODE  WHERE  TYPE = '0' ";
+	    	sqlZpyy="SELECT a2.com_name,a1.* FROM(SELECT * FROM SYS_COMPANY WHERE COM_F_PKID=(SELECT PKID FROM SYS_COMPANY WHERE COM_NAME='"+name+"')) a2 LEFT JOIN (select * from PKC_1_2_2  WHERE  TYPE = '0') a1 ON a1.COM_CODE=A2.COM_CODE ";
 	    }else{
-	    	sqlZpyy="SELECT a1.* FROM(SELECT * FROM SYS_COMPANY WHERE COM_F_PKID=(SELECT PKID FROM SYS_COMPANY WHERE COM_NAME='内蒙古自治区')) a2 LEFT JOIN PKC_1_2_2 a1 ON a1.COM_CODE=A2.COM_CODE  WHERE  TYPE = '0' ";
+	    	sqlZpyy="SELECT a2.com_name,a1.* FROM(SELECT * FROM SYS_COMPANY WHERE COM_F_PKID=(SELECT PKID FROM SYS_COMPANY WHERE COM_NAME='内蒙古自治区')) a2 LEFT JOIN (select * from PKC_1_2_2  WHERE  TYPE = '0') a1 ON a1.COM_CODE=A2.COM_CODE  ";
 	    }
 	    List<Map> listZpyy = this.getBySqlMapper.findRecords(sqlZpyy);
 	    if(listZpyy.size()>0){
@@ -1160,9 +1160,9 @@ public class AnController{
 	    JSONArray tjJson = new JSONArray();
 	    JSONObject jb = new JSONObject();
 	    if(name!=null&&!"".equals(name)){//判断是否为空
-	    	sqlAge="SELECT a1.* FROM(SELECT * FROM SYS_COMPANY WHERE COM_F_PKID=(SELECT PKID FROM SYS_COMPANY WHERE COM_NAME='"+name+"')) a2 LEFT JOIN PKC_1_1_1 a1 ON a1.V10=A2.COM_CODE  WHERE  V9 = '0'  ";
+	    	sqlAge="SELECT a2.com_name as v1,a1.* FROM(SELECT * FROM SYS_COMPANY WHERE COM_F_PKID=(SELECT PKID FROM SYS_COMPANY WHERE COM_NAME='"+name+"')) a2 LEFT JOIN (select * from PKC_1_1_1  WHERE  V9 = '0') a1 ON a1.V10=A2.COM_CODE  ";
 	    }else{
-	    	sqlAge="SELECT a1.* FROM(SELECT * FROM SYS_COMPANY WHERE COM_F_PKID=(SELECT PKID FROM SYS_COMPANY WHERE COM_NAME='内蒙古自治区')) a2 LEFT JOIN PKC_1_1_1 a1 ON a1.V10=A2.COM_CODE  WHERE  V9 = '0' ";
+	    	sqlAge="SELECT a2.com_name as v1,a1.* FROM(SELECT * FROM SYS_COMPANY WHERE COM_F_PKID=(SELECT PKID FROM SYS_COMPANY WHERE COM_NAME='内蒙古自治区')) a2 LEFT JOIN (select * from PKC_1_1_1  WHERE  V9 = '0') a1 ON a1.V10=A2.COM_CODE  ";
 	    }
 	    List<Map> listAge = this.getBySqlMapper.findRecords(sqlAge);
 	    if(listAge.size()>0){
@@ -1211,9 +1211,9 @@ public class AnController{
 	    JSONArray tjJson = new JSONArray();
 	    JSONObject jb = new JSONObject();
 	    if(name!=null&&!"".equals(name)){//判断是否为空
-	    	sqlIll="SELECT a1.* FROM(SELECT * FROM SYS_COMPANY WHERE COM_F_PKID=(SELECT PKID FROM SYS_COMPANY WHERE COM_NAME='"+name+"')) a2 LEFT JOIN PKC_1_1_2 a1 ON a1.V10=A2.COM_CODE  WHERE  V9 = '0' ";
+	    	sqlIll="SELECT  a2.com_name as v1,a1.* FROM(SELECT * FROM SYS_COMPANY WHERE COM_F_PKID=(SELECT PKID FROM SYS_COMPANY WHERE COM_NAME='"+name+"')) a2 LEFT JOIN (select * from PKC_1_1_2  WHERE  V9 = '0' ) a1 ON a1.V10=A2.COM_CODE ";
 	    }else{
-	    	sqlIll="SELECT a1.* FROM(SELECT * FROM SYS_COMPANY WHERE COM_F_PKID=(SELECT PKID FROM SYS_COMPANY WHERE COM_NAME='内蒙古自治区')) a2 LEFT JOIN PKC_1_1_2 a1 ON a1.V10=A2.COM_CODE  WHERE  V9 = '0' ";
+	    	sqlIll="SELECT  a2.com_name as v1,a1.* FROM(SELECT * FROM SYS_COMPANY WHERE COM_F_PKID=(SELECT PKID FROM SYS_COMPANY WHERE COM_NAME='内蒙古自治区')) a2 LEFT JOIN (select * from PKC_1_1_2  WHERE  V9 = '0' ) a1 ON a1.V10=A2.COM_CODE ";
 	    }
 	    List<Map> listIll = this.getBySqlMapper.findRecords(sqlIll);
 	    if(listIll.size()>0){
@@ -1258,9 +1258,9 @@ public class AnController{
 	    JSONArray tjJson = new JSONArray();
 	    JSONObject jb = new JSONObject();
 	    if(name!=null&&!"".equals(name)){//判断是否为空
-	    	sqlEdu="SELECT a1.* FROM(SELECT * FROM SYS_COMPANY WHERE COM_F_PKID=(SELECT PKID FROM SYS_COMPANY WHERE COM_NAME='"+name+"')) a2 LEFT JOIN PKC_1_1_3 a1 ON a1.V10=A2.COM_CODE  WHERE  V9 = '0'  ";
+	    	sqlEdu="SELECT a2.com_name as v1,a1.* FROM(SELECT * FROM SYS_COMPANY WHERE COM_F_PKID=(SELECT PKID FROM SYS_COMPANY WHERE COM_NAME='"+name+"')) a2 LEFT JOIN (select * from PKC_1_1_3  WHERE  V9 = '0') a1 ON a1.V10=A2.COM_CODE ";
 	    }else{
-	    	sqlEdu="SELECT a1.* FROM(SELECT * FROM SYS_COMPANY WHERE COM_F_PKID=(SELECT PKID FROM SYS_COMPANY WHERE COM_NAME='内蒙古自治区')) a2 LEFT JOIN PKC_1_1_3 a1 ON a1.V10=A2.COM_CODE  WHERE  V9 = '0' ";
+	    	sqlEdu="SELECT a2.com_name as v1,a1.* FROM(SELECT * FROM SYS_COMPANY WHERE COM_F_PKID=(SELECT PKID FROM SYS_COMPANY WHERE COM_NAME='内蒙古自治区')) a2 LEFT JOIN (select * from PKC_1_1_3  WHERE  V9 = '0') a1 ON a1.V10=A2.COM_CODE ";
 	    }
 	    List<Map> listEdu = this.getBySqlMapper.findRecords(sqlEdu);
 	    if(listEdu.size()>0){
@@ -1306,26 +1306,26 @@ public class AnController{
 	    double landFive=0;//林果面积
 	    double landSix=0;//牧草地面积
 	    String sqlLand = "";
-	    String sqlRjLand = "";//人均耕地面积
+//	    String sqlRjLand = "";//人均耕地面积
 	    JSONArray chartJson = new JSONArray();
 	    JSONArray tjJson = new JSONArray();
 	    JSONObject jb = new JSONObject();
 	    if(name!=null&&!"".equals(name)){//判断是否为空
-	    	sqlLand="SELECT a1.* FROM(SELECT * FROM SYS_COMPANY WHERE COM_F_PKID=(SELECT PKID FROM SYS_COMPANY WHERE COM_NAME='"+name+"')) a2 LEFT JOIN PKC_1_2_6 a1 ON a1.COM_CODE=A2.COM_CODE  WHERE  TYPE = '0'  ";
-	    	sqlRjLand="SELECT a1.* FROM(SELECT * FROM SYS_COMPANY WHERE COM_F_PKID=(SELECT PKID FROM SYS_COMPANY WHERE COM_NAME='"+name+"')) a2 LEFT JOIN PKC_1_2_6 a1 ON a1.COM_CODE=A2.COM_CODE  WHERE  TYPE = '0' ";
+	    	sqlLand="SELECT a2.com_name as v01,a1.* FROM(SELECT * FROM SYS_COMPANY WHERE COM_F_PKID=(SELECT PKID FROM SYS_COMPANY WHERE COM_NAME='"+name+"')) a2 LEFT JOIN (select * from PKC_1_2_6  WHERE  TYPE = '0' ) a1 ON a1.COM_CODE=A2.COM_CODE   ";
+//	    	sqlRjLand="SELECT a1.* FROM(SELECT * FROM SYS_COMPANY WHERE COM_F_PKID=(SELECT PKID FROM SYS_COMPANY WHERE COM_NAME='"+name+"')) a2 LEFT JOIN PKC_1_2_6 a1 ON a1.COM_CODE=A2.COM_CODE  WHERE  TYPE = '0' ";
 	    }else{
-	    	sqlLand="SELECT a1.* FROM(SELECT * FROM SYS_COMPANY WHERE COM_F_PKID=(SELECT PKID FROM SYS_COMPANY WHERE COM_NAME='内蒙古自治区')) a2 LEFT JOIN PKC_1_2_6 a1 ON a1.COM_CODE=A2.COM_CODE  WHERE  TYPE = '0' ";
-	    	sqlRjLand="SELECT a1.* FROM(SELECT * FROM SYS_COMPANY WHERE COM_F_PKID=(SELECT PKID FROM SYS_COMPANY WHERE COM_NAME='内蒙古自治区')) a2 LEFT JOIN PKC_1_2_6 a1 ON a1.COM_CODE=A2.COM_CODE  WHERE  TYPE = '0' ";
+	    	sqlLand="SELECT a2.com_name as v01,a1.* FROM(SELECT * FROM SYS_COMPANY WHERE COM_F_PKID=(SELECT PKID FROM SYS_COMPANY WHERE COM_NAME='内蒙古自治区')) a2 LEFT JOIN (select * from PKC_1_2_6  WHERE  TYPE = '0' ) a1 ON a1.COM_CODE=A2.COM_CODE ";
+//	    	sqlRjLand="SELECT a1.* FROM(SELECT * FROM SYS_COMPANY WHERE COM_F_PKID=(SELECT PKID FROM SYS_COMPANY WHERE COM_NAME='内蒙古自治区')) a2 LEFT JOIN PKC_1_2_6 a1 ON a1.COM_CODE=A2.COM_CODE  WHERE  TYPE = '0' ";
 	    }
 	    List<Map> listLand = this.getBySqlMapper.findRecords(sqlLand);
-	    List<Map> listRjLand = this.getBySqlMapper.findRecords(sqlRjLand);
-	    if(listRjLand.size()>0){
-	    	for (int i = 0; i < listRjLand.size(); i++) {
-	    		Map RjLand_map = listRjLand.get(i);
+//	    List<Map> listRjLand = this.getBySqlMapper.findRecords(sqlRjLand);
+	    if(listLand.size()>0){
+	    	for (int i = 0; i < listLand.size(); i++) {
+//	    		Map RjLand_map = listRjLand.get(i);
 	    		Map Land_map = listLand.get(i);
 				JSONObject obj = new JSONObject();
-				obj.put("V0", RjLand_map.get("COM_NAME"));//区域名
-				obj.put("V1", (RjLand_map.get("V2")!=null)&&(RjLand_map.get("V2")!="")?RjLand_map.get("V2"):0);//人均耕地面积
+				obj.put("V0", Land_map.get("V01"));//区域名
+				obj.put("V1", (Land_map.get("V2")!=null)&&(Land_map.get("V2")!="")?Land_map.get("V2"):0);//人均耕地面积
 				
 				landOne+=(Land_map.get("V1")!=null)&&(Land_map.get("V1")!="")?Double.parseDouble(Land_map.get("V1").toString()):0;
 				landTwo+=(Land_map.get("V3")!=null)&&(Land_map.get("V3")!="")?Double.valueOf(Land_map.get("V3").toString()):0;
@@ -1371,16 +1371,16 @@ public class AnController{
 	    JSONArray tjJson = new JSONArray();
 	    JSONObject jb = new JSONObject();
 	    if(name!=null&&!"".equals(name)){//判断是否为空
-	    	sqlProLife="SELECT a1.* FROM(SELECT * FROM SYS_COMPANY WHERE COM_F_PKID=(SELECT PKID FROM SYS_COMPANY WHERE COM_NAME='"+name+"')) a2 LEFT JOIN PKC_1_2_5 a1 ON a1.COM_CODE=A2.COM_CODE  WHERE  TYPE = '0' ";
+	    	sqlProLife="SELECT a2.com_name as v01,a1.* FROM(SELECT * FROM SYS_COMPANY WHERE COM_F_PKID=(SELECT PKID FROM SYS_COMPANY WHERE COM_NAME='"+name+"')) a2 LEFT JOIN (select * from PKC_1_2_5  WHERE  TYPE = '0') a1 ON a1.COM_CODE=A2.COM_CODE";
 	    }else{
-	    	sqlProLife="SELECT a1.* FROM(SELECT * FROM SYS_COMPANY WHERE COM_F_PKID=(SELECT PKID FROM SYS_COMPANY WHERE COM_NAME='内蒙古自治区')) a2 LEFT JOIN PKC_1_2_5 a1 ON a1.COM_CODE=A2.COM_CODE  WHERE  TYPE = '0' ";
+	    	sqlProLife="SELECT a2.com_name as v01,a1.* FROM(SELECT * FROM SYS_COMPANY WHERE COM_F_PKID=(SELECT PKID FROM SYS_COMPANY WHERE COM_NAME='内蒙古自治区')) a2 LEFT JOIN (select * from PKC_1_2_5  WHERE  TYPE = '0') a1 ON a1.COM_CODE=A2.COM_CODE ";
 	    }
 	    List<Map> listProLife = this.getBySqlMapper.findRecords(sqlProLife);
 	    if(listProLife.size()>0){
 	    	for (int i = 0; i < listProLife.size(); i++) {
 	    		Map ProLife_map = listProLife.get(i);
 				JSONObject obj = new JSONObject();
-				obj.put("V0", ProLife_map.get("COM_NAME"));//区域名
+				obj.put("V0", ProLife_map.get("V01"));//区域名
 				obj.put("V1", (ProLife_map.get("V13")!=null)&&(ProLife_map.get("V13")!="")?ProLife_map.get("V13"):0);//人均住房面积
 				
 				proLifeOne+=(ProLife_map.get("V1")!=null)&&(ProLife_map.get("V1")!="")?Integer.valueOf(ProLife_map.get("V1").toString()):0;
@@ -1424,16 +1424,16 @@ public class AnController{
 	    JSONArray tjJson = new JSONArray();
 	    JSONObject jb = new JSONObject();
 	    if(name!=null&&!"".equals(name)){//判断是否为空
-	    	sqlAgeEdu="SELECT a1.*,GJZDQX,ZZQZDQX,GMLQQX,MYQX,BJQX FROM(SELECT * FROM SYS_COMPANY WHERE COM_F_PKID=(SELECT PKID FROM SYS_COMPANY WHERE COM_NAME='"+name+"')) a2 LEFT JOIN PKC_1_1_9 a1 ON a1.V10=A2.COM_CODE  WHERE  V9 = '0'  ";
+	    	sqlAgeEdu="SELECT a2.com_name as v01,a1.*,GJZDQX,ZZQZDQX,GMLQQX,MYQX,BJQX FROM(SELECT * FROM SYS_COMPANY WHERE COM_F_PKID=(SELECT PKID FROM SYS_COMPANY WHERE COM_NAME='"+name+"')) a2 LEFT JOIN (select * from PKC_1_1_9 WHERE  V9 = '0' ) a1 ON a1.V10=A2.COM_CODE ";
 	    }else{
-	    	sqlAgeEdu="SELECT a1.*,GJZDQX,ZZQZDQX,GMLQQX,MYQX,BJQX FROM(SELECT * FROM SYS_COMPANY WHERE COM_F_PKID=(SELECT PKID FROM SYS_COMPANY WHERE COM_NAME='内蒙古自治区')) a2 LEFT JOIN PKC_1_1_9 a1 ON a1.V10=A2.COM_CODE  WHERE  V9 = '0' ";
+	    	sqlAgeEdu="SELECT a2.com_name as v01,a1.*,GJZDQX,ZZQZDQX,GMLQQX,MYQX,BJQX FROM(SELECT * FROM SYS_COMPANY WHERE COM_F_PKID=(SELECT PKID FROM SYS_COMPANY WHERE COM_NAME='内蒙古自治区')) a2 LEFT JOIN (select * from PKC_1_1_9 WHERE  V9 = '0' ) a1 ON a1.V10=A2.COM_CODE ";
 	    }
 	    List<Map> listAgeEdu = this.getBySqlMapper.findRecords(sqlAgeEdu);
 	    if(listAgeEdu.size()>0){
 	    	for (int i = 0; i < listAgeEdu.size(); i++) {
 	    		Map AgeEdu_map = listAgeEdu.get(i);
 				JSONObject obj = new JSONObject();
-				obj.put("V0", AgeEdu_map.get("V1"));//区域名
+				obj.put("V0", AgeEdu_map.get("V01"));//区域名
 				obj.put("V1", (AgeEdu_map.get("V4")!=null)&&(AgeEdu_map.get("V4")!="")?AgeEdu_map.get("V4").toString():0);//6-15岁
 				
 				ageEduOne+=(AgeEdu_map.get("V3")!=null)&&(AgeEdu_map.get("V3")!="")?Integer.valueOf(AgeEdu_map.get("V3").toString()):0;
@@ -1475,9 +1475,9 @@ public class AnController{
 	    JSONArray tjJson = new JSONArray();
 	    JSONObject jb = new JSONObject();
 	    if(name!=null&&!"".equals(name)){//判断是否为空
-	    	sqlFsl="select vf1,vf2,vf3,vf4,NVL(vf41, '0') vf41,vf5,(vf2-vf4) as vf6,(vf3-vf5) as vf7 from PKC_1_3_3 c join (select * from SYS_COMPANY where COM_F_PKID=(SELECT PKID from SYS_COMPANY where COM_NAME='"+name+"') ) b on c.v10=b.COM_CODE  WHERE  COM_PIN = '0' ";
+	    	sqlFsl="select b.com_name as vf1,vf2,vf3,vf4,NVL(vf41, '0') vf41,vf5,(vf2-vf4) as vf6,(vf3-vf5) as vf7 from (select * from SYS_COMPANY where COM_F_PKID=(SELECT PKID from SYS_COMPANY where COM_NAME='"+name+"') ) b left join  (select * from PKC_1_3_3 WHERE  COM_PIN = '0') c   on c.v10=b.COM_CODE ";
 	    }else{
-	    	sqlFsl="select vf1,vf2,vf3,vf4,NVL(vf41, '0') vf41,vf5,(vf2-vf4) as vf6,(vf3-vf5) as vf7 from PKC_1_3_3 c join (select * from SYS_COMPANY where COM_F_PKID=(SELECT PKID from SYS_COMPANY where COM_NAME='内蒙古自治区') ) b on c.v10=b.COM_CODE  WHERE  COM_PIN = '0' ";
+	    	sqlFsl="select b.com_name as vf1,vf2,vf3,vf4,NVL(vf41, '0') vf41,vf5,(vf2-vf4) as vf6,(vf3-vf5) as vf7 from  (select * from SYS_COMPANY where COM_F_PKID=(SELECT PKID from SYS_COMPANY where COM_NAME='内蒙古自治区') ) b left join (select * from PKC_1_3_3 WHERE  COM_PIN = '0') c  on c.v10=b.COM_CODE  ";
 	    }
 	    List<Map> listFsl = this.getBySqlMapper.findRecords(sqlFsl);
 	    if(listFsl.size()>0){
@@ -1676,9 +1676,9 @@ public class AnController{
 				"14571", "8825", "25337", "19230", "3499", "1147" };
 	    String zhsSql = "";String bfhsSql = "";
 	    if(name!=null&&!"".equals(name)){//判断是否为空
-	    	zhsSql="select vf1,vf2,vf3,vf4,NVL(vf41, '0') vf41,vf5,(vf2-vf4) as vf6,(vf3-vf5) as vf7 from PKC_1_3_3 c join (select * from SYS_COMPANY where COM_F_PKID=(SELECT PKID from SYS_COMPANY where COM_NAME='"+name+"') ) b on c.v10=b.COM_CODE  WHERE  COM_PIN = '0' ";
+	    	zhsSql="select b.com_name as vf1,vf2,vf3,vf4,NVL(vf41, '0') vf41,vf5,(vf2-vf4) as vf6,(vf3-vf5) as vf7 from  (select * from SYS_COMPANY where COM_F_PKID=(SELECT PKID from SYS_COMPANY where COM_NAME='"+name+"') ) b left join (select * from PKC_1_3_3   WHERE  COM_PIN = '0') c on c.v10=b.COM_CODE  ";
 	    }else{
-	    	zhsSql="select vf1,vf2,vf3,vf4,NVL(vf41, '0') vf41,vf5,(vf2-vf4) as vf6,(vf3-vf5) as vf7 from PKC_1_3_3 c join (select * from SYS_COMPANY where COM_F_PKID=(SELECT PKID from SYS_COMPANY where COM_NAME='内蒙古自治区') ) b on c.v10=b.COM_CODE  WHERE  COM_PIN = '0' ";
+	    	zhsSql="select b.com_name as vf1,vf2,vf3,vf4,NVL(vf41, '0') vf41,vf5,(vf2-vf4) as vf6,(vf3-vf5) as vf7 from  (select * from SYS_COMPANY where COM_F_PKID=(SELECT PKID from SYS_COMPANY where COM_NAME='内蒙古自治区') ) b left join (select * from PKC_1_3_3   WHERE  COM_PIN = '0') c on c.v10=b.COM_CODE ";
 	    }
 		
 	    if(Integer.valueOf(level)>1){//省级以下
@@ -1703,12 +1703,16 @@ public class AnController{
 		    List<Map> listZhs = this.getBySqlMapper.findRecords(zhsSql);
 	    	for (int i = 0; i < listZhs.size(); i++) {
 	    		Map Fsl_map = listZhs.get(i);
-				JSONObject obj = new JSONObject();
-				obj.put("V0", listBfhs.get(i).get("XZQH"));//区域名
-				obj.put("V1", (listBfhs.get(i).get("BFR")!=null)&&(listBfhs.get(i).get("BFR")!="")?Integer.valueOf(listBfhs.get(i).get("BFR").toString()):0);//帮扶责任人数量
 				
 				Zhs+=(Fsl_map.get("VF2")!=null)&&(Fsl_map.get("VF2")!="")?Integer.valueOf(Fsl_map.get("VF2").toString()):0;
-				lsHs+=(listBfhs.get(i).get("NUM")!=null)&&(listBfhs.get(i).get("NUM")!="")?Integer.valueOf(listBfhs.get(i).get("NUM").toString()):0;
+	    	}
+	    	
+	    	for(int ik = 0; ik < listBfhs.size(); ik++){
+	    		JSONObject obj = new JSONObject();
+	    		obj.put("V0", listBfhs.get(ik).get("XZQH"));//区域名
+				obj.put("V1", (listBfhs.get(ik).get("BFR")!=null)&&(listBfhs.get(ik).get("BFR")!="")?Integer.valueOf(listBfhs.get(ik).get("BFR").toString()):0);//帮扶责任人数量
+				
+	    		lsHs+=(listBfhs.get(ik).get("NUM")!=null)&&(listBfhs.get(ik).get("NUM")!="")?Integer.valueOf(listBfhs.get(ik).get("NUM").toString()):0;
 				chartJson.add(obj);
 	    	}
 	    	jb.put("ZhsTotal", Zhs);
@@ -1771,10 +1775,10 @@ public class AnController{
 	    String sqlPkh = "";
 	    
 	    //贫困户
-    	sqlPkh="SELECT a1.z_hu  FROM("
+    	sqlPkh="SELECT a2.com_name as v1,a1.z_hu  FROM("
 				+ "SELECT * FROM SYS_COMPANY WHERE COM_F_PKID=("
 				+ "SELECT PKID FROM SYS_COMPANY WHERE COM_NAME='"+name+"'"
-				+ ")) a2 LEFT JOIN PKC_1_2_1 a1 ON a1.COM_CODE=A2.COM_CODE  WHERE  TYPE = '0' ";
+				+ ")) a2 LEFT JOIN (select * from PKC_1_2_1  WHERE  TYPE = '0' ) a1 ON a1.COM_CODE=A2.COM_CODE ";
     	
     	 //走访贫困户总数
 	    String sqlx1 = "SELECT	COUNT (DISTINCT(household_card)) AS d_poor_sum	FROM	DA_HELP_VISIT  WHERE 1=1";
