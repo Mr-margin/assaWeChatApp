@@ -2122,7 +2122,7 @@ function lookdetail() {
         var detailhtml = "<div class='weui-flex'><div class='left_black'><img src='images/black.png' style='text-align: center' height='100%'></div>";
         detailhtml += "<div class='weui-flex__item subhead' style='padding-top: 0;height: 2.3em;line-height: 2.5em;background: transparent;color: #6f6f6f'>走访详情</div>";
         detailhtml += "<div style='width: 60px'></div></div>"
-        detailhtml += "<div class='zftp'><img style='border: 3px solid ghostwhite' height='100%' src='http://www.gistone.cn" + zfdata[option].pic + "'></div>";
+        detailhtml += "<div class='zftp'><img style='border: 3px solid ghostwhite;max-width: 100%' height='100%'  src='http://www.gistone.cn" + zfdata[option].pic + "'></div>";
         detailhtml += "<div class='weui-cells' style='margin-top: 0'><div class='weui-cell'><div class='detailtext'>帮扶人：" + bfrname + "</div></div>";
         detailhtml += "<div class='weui-cell'><div class='detailtext' >贫困户：" + pkhname + "</div></div>";
         detailhtml += "<div class='weui-cell'><div class='detailtext' >走访时间：" + zfsj + "</div></div>";
