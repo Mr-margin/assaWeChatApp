@@ -1,6 +1,7 @@
 /**
  * Created by 卜海波 on 2017/3/8.
  * 帮扶通领导版主界面
+ * "150400000000"赤峰
  */
 /**
  * 主界面变量
@@ -17,12 +18,19 @@ var serviceurl = "http://115.29.42.107/";//服务器地址
 //var serviceurl = "http://192.168.2.103:8888/";
 /*var stadate = "2014-1-1", enddate = "2017-12-31";//查询起止时间*/
 var rjtype = 0;
+var usercode = getUrlParam('xzqhcode');
+var usertype = getUrlParam('cType');
+var username = decodeURI(getUrlParam('xzqh'));
+xzqhcode = usercode;
+cType = usertype;
+xzqh = username;
+xzqhname = username;
+$('#xzqh').html(username);
 /**
  * 扶贫对象变量
  */
 var fpdxdata = new Array();//扶贫对象页面数据
 var zpyytop, nlfztop, jkzktop, whcdtop, tdzytop, scshtop, sljytop, pkfsltop;//扶贫对象各指标位置
-
 /**
  * 扶贫主体变量
  */
@@ -80,18 +88,32 @@ $(document).ready(function () {
      * 初始化行政区划选择器
      */
     function initxzqh() {
-        $("#xzms").empty();
         $.ajax({
             url: serviceurl + 'assaWeChatApp/getXzqh.do',
             type: 'POST',
             async: false,
             dataType: 'json',
-            data: {cType: 2},
+            data: {cType: parseInt(usertype) +1,code:usercode},
             success: function (data) {
-                $("#xzms").append("<option value='1'></option>");
-                $.each(data, function (i, item) {
-                    $("#xzms").append("<option value='" + item.code + "'>" + item.name + "</option>"); //为Select追加一个Option(下拉项)
-                });
+                if (usertype == 1){
+                    $("#xzms").append("<option value='1'></option>");
+                    $.each(data, function (i, item) {
+                        $("#xzms").append("<option value='" + item.code + "'>" + item.name + "</option>"); //为Select追加一个Option(下拉项)
+                    });
+                }else if(usertype == 2){
+                    $("#xzms").html("<option value='" + usercode + "'>" + xzqhname + "</option>")
+                    $("#xzqx").append("<option value='1'></option>");
+                    $.each(data, function (i, item) {
+                        $("#xzqx").append("<option value='" + item.code + "'>" + item.name + "</option>"); //为Select追加一个Option(下拉项)
+                    });
+                }else if(usertype == 3){
+                    $("#xzqx").html("<option value='" + usercode + "'>" + xzqhname + "</option>")
+                    $("#xzxz").append("<option value='1'></option>");
+                    $.each(data, function (i, item) {
+                        $("#xzxz").append("<option value='" + item.code + "'>" + item.name + "</option>"); //为Select追加一个Option(下拉项)
+                    });
+                }
+
             },
             error: function (msg) {
                 $("#tooltips_div").css("display", "block");
@@ -102,7 +124,6 @@ $(document).ready(function () {
             }
         });
     }
-
     $('#ggdq').click(xzdq);
 });
 
@@ -155,11 +176,23 @@ function xzdq() {
  * 重置地区
  */
 function dqresetting() {
-    $("#xzms").val("1");
-    $("#xzqx").val("1");
-    cType = 1;
-    xzqhcode = 150000000000;
-    xzqhname = "内蒙古自治区"
+    if (usertype == 1){
+        $("#xzms").val("1");
+        $("#xzqx").val("1");
+        $("#xzxz").val("1");
+        $("#xzcun").val("1");
+
+    }else if(usertype == 2){
+        $("#xzqx").val("1");
+        $("#xzxz").val("1");
+        $("#xzcun").val("1");
+    }else if (usertype == 3){
+        $("#xzxz").val("1");
+        $("#xzcun").val("1");
+    }
+    cType = usertype;
+    xzqhcode = usercode;
+    xzqhname = username;
 }
 /**
  * 提交地区
@@ -203,8 +236,45 @@ function setqxcode() {
     if ($("#xzqx").val() != 1) {
         cType = 3;
         xzqhcode = $("#xzqx").val();
-    } else {
+        $("#xzxz").empty();
+        /*请求乡镇列表*/
+        $.ajax({
+            url: serviceurl + 'assaWeChatApp/getXzqh.do',
+            type: 'POST',
+            async: false,
+            dataType: 'json',
+            data: {cType: 4, code: xzqhcode},
+            success: function (data) {
+                console.log(data);
+                $("#xzxz").append("<option value='1'></option>");
+                $.each(data, function (i, item) {
+                    $("#xzxz").append("<option value='" + item.code + "'>" + item.name + "</option>"); //为Select追加一个Option(下拉项)
+                });
+            },
+            error: function (msg) {
+                $("#tooltips_div").css("display", "block");
+                $("#tooltips_div").html("请求乡镇列表失败,服务器异常，错误码：" + msg.status);
+                setTimeout(function () {
+                    $("#tooltips_div").css("display", "none");
+                }, 2000);
+            }
+        });
+    } else {//没有选择旗县
+        $("#xzxz").empty();
         cType = 2;
+        xzqhcode = $("#xzms").val();
+    }
+}
+/**
+ * 设置乡镇code(监听选择器)
+ */
+function setxzcode(){
+    if ($("#xzxz").val() != 1){
+        cType = 4;
+        xzqhcode = $("#xzxz").val();
+    }else {//没有选择乡镇
+        cType = 3;
+        xzqhcode = $("#xzqx").val();
     }
 }
 /*监听可拖动的按钮（九宫格开关）*/
