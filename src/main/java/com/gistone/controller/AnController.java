@@ -47,6 +47,7 @@ import com.gistone.WeChatApp;
 import com.gistone.MyBatis.config.GetBySqlMapper;
 import com.gistone.util.DateFormatUtil;
 import com.gistone.util.MapUtil;
+import com.gistone.util.Tool;
 
 @RestController
 @RequestMapping
@@ -89,11 +90,51 @@ public class AnController{
 		List<Map> list;
 		String phone = request.getParameter("phone");//电话13904794720
 		String password = request.getParameter("password");//密码
-		String str = phone.substring(5,11);
-		String sqlLd = "select * from SYS_PERSONAL_LD where PERSONAL_PHONE ='"+phone+"'";
+		
+		
+		//SYS_PERSONAL_LD表废弃
+		//String sqlLd = "select * from SYS_PERSONAL_LD where PERSONAL_PHONE ='"+phone+"'";
+		
+		//查询pc端的用户表
+		String sqlLd = "select t1.pkid,t1.col_account,t1.col_password,t1.sys_com_code,t1.login_count,t1.LOGIN_TIME,t1.com_vd,t1.com_vs,t3.role_name,t3.pkid as role_id  from sys_user t1 "
+				+ "LEFT JOIN sys_user_role_many t2 on t1.SYS_ROLE_ID=t2.user_id "
+				+ "LEFT JOIN sys_role t3 on t2.role_id=t3.pkid WHERE t1.col_account = '"+phone+"'";
+		
+		
 		if(this.getBySqlMapper.findRecords(sqlLd).size()>0){
-//			System.out.println(this.getBySqlMapper.findRecords(sqlLd).get(0).get("PASSWORD"));
-			if (this.getBySqlMapper.findRecords(sqlLd).get(0).get("PASSWORD")!=null&&!"".equals(this.getBySqlMapper.findRecords(sqlLd).get(0).get("PASSWORD"))){
+			List<Map> Login = this.getBySqlMapper.findRecords(sqlLd);
+			String sql_com = "";
+			int lev =1;
+			if(Login.get(0).get("COM_VD").equals("V1")){
+				lev =1;
+				sql_com = "select v1,v2 from SYS_COM where v2='"+Login.get(0).get("SYS_COM_CODE")+"' GROUP BY v1,v2";
+			}else if(Login.get(0).get("COM_VD").equals("V3")){
+				lev =2;
+				sql_com = "select v1,v2,v3,v4 from SYS_COM where v4='"+Login.get(0).get("SYS_COM_CODE")+"' GROUP BY v1,v2,v3,v4";
+			}else if(Login.get(0).get("COM_VD").equals("V5")){
+				lev =3;
+				sql_com = "select v1,v2,v3,v4,v5,v6 from SYS_COM where v6='"+Login.get(0).get("SYS_COM_CODE")+"' GROUP BY v1,v2,v3,v4,v5,v6";
+			}else if(Login.get(0).get("COM_VD").equals("V7")){
+				lev =4;
+				sql_com = "select v1,v2,v3,v4,v5,v6,v7,v8 from SYS_COM where v8='"+Login.get(0).get("SYS_COM_CODE")+"' GROUP BY v1,v2,v3,v4,v5,v6,v7,v8";
+			}else if(Login.get(0).get("COM_VD").equals("V9")){
+				lev =5;
+				sql_com = "select * from SYS_COM where v10='"+Login.get(0).get("SYS_COM_CODE")+"'";
+			}
+			
+			if(Tool.md5(password).equals(Login.get(0).get("COL_PASSWORD"))==true){//密码正确
+				if(!sql_com.equals("")){
+					List<Map> user_list = this.getBySqlMapper.findRecords(sql_com);
+					Map us = user_list.get(0);
+					
+					response.getWriter().write("{\"success\":0,\"message\":\"0\",\"data\":{\"level\":"+lev+",\"name\":\""+us.get("V1")+",\"code\":\""+us.get("V2")+"\"}}");//登录成功
+				}else{
+					response.getWriter().write("{\"success\":1,\"message\":\"没有单位\",\"data\":\"\"}");
+				}
+			}else{
+				response.getWriter().write("{\"success\":1,\"message\":\"密码错误\",\"data\":\"\"}");
+			}
+			/*if (this.getBySqlMapper.findRecords(sqlLd).get(0).get("PASSWORD")!=null&&!"".equals(this.getBySqlMapper.findRecords(sqlLd).get(0).get("PASSWORD"))){
 				if (password!=null&&!"".equals(password)&&password.equals(this.getBySqlMapper.findRecords(sqlLd).get(0).get("PASSWORD"))){
 					response.getWriter().write("{\"success\":0,\"message\":\"0\",\"data\":\"\"}");//登录成功
 				}else{
@@ -105,7 +146,7 @@ public class AnController{
 				}else {
 					response.getWriter().write("{\"success\":1,\"message\":\"密码错误\",\"data\":\"\"}");
 				}
-			}
+			}*/
 			return;
 		}
 		String sql = "select * from SYS_PERSONAL_HOUSEHOLD_MANY where PERSONAL_PHONE ='"+phone+"'";
@@ -1873,21 +1914,30 @@ public class AnController{
 			if(MapUtil.isNumeric(cType)){
 				if(Integer.valueOf(cType)==1){//省
 					sql="select V1 as V1,V2 as V2 from sys_com GROUP BY V1,V2";
-					list = this.getBySqlMapper.findRecords(sql);
 				}else if(Integer.valueOf(cType)==2){//查询所有市级
 					sql="select V3 as V1,V4 as V2 from sys_com GROUP BY V3,V4";
-					list = this.getBySqlMapper.findRecords(sql);
-				}else if(Integer.valueOf(cType)==3){//查询所有县级
+				}else if(Integer.valueOf(cType)==3){//查询市级下的县级
 					sql="select V4,V5 as V1,V6 as V2 from sys_com ";
 					if(code!=null&&!"".equals(code)){
 						sql+=" where V4="+code;
 					}
 					sql+=" GROUP BY V4,V5,V6 ";
-					list = this.getBySqlMapper.findRecords(sql);
+				}else if(Integer.valueOf(cType)==4){//查询县级下的乡级
+					sql="select V6,V7 as V1,V8 as V2 from sys_com ";
+					if(code!=null&&!"".equals(code)){
+						sql+=" where V6="+code;
+					}
+					sql+=" GROUP BY V6,V7,V8 ";
+				}else if(Integer.valueOf(cType)==5){//查询乡级下的村
+					sql="select V8,V9 as V1,V10 as V2 from sys_com ";
+					if(code!=null&&!"".equals(code)){
+						sql+=" where V8="+code;
+					}
+					sql+=" GROUP BY V8,V9,V10 ";
 				}else{
 					sql="select V1 as V1,V2 as V2 from sys_com GROUP BY V1,V2";
-					list = this.getBySqlMapper.findRecords(sql);
 				}
+				list = this.getBySqlMapper.findRecords(sql);
 			}else{
 				sql="select V1 as V1,V2 as V2 from sys_com GROUP BY V1,V2";
 				list = this.getBySqlMapper.findRecords(sql);
