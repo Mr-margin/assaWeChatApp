@@ -32,10 +32,10 @@ $(function () {
 //手机登录
 function login() {
 
-    if ($("#username").val().length != 11) {
+    /*if ($("#username").val().length != 11) {
         alert("请输入正确的11位手机号码！");
         return;
-    }
+    }*/
     $.ajax({
         url: '/assaWeChatApp/getAnLoginController.do',
         type: "POST",
@@ -54,7 +54,10 @@ function login() {
             } else if (data.message == '0') {
                 localStorage.bftusername = $("#username").val();
                 localStorage.bftpwd = $("#password").val();
-                window.location.href = "http://www.gistone.cn/assaWeChatApp/BFTLeader/index.html";
+                var ctype = data.data.level;
+                var xzqhname = data.data.name;
+                var xzqhcode = data.data.code;
+                window.location.href = "http://www.gistone.cn/assaWeChatApp/BFTLeader/index.html?xzqhcode="+xzqhcode+"&cType="+ctype+"&xzqh="+xzqhname;
             }
         },
         error: function (msg) {
