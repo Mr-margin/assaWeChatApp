@@ -1029,15 +1029,15 @@ public class AnController{
 	    	//贫困人口
 	    	sqlPkr = "SELECT a2.com_name as V1,a1.V2,a2.com_level FROM("
 					+ "SELECT * FROM SYS_COMPANY WHERE COM_F_PKID=("
-					+ "SELECT PKID FROM SYS_COMPANY WHERE COM_NAME='" + name + "'"
+					+ "SELECT PKID FROM SYS_COMPANY WHERE COM_NAME='" + name + "' and rownum = 1 "
 					+ ")) a2 LEFT JOIN (select * from PKC_1_1_0 where V9=0 ) a1 ON a1.V10=A2.COM_CODE ";
 	    	//贫困户
 	    	sqlPkh="SELECT a2.com_name,a1.z_hu,a1.z_ren,a1.v1,a1.v5,a1.v9  FROM("
 					+ "SELECT * FROM SYS_COMPANY WHERE COM_F_PKID=("
-					+ "SELECT PKID FROM SYS_COMPANY WHERE COM_NAME='"+name+"'"
+					+ "SELECT PKID FROM SYS_COMPANY WHERE COM_NAME='"+name+"' and rownum = 1 "
 					+ ")) a2 LEFT JOIN (SELECT * FROM PKC_1_2_1  WHERE  TYPE = '0') a1 ON a1.COM_CODE=A2.COM_CODE  ";
 	    	//贫困村
-	    	sqlPkc = "select b.com_name as v1,v3 from  (select * from SYS_COMPANY where COM_F_PKID=(SELECT PKID from SYS_COMPANY where COM_NAME='"+name+"') ) "+
+	    	sqlPkc = "select b.com_name as v1,v3 from  (select * from SYS_COMPANY where COM_F_PKID=(SELECT PKID from SYS_COMPANY where COM_NAME='"+name+"' and rownum = 1 ) ) "+
  					"b left join (select * from PKC_1_3_1 WHERE  COM_PIN = '0') c on c.V10=b.COM_CODE ";
 	    }else{//如果都为空则查询自治区统计数据
 	    	name="内蒙古自治区";
@@ -1133,7 +1133,7 @@ public class AnController{
 	    JSONObject jb = new JSONObject();
 	    JSONObject obj = new JSONObject();
 	    if(name!=null&&!"".equals(name)){//判断是否为空
-	    	sqlZpyy="SELECT a2.com_name,a1.* FROM(SELECT * FROM SYS_COMPANY WHERE COM_F_PKID=(SELECT PKID FROM SYS_COMPANY WHERE COM_NAME='"+name+"')) a2 LEFT JOIN (select * from PKC_1_2_2  WHERE  TYPE = '0') a1 ON a1.COM_CODE=A2.COM_CODE ";
+	    	sqlZpyy="SELECT a2.com_name,a1.* FROM(SELECT * FROM SYS_COMPANY WHERE COM_F_PKID=(SELECT PKID FROM SYS_COMPANY WHERE COM_NAME='"+name+"'  and rownum = 1 )) a2 LEFT JOIN (select * from PKC_1_2_2  WHERE  TYPE = '0') a1 ON a1.COM_CODE=A2.COM_CODE ";
 	    }else{
 	    	sqlZpyy="SELECT a2.com_name,a1.* FROM(SELECT * FROM SYS_COMPANY WHERE COM_F_PKID=(SELECT PKID FROM SYS_COMPANY WHERE COM_NAME='内蒙古自治区')) a2 LEFT JOIN (select * from PKC_1_2_2  WHERE  TYPE = '0') a1 ON a1.COM_CODE=A2.COM_CODE  ";
 	    }
@@ -1217,7 +1217,7 @@ public class AnController{
 	    JSONArray tjJson = new JSONArray();
 	    JSONObject jb = new JSONObject();
 	    if(name!=null&&!"".equals(name)){//判断是否为空
-	    	sqlAge="SELECT a2.com_name as v1,a1.* FROM(SELECT * FROM SYS_COMPANY WHERE COM_F_PKID=(SELECT PKID FROM SYS_COMPANY WHERE COM_NAME='"+name+"')) a2 LEFT JOIN (select * from PKC_1_1_1  WHERE  V9 = '0') a1 ON a1.V10=A2.COM_CODE  ";
+	    	sqlAge="SELECT a2.com_name as v1,a1.* FROM(SELECT * FROM SYS_COMPANY WHERE COM_F_PKID=(SELECT PKID FROM SYS_COMPANY WHERE COM_NAME='"+name+"'  and rownum = 1 )) a2 LEFT JOIN (select * from PKC_1_1_1  WHERE  V9 = '0') a1 ON a1.V10=A2.COM_CODE  ";
 	    }else{
 	    	sqlAge="SELECT a2.com_name as v1,a1.* FROM(SELECT * FROM SYS_COMPANY WHERE COM_F_PKID=(SELECT PKID FROM SYS_COMPANY WHERE COM_NAME='内蒙古自治区')) a2 LEFT JOIN (select * from PKC_1_1_1  WHERE  V9 = '0') a1 ON a1.V10=A2.COM_CODE  ";
 	    }
@@ -1268,7 +1268,7 @@ public class AnController{
 	    JSONArray tjJson = new JSONArray();
 	    JSONObject jb = new JSONObject();
 	    if(name!=null&&!"".equals(name)){//判断是否为空
-	    	sqlIll="SELECT  a2.com_name as v1,a1.* FROM(SELECT * FROM SYS_COMPANY WHERE COM_F_PKID=(SELECT PKID FROM SYS_COMPANY WHERE COM_NAME='"+name+"')) a2 LEFT JOIN (select * from PKC_1_1_2  WHERE  V9 = '0' ) a1 ON a1.V10=A2.COM_CODE ";
+	    	sqlIll="SELECT  a2.com_name as v1,a1.* FROM(SELECT * FROM SYS_COMPANY WHERE COM_F_PKID=(SELECT PKID FROM SYS_COMPANY WHERE COM_NAME='"+name+"'  and rownum = 1 )) a2 LEFT JOIN (select * from PKC_1_1_2  WHERE  V9 = '0' ) a1 ON a1.V10=A2.COM_CODE ";
 	    }else{
 	    	sqlIll="SELECT  a2.com_name as v1,a1.* FROM(SELECT * FROM SYS_COMPANY WHERE COM_F_PKID=(SELECT PKID FROM SYS_COMPANY WHERE COM_NAME='内蒙古自治区')) a2 LEFT JOIN (select * from PKC_1_1_2  WHERE  V9 = '0' ) a1 ON a1.V10=A2.COM_CODE ";
 	    }
@@ -1315,7 +1315,7 @@ public class AnController{
 	    JSONArray tjJson = new JSONArray();
 	    JSONObject jb = new JSONObject();
 	    if(name!=null&&!"".equals(name)){//判断是否为空
-	    	sqlEdu="SELECT a2.com_name as v1,a1.* FROM(SELECT * FROM SYS_COMPANY WHERE COM_F_PKID=(SELECT PKID FROM SYS_COMPANY WHERE COM_NAME='"+name+"')) a2 LEFT JOIN (select * from PKC_1_1_3  WHERE  V9 = '0') a1 ON a1.V10=A2.COM_CODE ";
+	    	sqlEdu="SELECT a2.com_name as v1,a1.* FROM(SELECT * FROM SYS_COMPANY WHERE COM_F_PKID=(SELECT PKID FROM SYS_COMPANY WHERE COM_NAME='"+name+"'  and rownum = 1 )) a2 LEFT JOIN (select * from PKC_1_1_3  WHERE  V9 = '0') a1 ON a1.V10=A2.COM_CODE ";
 	    }else{
 	    	sqlEdu="SELECT a2.com_name as v1,a1.* FROM(SELECT * FROM SYS_COMPANY WHERE COM_F_PKID=(SELECT PKID FROM SYS_COMPANY WHERE COM_NAME='内蒙古自治区')) a2 LEFT JOIN (select * from PKC_1_1_3  WHERE  V9 = '0') a1 ON a1.V10=A2.COM_CODE ";
 	    }
@@ -1368,7 +1368,7 @@ public class AnController{
 	    JSONArray tjJson = new JSONArray();
 	    JSONObject jb = new JSONObject();
 	    if(name!=null&&!"".equals(name)){//判断是否为空
-	    	sqlLand="SELECT a2.com_name as v01,a1.* FROM(SELECT * FROM SYS_COMPANY WHERE COM_F_PKID=(SELECT PKID FROM SYS_COMPANY WHERE COM_NAME='"+name+"')) a2 LEFT JOIN (select * from PKC_1_2_6  WHERE  TYPE = '0' ) a1 ON a1.COM_CODE=A2.COM_CODE   ";
+	    	sqlLand="SELECT a2.com_name as v01,a1.* FROM(SELECT * FROM SYS_COMPANY WHERE COM_F_PKID=(SELECT PKID FROM SYS_COMPANY WHERE COM_NAME='"+name+"'  and rownum = 1 )) a2 LEFT JOIN (select * from PKC_1_2_6  WHERE  TYPE = '0' ) a1 ON a1.COM_CODE=A2.COM_CODE   ";
 //	    	sqlRjLand="SELECT a1.* FROM(SELECT * FROM SYS_COMPANY WHERE COM_F_PKID=(SELECT PKID FROM SYS_COMPANY WHERE COM_NAME='"+name+"')) a2 LEFT JOIN PKC_1_2_6 a1 ON a1.COM_CODE=A2.COM_CODE  WHERE  TYPE = '0' ";
 	    }else{
 	    	sqlLand="SELECT a2.com_name as v01,a1.* FROM(SELECT * FROM SYS_COMPANY WHERE COM_F_PKID=(SELECT PKID FROM SYS_COMPANY WHERE COM_NAME='内蒙古自治区')) a2 LEFT JOIN (select * from PKC_1_2_6  WHERE  TYPE = '0' ) a1 ON a1.COM_CODE=A2.COM_CODE ";
@@ -1428,7 +1428,7 @@ public class AnController{
 	    JSONArray tjJson = new JSONArray();
 	    JSONObject jb = new JSONObject();
 	    if(name!=null&&!"".equals(name)){//判断是否为空
-	    	sqlProLife="SELECT a2.com_name as v01,a1.* FROM(SELECT * FROM SYS_COMPANY WHERE COM_F_PKID=(SELECT PKID FROM SYS_COMPANY WHERE COM_NAME='"+name+"')) a2 LEFT JOIN (select * from PKC_1_2_5  WHERE  TYPE = '0') a1 ON a1.COM_CODE=A2.COM_CODE";
+	    	sqlProLife="SELECT a2.com_name as v01,a1.* FROM(SELECT * FROM SYS_COMPANY WHERE COM_F_PKID=(SELECT PKID FROM SYS_COMPANY WHERE COM_NAME='"+name+"'  and rownum = 1 )) a2 LEFT JOIN (select * from PKC_1_2_5  WHERE  TYPE = '0') a1 ON a1.COM_CODE=A2.COM_CODE";
 	    }else{
 	    	sqlProLife="SELECT a2.com_name as v01,a1.* FROM(SELECT * FROM SYS_COMPANY WHERE COM_F_PKID=(SELECT PKID FROM SYS_COMPANY WHERE COM_NAME='内蒙古自治区')) a2 LEFT JOIN (select * from PKC_1_2_5  WHERE  TYPE = '0') a1 ON a1.COM_CODE=A2.COM_CODE ";
 	    }
@@ -1481,7 +1481,7 @@ public class AnController{
 	    JSONArray tjJson = new JSONArray();
 	    JSONObject jb = new JSONObject();
 	    if(name!=null&&!"".equals(name)){//判断是否为空
-	    	sqlAgeEdu="SELECT a2.com_name as v01,a1.*,GJZDQX,ZZQZDQX,GMLQQX,MYQX,BJQX FROM(SELECT * FROM SYS_COMPANY WHERE COM_F_PKID=(SELECT PKID FROM SYS_COMPANY WHERE COM_NAME='"+name+"')) a2 LEFT JOIN (select * from PKC_1_1_9 WHERE  V9 = '0' ) a1 ON a1.V10=A2.COM_CODE ";
+	    	sqlAgeEdu="SELECT a2.com_name as v01,a1.*,GJZDQX,ZZQZDQX,GMLQQX,MYQX,BJQX FROM(SELECT * FROM SYS_COMPANY WHERE COM_F_PKID=(SELECT PKID FROM SYS_COMPANY WHERE COM_NAME='"+name+"'  and rownum = 1 )) a2 LEFT JOIN (select * from PKC_1_1_9 WHERE  V9 = '0' ) a1 ON a1.V10=A2.COM_CODE ";
 	    }else{
 	    	sqlAgeEdu="SELECT a2.com_name as v01,a1.*,GJZDQX,ZZQZDQX,GMLQQX,MYQX,BJQX FROM(SELECT * FROM SYS_COMPANY WHERE COM_F_PKID=(SELECT PKID FROM SYS_COMPANY WHERE COM_NAME='内蒙古自治区')) a2 LEFT JOIN (select * from PKC_1_1_9 WHERE  V9 = '0' ) a1 ON a1.V10=A2.COM_CODE ";
 	    }
@@ -1532,7 +1532,7 @@ public class AnController{
 	    JSONArray tjJson = new JSONArray();
 	    JSONObject jb = new JSONObject();
 	    if(name!=null&&!"".equals(name)){//判断是否为空
-	    	sqlFsl="select b.com_name as vf1,vf2,vf3,vf4,NVL(vf41, '0') vf41,vf5,(vf2-vf4) as vf6,(vf3-vf5) as vf7 from (select * from SYS_COMPANY where COM_F_PKID=(SELECT PKID from SYS_COMPANY where COM_NAME='"+name+"') ) b left join  (select * from PKC_1_3_3 WHERE  COM_PIN = '0') c   on c.v10=b.COM_CODE ";
+	    	sqlFsl="select b.com_name as vf1,vf2,vf3,vf4,NVL(vf41, '0') vf41,vf5,(vf2-vf4) as vf6,(vf3-vf5) as vf7 from (select * from SYS_COMPANY where COM_F_PKID=(SELECT PKID from SYS_COMPANY where COM_NAME='"+name+"'  and rownum = 1 ) ) b left join  (select * from PKC_1_3_3 WHERE  COM_PIN = '0') c   on c.v10=b.COM_CODE ";
 	    }else{
 	    	sqlFsl="select b.com_name as vf1,vf2,vf3,vf4,NVL(vf41, '0') vf41,vf5,(vf2-vf4) as vf6,(vf3-vf5) as vf7 from  (select * from SYS_COMPANY where COM_F_PKID=(SELECT PKID from SYS_COMPANY where COM_NAME='内蒙古自治区') ) b left join (select * from PKC_1_3_3 WHERE  COM_PIN = '0') c  on c.v10=b.COM_CODE  ";
 	    }
@@ -1552,8 +1552,20 @@ public class AnController{
 				fslFcrs+=(Fsl_map.get("VF7")!=null)&&(Fsl_map.get("VF7")!="")?Integer.valueOf(Fsl_map.get("VF7").toString()):0;
 				chartJson.add(obj);
 	    	}
-	    	jb.put("fslZhsTotal", fslZhs);
-	    	jb.put("fslZrsTotal", fslZrs);
+	    	//贫困人口
+	    	String sqlPkr = "SELECT a2.com_name as V1,a1.V2,a2.com_level FROM("
+					+ "SELECT * FROM SYS_COMPANY WHERE COM_F_PKID=("
+					+ "SELECT PKID FROM SYS_COMPANY WHERE COM_NAME='" + name + "'"
+					+ ")) a2 LEFT JOIN (select * from PKC_1_1_0 where V9=0 ) a1 ON a1.V10=A2.COM_CODE ";
+	    	List<Map> listPkr = this.getBySqlMapper.findRecords(sqlPkr);
+	    	if(Integer.valueOf(listPkr.get(0).get("COM_LEVEL").toString())-1==1){//静态获取全区统计数据
+	    		jb.put("fslZhsTotal", 249506);
+		    	jb.put("fslZrsTotal", 555563);
+	    	}else{
+	    		jb.put("fslZhsTotal", fslZhs);
+		    	jb.put("fslZrsTotal", fslZrs);
+	    	}
+	    	
 	    	jb.put("fslChsTotal", fslChs);
 	    	jb.put("fslCrsTotal", fslCrs);
 	    	jb.put("fslFchsTotal", fslFchs);
@@ -1589,7 +1601,7 @@ public class AnController{
 	    int zcgzd = 3159;
 	    int zcgzgb = 14134;
 	    int lsbfzrr = 152041;
-	    int bfhs = 357724;
+	    int bfhs = 249506;
 	    
 	    
 	    String dw_sql="";
@@ -1721,8 +1733,8 @@ public class AnController{
 	    String code = request.getParameter("code");
 	    String name = request.getParameter("name");//行政区划名称
 	    String level = request.getParameter("level");//2省 3市 4 县 5乡 6村
-	    double Zhs=242784;//总户数
-	    double lsHs=357724;//帮扶责任人落实户数
+	    double Zhs=249506;//总户数
+	    double lsHs=249506;//帮扶责任人落实户数
 	    int lsBl=1;//落实帮扶比例
 	    JSONArray chartJson = new JSONArray();
 	    JSONArray tjJson = new JSONArray();
@@ -1733,7 +1745,7 @@ public class AnController{
 				"14571", "8825", "25337", "19230", "3499", "1147" };
 	    String zhsSql = "";String bfhsSql = "";
 	    if(name!=null&&!"".equals(name)){//判断是否为空
-	    	zhsSql="select b.com_name as vf1,vf2,vf3,vf4,NVL(vf41, '0') vf41,vf5,(vf2-vf4) as vf6,(vf3-vf5) as vf7 from  (select * from SYS_COMPANY where COM_F_PKID=(SELECT PKID from SYS_COMPANY where COM_NAME='"+name+"') ) b left join (select * from PKC_1_3_3   WHERE  COM_PIN = '0') c on c.v10=b.COM_CODE  ";
+	    	zhsSql="select b.com_name as vf1,vf2,vf3,vf4,NVL(vf41, '0') vf41,vf5,(vf2-vf4) as vf6,(vf3-vf5) as vf7 from  (select * from SYS_COMPANY where COM_F_PKID=(SELECT PKID from SYS_COMPANY where COM_NAME='"+name+"'  and rownum = 1 ) ) b left join (select * from PKC_1_3_3   WHERE  COM_PIN = '0') c on c.v10=b.COM_CODE  ";
 	    }else{
 	    	zhsSql="select b.com_name as vf1,vf2,vf3,vf4,NVL(vf41, '0') vf41,vf5,(vf2-vf4) as vf6,(vf3-vf5) as vf7 from  (select * from SYS_COMPANY where COM_F_PKID=(SELECT PKID from SYS_COMPANY where COM_NAME='内蒙古自治区') ) b left join (select * from PKC_1_3_3   WHERE  COM_PIN = '0') c on c.v10=b.COM_CODE ";
 	    }
@@ -1805,6 +1817,7 @@ public class AnController{
 	    response.setHeader("Access-Control-Allow-Origin", "*");
 	    String name = request.getParameter("name");
 	    String level = request.getParameter("level");//2省 3市 4 县 5乡 6村
+	    level=Integer.valueOf(level)+1+"";
 	    String code = request.getParameter("code");//当前查询的区域范围如默认内蒙古自治区
 	    if(Integer.valueOf(Integer.valueOf(level)-1)>1){
 	    	code=this.getXjcode((Integer.valueOf(level)-1)+"",code);//根据当前传的行政区划code获取所有村级行政区划
@@ -1825,7 +1838,7 @@ public class AnController{
 		String sqlTj = "select * from (";//拼接的sql条件
 		//查询行政区划,获取行政区划code
 		String sql = "SELECT * FROM SYS_COMPANY WHERE COM_F_PKID=("
-		+ "SELECT PKID FROM SYS_COMPANY WHERE COM_NAME='" + name + "'"
+		+ "SELECT PKID FROM SYS_COMPANY WHERE COM_NAME='" + name + "'  and rownum = 1 "
 		+ ") ";
 		
 		 //查询贫困户
@@ -1834,25 +1847,26 @@ public class AnController{
 	    //贫困户
     	sqlPkh="SELECT a2.com_name as v1,a1.z_hu  FROM("
 				+ "SELECT * FROM SYS_COMPANY WHERE COM_F_PKID=("
-				+ "SELECT PKID FROM SYS_COMPANY WHERE COM_NAME='"+name+"'"
+				+ "SELECT PKID FROM SYS_COMPANY WHERE COM_NAME='"+name+"'  and rownum = 1 "
 				+ ")) a2 LEFT JOIN (select * from PKC_1_2_1  WHERE  TYPE = '0' ) a1 ON a1.COM_CODE=A2.COM_CODE ";
     	
+    	List<Map> listPkh = this.getBySqlMapper.findRecords(sqlPkh);
     	 //走访贫困户总数
 	    String sqlx1 = "SELECT	COUNT (DISTINCT(household_card)) AS d_poor_sum	FROM	DA_HELP_VISIT  WHERE 1=1";
 	    if(code!=null&&!"".equals(code)&&Integer.valueOf(level)-1>1){//按区域查
 	    	sqlx1+=" and AAR008 like('"+code+"%')";
+	    	for (int i = 0; i < listPkh.size(); i++) {
+	    		pkh+=(listPkh.get(i).get("Z_HU")!=null)&&(listPkh.get(i).get("Z_HU")!="")?Integer.valueOf(listPkh.get(i).get("Z_HU").toString()):0;
+	    	}
+	    }else{
+	    	pkh=249506;
 	    }
 	    List<Map> listx1 = this.getBySqlMapper.findRecords(sqlx1);
-	    List<Map> listPkh = this.getBySqlMapper.findRecords(sqlPkh);
 	    if(listx1.size()>0){
 	    	zfpkh=listx1.get(0).get("D_POOR_SUM")==null?0:Integer.valueOf(listx1.get(0).get("D_POOR_SUM").toString());
 	    }else{
 	    	zfpkh=0;
 	    }
-	    for (int i = 0; i < listPkh.size(); i++) {
-    		pkh+=(listPkh.get(i).get("Z_HU")!=null)&&(listPkh.get(i).get("Z_HU")!="")?Integer.valueOf(listPkh.get(i).get("Z_HU").toString()):0;
-    	}
-	    
 		List l = new ArrayList();//存储地区名
 		List lev = new ArrayList();//存储地区所属层级
 		List<Map> list = this.getBySqlMapper.findRecords(sql);
@@ -1982,8 +1996,10 @@ public class AnController{
 		String codes="";
 		if(Integer.valueOf(ctype)==2){
 			codes=code.substring(0, 4);
-		}else if(Integer.valueOf(ctype)==3){
-			codes=code;
+		}else if(Integer.valueOf(ctype)==3){//县
+			codes=code.substring(0, 6);
+		}else if(Integer.valueOf(ctype)==4){
+			codes=code.substring(0, 8);
 		}
 		return codes;
 	}
