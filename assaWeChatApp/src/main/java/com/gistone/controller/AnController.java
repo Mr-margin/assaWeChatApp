@@ -126,8 +126,24 @@ public class AnController{
 				if(!sql_com.equals("")){
 					List<Map> user_list = this.getBySqlMapper.findRecords(sql_com);
 					Map us = user_list.get(0);
-					
-					response.getWriter().write("{\"success\":0,\"message\":\"0\",\"data\":{\"level\":"+lev+",\"name\":\""+us.get("V1")+",\"code\":\""+us.get("V2")+"\"}}");//登录成功
+					String name,code;
+					if(lev==2){
+						name=us.get("V3").toString();
+						code=us.get("V4").toString();
+					}else if(lev==3){
+						name=us.get("V5").toString();
+						code=us.get("V6").toString();
+					}else if(lev==4){
+						name=us.get("V7").toString();
+						code=us.get("V8").toString();
+					}else if(lev==5){
+						name=us.get("V9").toString();
+						code=us.get("V10").toString();
+					}else{
+						name=us.get("V1").toString();
+						code=us.get("V2").toString();
+					}
+					response.getWriter().write("{\"success\":0,\"message\":\"0\",\"data\":{\"level\":"+lev+",\"name\":\""+name+"\",\"code\":\""+code+"\"}}");//登录成功
 				}else{
 					response.getWriter().write("{\"success\":1,\"message\":\"没有单位\",\"data\":\"\"}");
 				}
