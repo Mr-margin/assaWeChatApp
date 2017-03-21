@@ -1001,7 +1001,7 @@ function initfpdx() {
 
             series: [
                 {
-                    name: '贫困人口',
+                    name: '60岁以上人口',
                     type: 'bar',
                     label: {
                         normal: {
@@ -1088,7 +1088,7 @@ function initfpdx() {
 
             series: [
                 {
-                    name: '贫困人口',
+                    name: '长期慢性病人口',
                     type: 'bar',
                     label: {
                         normal: {
@@ -1174,7 +1174,7 @@ function initfpdx() {
 
             series: [
                 {
-                    name: '贫困人口',
+                    name: '文盲人口',
                     type: 'bar',
                     label: {
                         normal: {
@@ -1435,7 +1435,7 @@ function initfpdx() {
 
             series: [
                 {
-                    name: '贫困人口',
+                    name: '6-15岁人口',
                     type: 'bar',
                     label: {
                         normal: {
