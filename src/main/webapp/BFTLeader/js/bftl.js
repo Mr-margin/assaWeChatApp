@@ -18,9 +18,9 @@ var serviceurl = "http://115.29.42.107/";//服务器地址
 //var serviceurl = "http://192.168.2.103:8888/";
 /*var stadate = "2014-1-1", enddate = "2017-12-31";//查询起止时间*/
 var rjtype = 0;
-var usercode = getUrlParam('xzqhcode');
-var usertype = getUrlParam('cType');
-var username = decodeURI(getUrlParam('xzqh'));
+var usercode = getUrlParam('xzqhcode');//用户code
+var usertype = getUrlParam('cType');//用户级别
+var username = decodeURI(getUrlParam('xzqh'));//用户地区名称
 xzqhcode = usercode;
 cType = usertype;
 xzqh = username;
@@ -57,6 +57,7 @@ var isrjlb = false;//正在显示日记
 /**************************************************Home(主界面操作部分)**************************************************************************************/
 //文档加载完毕执行JS
 $(document).ready(function () {
+    //设置各指标项跳转的位置
     zpyytop = $("#zpyys").offset().top - 100;
     nlfztop = $("#nlfzs").offset().top - 100;
     jkzktop = $("#jkzks").offset().top - 100;
@@ -95,7 +96,7 @@ $(document).ready(function () {
             dataType: 'json',
             data: {cType: parseInt(usertype) +1,code:usercode},
             success: function (data) {
-                if (usertype == 1){
+                if (usertype == 1){//通过级别设置权限
                     $("#xzms").append("<option value='1'></option>");
                     $.each(data, function (i, item) {
                         $("#xzms").append("<option value='" + item.code + "'>" + item.name + "</option>"); //为Select追加一个Option(下拉项)
@@ -165,6 +166,7 @@ function setqx() {
 }
 /**
  * 选择地区
+ * 弹出地区选择器
  */
 function xzdq() {
     $('.weui-mask').show();
@@ -193,6 +195,7 @@ function dqresetting() {
     cType = usertype;
     xzqhcode = usercode;
     xzqhname = username;
+    xzqh = username;
 }
 /**
  * 提交地区
@@ -204,19 +207,31 @@ function submitdq() {
     $('#xzqhxz').hide();
     var ms = $("#xzms").find("option:selected").text();
     var qx = $("#xzqx").find("option:selected").text();
-    xzqh = ms + qx;
-    $("#xzqh").html(xzqh);
-    if (qx == "") {
-        xzqhname = ms;
-        xzqhcode = $("#xzms").val();
-    } else {
+    var xz = $("#xzxz").find("option:selected").text();
+    var cun = $("#xzcun").find("option:selected").text();
+    if(cun != ""){
+        xzqh = xz + cun;
+        xzqhname = cun;
+        xzqhcode = $("#xzcun").val();
+    }else if(xz != ""){
+        xzqh = qx + xz;
+        xzqhname = xz;
+        xzqhcode = $("#xzxz").val();
+    }else if (qx != ""){
+        xzqh = ms +qx;
         xzqhname = qx;
         xzqhcode = $("#xzqx").val();
-    }
-    if (xzqh == "" || xzqh == null) {
+    }else if (ms != ""){
+        xzqhname = ms;
+        xzqh = ms;
+        xzqhcode = $("#xzms").val();
+    }else {
         $("#xzqh").html("内蒙古自治区");
         xzqhname = "内蒙古自治区";
+        xzqhcode = 150000000000;
     }
+    $("#xzqh").html(xzqh);
+
     if (isrjlb) {
         counter = 1;
         rjoption = 0;
@@ -272,11 +287,55 @@ function setxzcode(){
     if ($("#xzxz").val() != 1){
         cType = 4;
         xzqhcode = $("#xzxz").val();
+        xzqhname = $("#xzxz").val();
+        xzqh = $("#xzqx").val() + $("#xzxz").val();
+        $("#xzcun").empty();
+        /*请求行政村列表*/
+        $.ajax({
+            url: serviceurl + 'assaWeChatApp/getXzqh.do',
+            type: 'POST',
+            async: false,
+            dataType: 'json',
+            data: {cType: 5, code: xzqhcode},
+            success: function (data) {
+                console.log(data);
+                $("#xzcun").append("<option value='1'></option>");
+                $.each(data, function (i, item) {
+                    $("#xzcun").append("<option value='" + item.code + "'>" + item.name + "</option>"); //为Select追加一个Option(下拉项)
+                });
+            },
+            error: function (msg) {
+                $("#tooltips_div").css("display", "block");
+                $("#tooltips_div").html("请求行政村列表失败,服务器异常，错误码：" + msg.status);
+                setTimeout(function () {
+                    $("#tooltips_div").css("display", "none");
+                }, 2000);
+            }
+        });
     }else {//没有选择乡镇
         cType = 3;
         xzqhcode = $("#xzqx").val();
+        xzqhname = $("#xzqx").val();
+        xzqh = $("#xzqx").val();
     }
 }
+/**
+ * 设置行政村code
+ */
+function setcuncode(){
+    if ($("#xzcun").val() != 1) {
+        cType = 5;
+        xzqhcode = $("#xzcun").val();
+        xzqhname = $("#xzcun").val();
+        xzqh = $("#xzxz").val() + $("#xzcun").val();
+    }else {//没有选择村
+        cType = 4;
+        xzqhcode = $("#xzxz").val();
+        xzqhname = $("#xzxz").val();
+        xzqh = $("#xzxz").val();
+    }
+}
+
 /*监听可拖动的按钮（九宫格开关）*/
 var _x_start, _y_start, _x_move, _y_move, _x_end, _y_end, left_start, top_start;
 
@@ -336,13 +395,13 @@ function initpage(option) {
             setTimeout(function () {
                 initfpdx();
                 //$('#loadingToast').fadeOut(100);
-                $("#tooltips_div").css("display", "none");
+                /*$("#tooltips_div").css("display", "none");*/
             }, 50);
         } else if (option == 1) {
             $('#page_title').html("扶贫主体")
             setTimeout(function () {
                 initfpzt();
-                $("#tooltips_div").css("display", "none");
+                /*$("#tooltips_div").css("display", "none");*/
             }, 50);
 
         } else if (option) {
@@ -453,9 +512,17 @@ function initfpdx() {
         dataType: 'json',
         data: {name: xzqhname},
         success: function (data) {
-            fpdxdata['pkgk'] = data;
             $('#loadingToast').fadeOut(400);
-            setpkgk(fpdxdata['pkgk']);
+            if (data == 0){
+                $("#tooltips_div").css("display", "block");
+                $("#tooltips_div").html(xzqhname +"没有贫困数据，请重新选择地区！");
+                setTimeout(function () {
+                    $("#tooltips_div").css("display", "none");
+                }, 2000);
+            }else {
+                fpdxdata['pkgk'] = data;
+                setpkgk(fpdxdata['pkgk']);
+            }
         },
         error: function (msg) {
             $("#tooltips_div").css("display", "block");
@@ -855,7 +922,7 @@ function initfpdx() {
                             position: 'right',
                             /*formatter: '{c}户'*/
                             formatter: function (data) {
-                                return formatNum(data.value) + "人";
+                                return formatNum(data.value) + "户";
                             }
                         }
                     },
@@ -1634,9 +1701,17 @@ function initfpzt() {
         dataType: 'json',
         data: {name: xzqhname, code: xzqhcode, level: cType},
         success: function (data) {
-            fpztdata['bfgk'] = data;
             $('#loadingToast').fadeOut(400);
-            setbfgk(fpztdata['bfgk']);
+            if (data == 0){
+                $("#tooltips_div").css("display", "block");
+                $("#tooltips_div").html(xzqhname +"没有贫困数据，请重新选择地区！");
+                setTimeout(function () {
+                    $("#tooltips_div").css("display", "none");
+                }, 2000);
+            }else {
+                fpztdata['bfgk'] = data;
+                setbfgk(fpztdata['bfgk']);
+            }
         },
         error: function (msg) {
             $("#tooltips_div").css("display", "block");
@@ -1658,14 +1733,14 @@ function initfpzt() {
     function setlsqk(data) {
         $('#lszhs__sum').html(formatNum(data.tjSum[0].ZhsTotal));
         $('#bfzrrlshs__sum').html(formatNum(data.tjSum[0].lsHsTotal));
-        $('#lsbfbl__sum').html((data.tjSum[0].lsBlTotal * 100) + '%');
+        $('#lsbfbl__sum').html(parseInt(data.tjSum[0].lsBlTotal * 100) + '%');
         setlsqkbar(data);
     }
 
     function setrhbf(data) {
         $('#rh-pkh__sum').html(formatNum(data.tjSum[0].pkhTotal));
         $('#zfpkh__sum').html(formatNum(data.tjSum[0].zfpkhTotal));
-        $('#zfbl_rh').html((data.tjSum[0].zfblTotal * 100) + '%');
+        $('#zfbl_rh').html(parseInt(data.tjSum[0].zfblTotal * 100) + '%');
         $('#day_sum').html(formatNum(data.tjSum[0].drzfTotal));
         $('#week_sum').html(formatNum(data.tjSum[0].bzzfTotal));
         $('#month_sum').html(formatNum(data.tjSum[0].byzfTotal));
@@ -2178,6 +2253,7 @@ function initRJcells(data) {
     $("#jzgd").html("加载更多");
 }
 function lookdetail() {
+    $('.xzqhdm').hide();
     var option = this.name;
     if (checkMobile(option)) {
         search_text = option;
@@ -2209,7 +2285,8 @@ function lookdetail() {
         $("#zfdetail").html(detailhtml);
         $("#zfdetail").css("display", "block");
         $("div.left_black").click(function () {
-            $("#zfdetail").css("display", "none");
+            $("#zfdetail").hide();
+            $('.xzqhdm').show();
             isxsxq = false;
         });
         isxsxq = true;
@@ -2256,7 +2333,7 @@ function start_search() {
                 type: 'POST',
                 async: false,
                 dataType: 'json',
-                data: {cType: 1, code: xzqhcode, pageNum: counter, phone: search_text},
+                data: {cType: 1, code: 150000000000, pageNum: counter, phone: search_text,type:1},
                 success: function (data) {
                     if (data == null || data.length <= 0 || data == "") {
                         $("#jzgd").hide();
