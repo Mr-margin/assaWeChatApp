@@ -914,7 +914,7 @@ function initfpdx() {
             },
             series: [
                 {
-                    name: '贫困人口',
+                    name: '贫困户数',
                     type: 'bar',
                     label: {
                         normal: {
@@ -1261,7 +1261,7 @@ function initfpdx() {
 
             series: [
                 {
-                    name: '贫困人口',
+                    name: '人均耕地',
                     type: 'bar',
                     label: {
                         normal: {
@@ -1348,7 +1348,7 @@ function initfpdx() {
 
             series: [
                 {
-                    name: '贫困人口',
+                    name: '人均住房',
                     type: 'bar',
                     label: {
                         normal: {
@@ -1522,7 +1522,7 @@ function initfpdx() {
 
             series: [
                 {
-                    name: '贫困人口',
+                    name: '贫困发生率(%)',
                     type: 'bar',
                     label: {
                         normal: {
@@ -1800,7 +1800,7 @@ function initfpzt() {
 
             series: [
                 {
-                    name: '贫困人口',
+                    name: '帮扶人数',
                     type: 'bar',
                     label: {
                         normal: {
@@ -1889,7 +1889,7 @@ function initfpzt() {
 
             series: [
                 {
-                    name: '贫困人口',
+                    name: '落实帮扶人数',
                     type: 'bar',
                     label: {
                         normal: {
@@ -1975,7 +1975,7 @@ function initfpzt() {
 
             series: [
                 {
-                    name: '贫困人口',
+                    name: '走访次数',
                     type: 'bar',
                     label: {
                         normal: {
