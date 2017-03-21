@@ -186,6 +186,8 @@ function setqx() {
         });
     } else {//没有选择盟市
         $("#xzqx").empty();
+        $("#xzxz").empty();
+        ms = "";
         cType = 1;
         xzqhcode = 150000000000;
     }
@@ -243,10 +245,11 @@ function submitdq() {
         xzqhname = ms;
         xzqh = ms;
         xzqhcode = $("#xzms").val();
-    } else {
+    } else if(ms == ""){
         $("#xzqh").html("内蒙古自治区");
         xzqhname = "内蒙古自治区";
         xzqhcode = 150000000000;
+        xzqh = "内蒙古自治区";
     }
     $("#xzqh").html(xzqh);
 
@@ -1704,13 +1707,13 @@ function initfpzt() {
         $('#zcgzd__sum').html(formatNum(data.tjSum[0].zcgzdTotal));
         $('#zcgzgb__sum').html(formatNum(data.tjSum[0].zcgzgbTotal));
         $('#lsbfzrr_sum').html(formatNum(data.tjSum[0].lsbfzrrTotal));
-        $('#bfhs_sum').html(formatNum(data.tjSum[0].bfhsTotal));
+        //$('#bfhs_sum').html(formatNum(data.tjSum[0].bfhsTotal));
         setbfgkbar(data);
     }
 
     function setlsqk(data) {
         $('#lszhs__sum').html(formatNum(data.tjSum[0].ZhsTotal));
-        $('#bfzrrlshs__sum').html(formatNum(data.tjSum[0].lsHsTotal));
+        //$('#bfzrrlshs__sum').html(formatNum(data.tjSum[0].lsHsTotal));
         $('#lsbfbl__sum').html(parseInt(data.tjSum[0].lsBlTotal * 100) + '%');
         setlsqkbar(data);
     }
