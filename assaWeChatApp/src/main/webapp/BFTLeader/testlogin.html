@@ -49,6 +49,9 @@
     </div>
 </div>
 <script type="text/javascript">
+    $("#xzqhcode").val('150000000000');
+    $("#cType").val('1');
+    $("#xzqh").val('内蒙古自治区');
     $('#btn_login').click(function () {
         window.location.href = "index.html?xzqhcode=" + $("#xzqhcode").val() + "&cType=" + $("#cType").val()+"&xzqh="+encodeURI($("#xzqh").val());
     });
