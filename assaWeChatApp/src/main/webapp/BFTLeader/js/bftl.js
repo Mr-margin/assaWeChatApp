@@ -85,6 +85,7 @@ $(document).ready(function () {
         $(".weui-tab__panel").children().eq(option_tabbar).show();//显示对应的子页面
         initpage(option_tabbar);//初始所选择的页面
         initjgg(option_tabbar);//初始化菜单
+        initbarico(option_tabbar);
     });
     /**
      * 初始化行政区划选择器
@@ -129,6 +130,29 @@ $(document).ready(function () {
 
     $('#ggdq').click(xzdq);
 });
+function initbarico(p){
+    if (p==0){
+        $('#icon_1').attr('src','./images/bfzt2.png');
+        $('#icon_2').attr('src','./images/bfdx.png');
+        $('#icon_3').attr('src','./images/bfcs.png');
+        $('#icon_4').attr('src','./images/bfcx.png');
+    }else if(p==1){
+        $('#icon_1').attr('src','./images/bfzt.png');
+        $('#icon_2').attr('src','./images/bfdx2.png');
+        $('#icon_3').attr('src','./images/bfcs.png');
+        $('#icon_4').attr('src','./images/bfcx.png');
+    }else if(p==2){
+        $('#icon_1').attr('src','./images/bfzt.png');
+        $('#icon_2').attr('src','./images/bfdx.png');
+        $('#icon_3').attr('src','./images/bfcs2.png');
+        $('#icon_4').attr('src','./images/bfcx.png');
+    }else if(p==3){
+        $('#icon_1').attr('src','./images/bfzt.png');
+        $('#icon_2').attr('src','./images/bfdx.png');
+        $('#icon_3').attr('src','./images/bfcs.png');
+        $('#icon_4').attr('src','./images/bfcx2.png');
+    }
+}
 
 /**
  * 监听盟市设置旗县
