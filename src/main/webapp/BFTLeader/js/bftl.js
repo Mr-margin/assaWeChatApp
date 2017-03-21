@@ -73,6 +73,7 @@ $(document).ready(function () {
      * 底部导航点击切换页面与自身样式
      */
     $(".weui-tabbar__item").click(function () {
+        $('#zfdetail').hide();
         $('#cir').show();
         isrjlb = false;
         if (!$(this).is(".weui-bar__item_on")) {//点击的按钮非正在选择状态
@@ -94,20 +95,20 @@ $(document).ready(function () {
             type: 'POST',
             async: false,
             dataType: 'json',
-            data: {cType: parseInt(usertype) +1,code:usercode},
+            data: {cType: parseInt(usertype) + 1, code: usercode},
             success: function (data) {
-                if (usertype == 1){//通过级别设置权限
+                if (usertype == 1) {//通过级别设置权限
                     $("#xzms").append("<option value='1'></option>");
                     $.each(data, function (i, item) {
                         $("#xzms").append("<option value='" + item.code + "'>" + item.name + "</option>"); //为Select追加一个Option(下拉项)
                     });
-                }else if(usertype == 2){
+                } else if (usertype == 2) {
                     $("#xzms").html("<option value='" + usercode + "'>" + xzqhname + "</option>")
                     $("#xzqx").append("<option value='1'></option>");
                     $.each(data, function (i, item) {
                         $("#xzqx").append("<option value='" + item.code + "'>" + item.name + "</option>"); //为Select追加一个Option(下拉项)
                     });
-                }else if(usertype == 3){
+                } else if (usertype == 3) {
                     $("#xzqx").html("<option value='" + usercode + "'>" + xzqhname + "</option>")
                     $("#xzxz").append("<option value='1'></option>");
                     $.each(data, function (i, item) {
@@ -125,6 +126,7 @@ $(document).ready(function () {
             }
         });
     }
+
     $('#ggdq').click(xzdq);
 });
 
@@ -178,19 +180,16 @@ function xzdq() {
  * 重置地区
  */
 function dqresetting() {
-    if (usertype == 1){
+    if (usertype == 1) {
         $("#xzms").val("1");
         $("#xzqx").val("1");
         $("#xzxz").val("1");
-        $("#xzcun").val("1");
 
-    }else if(usertype == 2){
+    } else if (usertype == 2) {
         $("#xzqx").val("1");
         $("#xzxz").val("1");
-        $("#xzcun").val("1");
-    }else if (usertype == 3){
+    } else if (usertype == 3) {
         $("#xzxz").val("1");
-        $("#xzcun").val("1");
     }
     cType = usertype;
     xzqhcode = usercode;
@@ -208,24 +207,19 @@ function submitdq() {
     var ms = $("#xzms").find("option:selected").text();
     var qx = $("#xzqx").find("option:selected").text();
     var xz = $("#xzxz").find("option:selected").text();
-    var cun = $("#xzcun").find("option:selected").text();
-    if(cun != ""){
-        xzqh = xz + cun;
-        xzqhname = cun;
-        xzqhcode = $("#xzcun").val();
-    }else if(xz != ""){
+    if (xz != "") {
         xzqh = qx + xz;
         xzqhname = xz;
         xzqhcode = $("#xzxz").val();
-    }else if (qx != ""){
-        xzqh = ms +qx;
+    } else if (qx != "") {
+        xzqh = ms + qx;
         xzqhname = qx;
         xzqhcode = $("#xzqx").val();
-    }else if (ms != ""){
+    } else if (ms != "") {
         xzqhname = ms;
         xzqh = ms;
         xzqhcode = $("#xzms").val();
-    }else {
+    } else {
         $("#xzqh").html("内蒙古自治区");
         xzqhname = "内蒙古自治区";
         xzqhcode = 150000000000;
@@ -237,9 +231,9 @@ function submitdq() {
         rjoption = 0;
         $("#rjcells").html("");
         $('#loadingToast').fadeIn(80);
-        setTimeout(function(){
+        setTimeout(function () {
             getrjdata();
-        },100);
+        }, 100);
         return;
     }
     initpage(option_tabbar);
@@ -283,56 +277,17 @@ function setqxcode() {
 /**
  * 设置乡镇code(监听选择器)
  */
-function setxzcode(){
-    if ($("#xzxz").val() != 1){
+function setxzcode() {
+    if ($("#xzxz").val() != 1) {
         cType = 4;
         xzqhcode = $("#xzxz").val();
         xzqhname = $("#xzxz").val();
         xzqh = $("#xzqx").val() + $("#xzxz").val();
-        $("#xzcun").empty();
-        /*请求行政村列表*/
-        $.ajax({
-            url: serviceurl + 'assaWeChatApp/getXzqh.do',
-            type: 'POST',
-            async: false,
-            dataType: 'json',
-            data: {cType: 5, code: xzqhcode},
-            success: function (data) {
-                console.log(data);
-                $("#xzcun").append("<option value='1'></option>");
-                $.each(data, function (i, item) {
-                    $("#xzcun").append("<option value='" + item.code + "'>" + item.name + "</option>"); //为Select追加一个Option(下拉项)
-                });
-            },
-            error: function (msg) {
-                $("#tooltips_div").css("display", "block");
-                $("#tooltips_div").html("请求行政村列表失败,服务器异常，错误码：" + msg.status);
-                setTimeout(function () {
-                    $("#tooltips_div").css("display", "none");
-                }, 2000);
-            }
-        });
-    }else {//没有选择乡镇
+    } else {//没有选择乡镇
         cType = 3;
         xzqhcode = $("#xzqx").val();
         xzqhname = $("#xzqx").val();
         xzqh = $("#xzqx").val();
-    }
-}
-/**
- * 设置行政村code
- */
-function setcuncode(){
-    if ($("#xzcun").val() != 1) {
-        cType = 5;
-        xzqhcode = $("#xzcun").val();
-        xzqhname = $("#xzcun").val();
-        xzqh = $("#xzxz").val() + $("#xzcun").val();
-    }else {//没有选择村
-        cType = 4;
-        xzqhcode = $("#xzxz").val();
-        xzqhname = $("#xzxz").val();
-        xzqh = $("#xzxz").val();
     }
 }
 
@@ -513,13 +468,13 @@ function initfpdx() {
         data: {name: xzqhname},
         success: function (data) {
             $('#loadingToast').fadeOut(400);
-            if (data == 0){
+            if (data == 0) {
                 $("#tooltips_div").css("display", "block");
-                $("#tooltips_div").html(xzqhname +"没有贫困数据，请重新选择地区！");
+                $("#tooltips_div").html(xzqhname + "没有贫困数据，请重新选择地区！");
                 setTimeout(function () {
                     $("#tooltips_div").css("display", "none");
                 }, 2000);
-            }else {
+            } else {
                 fpdxdata['pkgk'] = data;
                 setpkgk(fpdxdata['pkgk']);
             }
@@ -628,7 +583,6 @@ function initfpdx() {
         for (var tmp in gkdata) {
             yaxisdata.push(gkdata[tmp].V1);
             gkdatavalue.push(gkdata[tmp].V2)
-
         }
         option1 = {
             title: {
@@ -680,7 +634,7 @@ function initfpdx() {
                         }
                     },
                     barCategoryGap: '18px',
-                    barWidth: '16px',
+                    barWidth: yaxisdata.length < 13 ? '16px':'12px',
                     data: gkdatavalue.reverse(),
                     itemStyle: {
                         normal: {
@@ -858,13 +812,13 @@ function initfpdx() {
     function setzpyybar(data) {
         //行政区划贫困人口数统计****************************************
         var zpyybt = ['因病致贫', '因残致贫', '因学致贫', '因灾致贫', '缺土地', '缺水', '缺技术', '缺劳力', '缺资金', '交通条件落后', '自身发展力不足'];
-        var zpyyval = [data.chartData[0].V1,data.chartData[0].V2,data.chartData[0].V3,data.chartData[0].V4,data.chartData[0].V5,data.chartData[0].V6,
-            data.chartData[0].V7,data.chartData[0].V8,data.chartData[0].V9,data.chartData[0].V10,data.chartData[0].V11];
+        var zpyyval = [data.chartData[0].V1, data.chartData[0].V2, data.chartData[0].V3, data.chartData[0].V4, data.chartData[0].V5, data.chartData[0].V6,
+            data.chartData[0].V7, data.chartData[0].V8, data.chartData[0].V9, data.chartData[0].V10, data.chartData[0].V11];
         var zpyydata = new Array();
-        for(var i = 0;i < zpyybt.length; i++){
-            zpyydata[i] = {'V0':zpyybt[i],'V1':zpyyval[i]};
+        for (var i = 0; i < zpyybt.length; i++) {
+            zpyydata[i] = {'V0': zpyybt[i], 'V1': zpyyval[i]};
         }
-        zpyydata = sortByKey(zpyydata,'V1')
+        zpyydata = sortByKey(zpyydata, 'V1')
         var myBarChart = echarts.init(document.getElementById('cause_bar'));
         var yaxisdata = new Array();
         var zpyydatavalue = new Array;
@@ -927,7 +881,7 @@ function initfpdx() {
                         }
                     },
                     barCategoryGap: '18px',
-                    barWidth: '16px',
+                    barWidth: yaxisdata.length < 13 ? '16px':'12px',
                     data: zpyydatavalue.reverse(),
                     itemStyle: {
                         normal: {
@@ -1014,7 +968,7 @@ function initfpdx() {
                         }
                     },
                     barCategoryGap: '18px',
-                    barWidth: '16px',
+                    barWidth: yaxisdata.length < 13 ? '16px':'12px',
                     data: nlfzdatavalue.reverse(),
                     itemStyle: {
                         normal: {
@@ -1101,7 +1055,7 @@ function initfpdx() {
                         }
                     },
                     barCategoryGap: '18px',
-                    barWidth: '16px',
+                    barWidth: yaxisdata.length < 13 ? '16px':'12px',
                     data: jkzkdatavalue.reverse(),
                     itemStyle: {
                         normal: {
@@ -1187,7 +1141,7 @@ function initfpdx() {
                         }
                     },
                     barCategoryGap: '18px',
-                    barWidth: '16px',
+                    barWidth: yaxisdata.length < 13 ? '16px':'12px',
                     data: whcddatavalue.reverse(),
                     itemStyle: {
                         normal: {
@@ -1274,7 +1228,7 @@ function initfpdx() {
                         }
                     },
                     barCategoryGap: '18px',
-                    barWidth: '16px',
+                    barWidth: yaxisdata.length < 13 ? '16px':'12px',
                     data: tdzydatavalue.reverse(),
                     itemStyle: {
                         normal: {
@@ -1361,7 +1315,7 @@ function initfpdx() {
                         }
                     },
                     barCategoryGap: '18px',
-                    barWidth: '16px',
+                    barWidth: yaxisdata.length < 13 ? '16px':'12px',
                     data: scshdatavalue.reverse(),
                     itemStyle: {
                         normal: {
@@ -1448,7 +1402,7 @@ function initfpdx() {
                         }
                     },
                     barCategoryGap: '18px',
-                    barWidth: '16px',
+                    barWidth: yaxisdata.length < 13 ? '16px':'12px',
                     data: sljydatavalue.reverse(),
                     itemStyle: {
                         normal: {
@@ -1535,7 +1489,7 @@ function initfpdx() {
                         }
                     },
                     barCategoryGap: '18px',
-                    barWidth: '16px',
+                    barWidth: yaxisdata.length < 13 ? '16px':'12px',
                     data: pkfsldatavalue.reverse(),
                     itemStyle: {
                         normal: {
@@ -1702,13 +1656,13 @@ function initfpzt() {
         data: {name: xzqhname, code: xzqhcode, level: cType},
         success: function (data) {
             $('#loadingToast').fadeOut(400);
-            if (data == 0){
+            if (data == 0) {
                 $("#tooltips_div").css("display", "block");
-                $("#tooltips_div").html(xzqhname +"没有贫困数据，请重新选择地区！");
+                $("#tooltips_div").html(xzqhname + "没有贫困数据，请重新选择地区！");
                 setTimeout(function () {
                     $("#tooltips_div").css("display", "none");
                 }, 2000);
-            }else {
+            } else {
                 fpztdata['bfgk'] = data;
                 setbfgk(fpztdata['bfgk']);
             }
@@ -1800,7 +1754,7 @@ function initfpzt() {
 
             series: [
                 {
-                    name: '帮扶人数',
+                    name: '帮扶责任人',
                     type: 'bar',
                     label: {
                         normal: {
@@ -1813,7 +1767,7 @@ function initfpzt() {
                         }
                     },
                     barCategoryGap: '18px',
-                    barWidth: '16px',
+                    barWidth: yaxisdata.length < 13 ? '16px':'12px',
                     data: bfgkdatavalue.reverse(),
                     itemStyle: {
                         normal: {
@@ -1902,7 +1856,7 @@ function initfpzt() {
                         }
                     },
                     barCategoryGap: '18px',
-                    barWidth: '16px',
+                    barWidth: yaxisdata.length < 13 ? '16px':'12px',
                     data: lsqkdatavalue.reverse(),
                     itemStyle: {
                         normal: {
@@ -1988,7 +1942,7 @@ function initfpzt() {
                         }
                     },
                     barCategoryGap: '18px',
-                    barWidth: '16px',
+                    barWidth: yaxisdata.length < 13 ? '16px':'12px',
                     data: rhbfdatavalue.reverse(),
                     itemStyle: {
                         normal: {
@@ -2068,9 +2022,9 @@ function jrrj() {
         $('#rjlbbq').children().removeClass('rjbqax');
         $('#jrrj').addClass('rjbqax');
         $('#loadingToast').fadeIn(80);
-        setTimeout(function(){
+        setTimeout(function () {
             getrjdata();
-        },100);
+        }, 100);
     });
     $('#bzrj').click(function () {
         rjtype = 2;
@@ -2080,9 +2034,9 @@ function jrrj() {
         rjoption = 0;
         $("#rjcells").html("");
         $('#loadingToast').fadeIn(80);
-        setTimeout(function(){
+        setTimeout(function () {
             getrjdata();
-        },100);
+        }, 100);
     });
     $('#byrj').click(function () {
         rjtype = 3;
@@ -2092,9 +2046,9 @@ function jrrj() {
         rjoption = 0;
         $("#rjcells").html("");
         $('#loadingToast').fadeIn(80);
-        setTimeout(function(){
+        setTimeout(function () {
             getrjdata();
-        },100);
+        }, 100);
     });
     $('#qbrj').click(function () {
 
@@ -2105,9 +2059,9 @@ function jrrj() {
         rjoption = 0;
         $("#rjcells").html("");
         $('#loadingToast').fadeIn(80);
-        setTimeout(function(){
+        setTimeout(function () {
             getrjdata();
-        },100);
+        }, 100);
     });
     /*监听加载更多*/
     $("#jzgd").click(function () {
@@ -2266,17 +2220,17 @@ function lookdetail() {
         var zfsj = (zfdata[option].time != undefined) ? zfdata[option].time : "未填写";
         var zfjl = (zfdata[option].content != undefined) ? zfdata[option].content : "未填写";
         var zflx = zfdata[option].zftype;
-        if (zflx != undefined){
+        if (zflx != undefined) {
             zflx = getzflx(zflx);
         }
-        var detailhtml = "<div class='weui-flex'><div class='left_black'><img src='images/black.png' style='text-align: center' height='100%'></div>";
+        var detailhtml = "<div class='weui-flex' style='position: fixed;width: 100%;background: #dfdfdf;z-index: 500;'><div class='left_black'><img src='images/black.png' style='text-align: center' height='100%'></div>";
         detailhtml += "<div class='weui-flex__item subhead' style='padding-top: 0;height: 2.3em;line-height: 2.5em;background: transparent;color: #6f6f6f'>走访详情</div>";
         detailhtml += "<div style='width: 60px'></div></div>"
         detailhtml += "<div class='zftp'><img style='border: 3px solid ghostwhite;max-width: 100%' height='100%'  src='http://www.gistone.cn" + zfdata[option].pic + "'></div>";
         detailhtml += "<div class='weui-cells' style='margin-top: 0'><div class='weui-cell'><div class='detailtext'>帮扶人：" + bfrname + "</div></div>";
         detailhtml += "<div class='weui-cell'><div class='detailtext' >贫困户：" + pkhname + "</div></div>";
         detailhtml += "<div class='weui-cell'><div class='detailtext' >走访时间：" + zfsj + "</div></div>";
-        if (zflx != undefined){
+        if (zflx != undefined) {
             detailhtml += "<div class='weui-cell'><div class='detailtext' >走访类型：" + zflx + "</div></div>";
         }
         detailhtml += "<div class='weui-cell'><div class='detailtext' style='_height:200px; min-height:200px;padding-left: 10px' >走访记录：" + zfjl + "</div> </div></div>";
@@ -2299,24 +2253,24 @@ function lookdetail() {
     }
 }
 
-function getzflx(p){
-    if (p == 1){
+function getzflx(p) {
+    if (p == 1) {
         return '其他帮扶活动';
-    }else if(p ==2){
+    } else if (p == 2) {
         return '了解基本情况';
-    }else if(p ==3){
+    } else if (p == 3) {
         return '填写扶贫手册';
     }
-    else if(p ==4){
+    else if (p == 4) {
         return '制定脱贫计划';
     }
-    else if(p ==5){
+    else if (p == 5) {
         return '落实资金项目';
     }
-    else if(p ==6){
+    else if (p == 6) {
         return '宣传扶贫政策';
     }
-    else if(p ==7){
+    else if (p == 7) {
         return '节日假日慰问';
     }
 }
@@ -2333,7 +2287,7 @@ function start_search() {
                 type: 'POST',
                 async: false,
                 dataType: 'json',
-                data: {cType: 1, code: 150000000000, pageNum: counter, phone: search_text,type:1},
+                data: {cType: 1, code: 150000000000, pageNum: counter, phone: search_text, type: 1},
                 success: function (data) {
                     if (data == null || data.length <= 0 || data == "") {
                         $("#jzgd").hide();
