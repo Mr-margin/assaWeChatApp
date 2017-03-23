@@ -130,27 +130,27 @@ $(document).ready(function () {
 
     $('#ggdq').click(xzdq);
 });
-function initbarico(p){
-    if (p==0){
-        $('#icon_1').attr('src','./images/bfzt2.png');
-        $('#icon_2').attr('src','./images/bfdx.png');
-        $('#icon_3').attr('src','./images/bfcs.png');
-        $('#icon_4').attr('src','./images/bfcx.png');
-    }else if(p==1){
-        $('#icon_1').attr('src','./images/bfzt.png');
-        $('#icon_2').attr('src','./images/bfdx2.png');
-        $('#icon_3').attr('src','./images/bfcs.png');
-        $('#icon_4').attr('src','./images/bfcx.png');
-    }else if(p==2){
-        $('#icon_1').attr('src','./images/bfzt.png');
-        $('#icon_2').attr('src','./images/bfdx.png');
-        $('#icon_3').attr('src','./images/bfcs2.png');
-        $('#icon_4').attr('src','./images/bfcx.png');
-    }else if(p==3){
-        $('#icon_1').attr('src','./images/bfzt.png');
-        $('#icon_2').attr('src','./images/bfdx.png');
-        $('#icon_3').attr('src','./images/bfcs.png');
-        $('#icon_4').attr('src','./images/bfcx2.png');
+function initbarico(p) {
+    if (p == 0) {
+        $('#icon_1').attr('src', './images/bfzt2.png');
+        $('#icon_2').attr('src', './images/bfdx.png');
+        $('#icon_3').attr('src', './images/bfcs.png');
+        $('#icon_4').attr('src', './images/bfcx.png');
+    } else if (p == 1) {
+        $('#icon_1').attr('src', './images/bfzt.png');
+        $('#icon_2').attr('src', './images/bfdx2.png');
+        $('#icon_3').attr('src', './images/bfcs.png');
+        $('#icon_4').attr('src', './images/bfcx.png');
+    } else if (p == 2) {
+        $('#icon_1').attr('src', './images/bfzt.png');
+        $('#icon_2').attr('src', './images/bfdx.png');
+        $('#icon_3').attr('src', './images/bfcs2.png');
+        $('#icon_4').attr('src', './images/bfcx.png');
+    } else if (p == 3) {
+        $('#icon_1').attr('src', './images/bfzt.png');
+        $('#icon_2').attr('src', './images/bfdx.png');
+        $('#icon_3').attr('src', './images/bfcs.png');
+        $('#icon_4').attr('src', './images/bfcx2.png');
     }
 }
 
@@ -161,6 +161,7 @@ function setqx() {
     if ($("#xzms").val() != 1) {
         cType = 2;
         $("#xzqx").empty();
+        $("#xzxz").empty();
         xzqhcode = $("#xzms").val();
         /*请求旗县列表*/
         $.ajax({
@@ -245,7 +246,7 @@ function submitdq() {
         xzqhname = ms;
         xzqh = ms;
         xzqhcode = $("#xzms").val();
-    } else if(ms == ""){
+    } else if (ms == "") {
         $("#xzqh").html("内蒙古自治区");
         xzqhname = "内蒙古自治区";
         xzqhcode = 150000000000;
@@ -330,8 +331,20 @@ document.getElementById("cir").addEventListener("touchstart", function (e) {//�
 document.getElementById("cir").addEventListener("touchmove", function (e) {//手指滑动事件
     _x_move = e.touches[0].pageX;
     _y_move = e.touches[0].pageY;
-    $("#cir").css("left", parseFloat(_x_move) - parseFloat(_x_start) + parseFloat(left_start) + "px");
-    $("#cir").css("top", parseFloat(_y_move) - parseFloat(_y_start) + parseFloat(top_start) + "px");
+    var leftval = parseFloat(_x_move) - parseFloat(_x_start) + parseFloat(left_start);
+    var topval = parseFloat(_y_move) - parseFloat(_y_start) + parseFloat(top_start);
+    if (leftval < 0) {
+        leftval = 0;
+    } else if (leftval > document.body.clientWidth-40) {
+        leftval = document.body.clientWidth-40;
+    }
+    if (topval < 0) {
+        topval = 0;
+    } else if (topval > document.body.clientHeight-110) {
+        topval = document.body.clientHeight-110;
+    }
+    $("#cir").css("left", leftval + "px");
+    $("#cir").css("top", topval + "px");
     ismove = false;
 })
 document.getElementById("cir").addEventListener("touchend", function (e) {//手指离开事件
@@ -386,9 +399,8 @@ function initpage(option) {
                 /*$("#tooltips_div").css("display", "none");*/
             }, 50);
 
-        } else if (option) {
+        } else if (option == 2) {
             $('#page_title').html("帮扶措施")
-
             initbfcs();
         } else {
             $('#page_title').html("帮扶成效")
@@ -643,7 +655,13 @@ function initfpdx() {
             },
             yAxis: {
                 type: 'category',
-                data: yaxisdata.reverse()
+                data: yaxisdata.reverse(),
+                axisLabel: {
+                    interval: 0,
+                    textStyle: {
+                        fontSize: yaxisdata.length < 16 ? 12 : 8
+                    }
+                }
             },
 
             series: [
@@ -654,14 +672,16 @@ function initfpdx() {
                         normal: {
                             show: true,
                             position: 'right',
+                            textStyle:{
+                                fontSize: yaxisdata.length < 16 ? 12 : 8
+                            },
                             /*formatter: '{c}户'*/
                             formatter: function (data) {
                                 return formatNum(data.value) + "人";
                             }
                         }
                     },
-                    barCategoryGap: '18px',
-                    barWidth: yaxisdata.length < 13 ? '16px':'12px',
+                    barWidth: yaxisdata.length < 16 ? '16px' : '8px',
                     data: gkdatavalue.reverse(),
                     itemStyle: {
                         normal: {
@@ -886,7 +906,13 @@ function initfpdx() {
             },
             yAxis: {
                 type: 'category',
-                data: yaxisdata.reverse()
+                data: yaxisdata.reverse(),
+                axisLabel: {
+                    interval: 0,
+                    textStyle: {
+                        fontSize: yaxisdata.length < 16 ? 12 : 8
+                    }
+                }
             },
             itemStyle: {
                 normal: {
@@ -901,14 +927,16 @@ function initfpdx() {
                         normal: {
                             show: true,
                             position: 'right',
+                            textStyle: {
+                                fontSize: yaxisdata.length < 16 ? 12 : 8
+                            },
                             /*formatter: '{c}户'*/
                             formatter: function (data) {
                                 return formatNum(data.value) + "户";
                             }
                         }
                     },
-                    barCategoryGap: '18px',
-                    barWidth: yaxisdata.length < 13 ? '16px':'12px',
+                    barWidth: yaxisdata.length < 16 ? '16px' : '8px',
                     data: zpyydatavalue.reverse(),
                     itemStyle: {
                         normal: {
@@ -977,7 +1005,13 @@ function initfpdx() {
             },
             yAxis: {
                 type: 'category',
-                data: yaxisdata.reverse()
+                data: yaxisdata.reverse(),
+                axisLabel: {
+                    interval: 0,
+                    textStyle: {
+                        fontSize: yaxisdata.length < 16 ? 12 : 8
+                    }
+                }
             },
 
             series: [
@@ -988,14 +1022,16 @@ function initfpdx() {
                         normal: {
                             show: true,
                             position: 'right',
+                            textStyle: {
+                                fontSize: yaxisdata.length < 16 ? 12 : 8
+                            },
                             /*formatter: '{c}户'*/
                             formatter: function (data) {
                                 return formatNum(data.value) + "人";
                             }
                         }
                     },
-                    barCategoryGap: '18px',
-                    barWidth: yaxisdata.length < 13 ? '16px':'12px',
+                    barWidth: yaxisdata.length < 16 ? '16px' : '8px',
                     data: nlfzdatavalue.reverse(),
                     itemStyle: {
                         normal: {
@@ -1064,7 +1100,13 @@ function initfpdx() {
             },
             yAxis: {
                 type: 'category',
-                data: yaxisdata.reverse()
+                data: yaxisdata.reverse(),
+                axisLabel: {
+                    interval: 0,
+                    textStyle: {
+                        fontSize: yaxisdata.length < 16 ? 12 : 8
+                    }
+                }
             },
 
             series: [
@@ -1075,14 +1117,16 @@ function initfpdx() {
                         normal: {
                             show: true,
                             position: 'right',
+                            textStyle: {
+                                fontSize: yaxisdata.length < 16 ? 12 : 8
+                            },
                             /*formatter: '{c}户'*/
                             formatter: function (data) {
                                 return formatNum(data.value) + "人";
                             }
                         }
                     },
-                    barCategoryGap: '18px',
-                    barWidth: yaxisdata.length < 13 ? '16px':'12px',
+                    barWidth: yaxisdata.length < 16 ? '16px' : '8px',
                     data: jkzkdatavalue.reverse(),
                     itemStyle: {
                         normal: {
@@ -1150,7 +1194,13 @@ function initfpdx() {
             },
             yAxis: {
                 type: 'category',
-                data: yaxisdata.reverse()
+                data: yaxisdata.reverse(),
+                axisLabel: {
+                    interval: 0,
+                    textStyle: {
+                        fontSize: yaxisdata.length < 16 ? 12 : 8
+                    }
+                }
             },
 
             series: [
@@ -1161,14 +1211,16 @@ function initfpdx() {
                         normal: {
                             show: true,
                             position: 'right',
+                            textStyle: {
+                                fontSize: yaxisdata.length < 16 ? 12 : 8
+                            },
                             /*formatter: '{c}户'*/
                             formatter: function (data) {
                                 return formatNum(data.value) + "人";
                             }
                         }
                     },
-                    barCategoryGap: '18px',
-                    barWidth: yaxisdata.length < 13 ? '16px':'12px',
+                    barWidth: yaxisdata.length < 16 ? '16px' : '8px',
                     data: whcddatavalue.reverse(),
                     itemStyle: {
                         normal: {
@@ -1237,7 +1289,13 @@ function initfpdx() {
             },
             yAxis: {
                 type: 'category',
-                data: yaxisdata.reverse()
+                data: yaxisdata.reverse(),
+                axisLabel: {
+                    interval: 0,
+                    textStyle: {
+                        fontSize: yaxisdata.length < 16 ? 12 : 8
+                    }
+                }
             },
 
             series: [
@@ -1248,14 +1306,16 @@ function initfpdx() {
                         normal: {
                             show: true,
                             position: 'right',
+                            textStyle: {
+                                fontSize: yaxisdata.length < 16 ? 12 : 8
+                            },
                             /*formatter: '{c}户'*/
                             formatter: function (data) {
                                 return formatNum(data.value) + "亩";
                             }
                         }
                     },
-                    barCategoryGap: '18px',
-                    barWidth: yaxisdata.length < 13 ? '16px':'12px',
+                    barWidth: yaxisdata.length < 16 ? '16px' : '8px',
                     data: tdzydatavalue.reverse(),
                     itemStyle: {
                         normal: {
@@ -1324,7 +1384,13 @@ function initfpdx() {
             },
             yAxis: {
                 type: 'category',
-                data: yaxisdata.reverse()
+                data: yaxisdata.reverse(),
+                axisLabel: {
+                    interval: 0,
+                    textStyle: {
+                        fontSize: yaxisdata.length < 16 ? 12 : 8
+                    }
+                }
             },
 
             series: [
@@ -1335,14 +1401,16 @@ function initfpdx() {
                         normal: {
                             show: true,
                             position: 'right',
+                            textStyle: {
+                                fontSize: yaxisdata.length < 16 ? 12 : 8
+                            },
                             /*formatter: '{c}户'*/
                             formatter: function (data) {
                                 return formatNum(data.value) + "m²";
                             }
                         }
                     },
-                    barCategoryGap: '18px',
-                    barWidth: yaxisdata.length < 13 ? '16px':'12px',
+                    barWidth: yaxisdata.length < 16 ? '16px' : '8px',
                     data: scshdatavalue.reverse(),
                     itemStyle: {
                         normal: {
@@ -1411,7 +1479,13 @@ function initfpdx() {
             },
             yAxis: {
                 type: 'category',
-                data: yaxisdata.reverse()
+                data: yaxisdata.reverse(),
+                axisLabel: {
+                    interval: 0,
+                    textStyle: {
+                        fontSize: yaxisdata.length < 16 ? 12 : 8
+                    }
+                }
             },
 
             series: [
@@ -1422,14 +1496,16 @@ function initfpdx() {
                         normal: {
                             show: true,
                             position: 'right',
+                            textStyle: {
+                                fontSize: yaxisdata.length < 16 ? 12 : 8
+                            },
                             /*formatter: '{c}户'*/
                             formatter: function (data) {
                                 return formatNum(data.value) + "人";
                             }
                         }
                     },
-                    barCategoryGap: '18px',
-                    barWidth: yaxisdata.length < 13 ? '16px':'12px',
+                    barWidth: yaxisdata.length < 16 ? '16px' : '8px',
                     data: sljydatavalue.reverse(),
                     itemStyle: {
                         normal: {
@@ -1498,7 +1574,13 @@ function initfpdx() {
             },
             yAxis: {
                 type: 'category',
-                data: yaxisdata.reverse()
+                data: yaxisdata.reverse(),
+                axisLabel: {
+                    interval: 0,
+                    textStyle: {
+                        fontSize: yaxisdata.length < 16 ? 12 : 8
+                    }
+                }
             },
 
             series: [
@@ -1509,14 +1591,16 @@ function initfpdx() {
                         normal: {
                             show: true,
                             position: 'right',
+                            textStyle: {
+                                fontSize: yaxisdata.length < 16 ? 12 : 8
+                            },
                             /*formatter: '{c}户'*/
                             formatter: function (data) {
                                 return formatNum(data.value) + "%";
                             }
                         }
                     },
-                    barCategoryGap: '18px',
-                    barWidth: yaxisdata.length < 13 ? '16px':'12px',
+                    barWidth: yaxisdata.length < 16 ? '16px' : '8px',
                     data: pkfsldatavalue.reverse(),
                     itemStyle: {
                         normal: {
@@ -1702,6 +1786,7 @@ function initfpzt() {
             }, 2000);
         }
     });
+    //
     function setbfgk(data) {
         $('#bfdw__sum').html(formatNum(data.tjSum[0].bfdwTotal));
         $('#zcgzd__sum').html(formatNum(data.tjSum[0].zcgzdTotal));
@@ -1776,7 +1861,13 @@ function initfpzt() {
             },
             yAxis: {
                 type: 'category',
-                data: yaxisdata.reverse()
+                data: yaxisdata.reverse(),
+                axisLabel: {
+                    interval: 0,
+                    textStyle: {
+                        fontSize: yaxisdata.length < 16 ? 12 : 8
+                    }
+                }
             },
 
             series: [
@@ -1787,14 +1878,16 @@ function initfpzt() {
                         normal: {
                             show: true,
                             position: 'right',
+                            textStyle: {
+                                fontSize: yaxisdata.length < 16 ? 12 : 8
+                            },
                             /*formatter: '{c}户'*/
                             formatter: function (data) {
                                 return formatNum(data.value) + "人";
                             }
                         }
                     },
-                    barCategoryGap: '18px',
-                    barWidth: yaxisdata.length < 13 ? '16px':'12px',
+                    barWidth: yaxisdata.length < 16 ? '16px' : '8px',
                     data: bfgkdatavalue.reverse(),
                     itemStyle: {
                         normal: {
@@ -1865,7 +1958,13 @@ function initfpzt() {
             },
             yAxis: {
                 type: 'category',
-                data: yaxisdata.reverse()
+                data: yaxisdata.reverse(),
+                axisLabel: {
+                    interval: 0,
+                    textStyle: {
+                        fontSize: yaxisdata.length < 16 ? 12 : 8
+                    }
+                }
             },
 
             series: [
@@ -1876,14 +1975,16 @@ function initfpzt() {
                         normal: {
                             show: true,
                             position: 'right',
+                            textStyle: {
+                                fontSize: yaxisdata.length < 16 ? 12 : 8
+                            },
                             /*formatter: '{c}户'*/
                             formatter: function (data) {
                                 return formatNum(data.value) + "人";
                             }
                         }
                     },
-                    barCategoryGap: '18px',
-                    barWidth: yaxisdata.length < 13 ? '16px':'12px',
+                    barWidth: yaxisdata.length < 16 ? '16px' : '8px',
                     data: lsqkdatavalue.reverse(),
                     itemStyle: {
                         normal: {
@@ -1951,7 +2052,13 @@ function initfpzt() {
             },
             yAxis: {
                 type: 'category',
-                data: yaxisdata.reverse()
+                data: yaxisdata.reverse(),
+                axisLabel: {
+                    interval: 0,
+                    textStyle: {
+                        fontSize: yaxisdata.length < 16 ? 12 : 8
+                    }
+                }
             },
 
             series: [
@@ -1962,14 +2069,16 @@ function initfpzt() {
                         normal: {
                             show: true,
                             position: 'right',
+                            textStyle: {
+                                fontSize: yaxisdata.length < 16 ? 12 : 8
+                            },
                             /*formatter: '{c}户'*/
                             formatter: function (data) {
                                 return formatNum(data.value) + "次";
                             }
                         }
                     },
-                    barCategoryGap: '18px',
-                    barWidth: yaxisdata.length < 13 ? '16px':'12px',
+                    barWidth: yaxisdata.length < 16 ? '16px' : '8px',
                     data: rhbfdatavalue.reverse(),
                     itemStyle: {
                         normal: {
@@ -2029,8 +2138,6 @@ function initfpzt() {
             }
         });
     }
-
-
 }
 
 /**
