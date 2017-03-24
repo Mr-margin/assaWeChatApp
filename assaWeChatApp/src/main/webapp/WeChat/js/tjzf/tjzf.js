@@ -352,7 +352,6 @@ function savezfjl(){
 			alert("保存成功！");
 			location.reload(window.location.href)
 		}
-
     }
 }
 /**
@@ -598,11 +597,12 @@ function dellsdata(lsdate){
 		var objStr=JSON.stringify(lsdata);
 		localStorage.mzfjl = objStr;
 }
+
 $(function(){
 	var currYear = (new Date()).getFullYear();
 	var opt={};
 	opt.date = {preset : 'date'};
-	opt.datetime = {preset : 'datetime'};
+	opt.datetime = {preset : 'datetime',minDate:new Date(2016,1,1,1,1),maxDate:new Date()};
 	opt.time = {preset : 'time'};
 	opt.default = {
 		theme: 'android-ics light', //皮肤样式
@@ -612,12 +612,12 @@ $(function(){
 		lang: 'zh',
 		showNow: true,
 		nowText: "今天",
-		startYear: currYear - 10, //开始年份
-		endYear: currYear + 80 //结束年份
+		startYear: currYear - 1, //开始年份
+		endYear: currYear //结束年份
 	};
 	/*$("#EndDate").mobiscroll($.extend(opt['date'], opt['default']));//年月日型*/
 	var optDateTime = $.extend(opt['datetime'], opt['default']);
-	var optTime = $.extend(opt['time'], opt['default']);
+	//var optTime = $.extend(opt['time'], opt['default']);
 	$("#AbsentEndDate").mobiscroll(optDateTime).datetime(optDateTime);//年月日时分型
 	/*$("#EndTime").mobiscroll(optTime).time(optTime);//时分型*/
 });
