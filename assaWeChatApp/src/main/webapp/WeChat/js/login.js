@@ -61,7 +61,7 @@ function login() {
             }
         },
         error: function (msg) {
-            alert('登录失败(错误码：' + msg.status + ')');
+            alert('登录失败,请联系管理员');
         }
     })
 }
