@@ -56,7 +56,11 @@ function poor_name(){
 	    success: function (data) {
 			poordata = data.data;
     		$.each(data.data,function(i,item){
-    			html +='<option value="'+item.v8+'">'+item.v6+'</option>';
+				var sftp = "（未脱贫）";
+				if (item.sftp == 1){
+					sftp = "（已脱贫）";
+				}
+    			html +='<option value="'+item.v8+'">'+item.v6+sftp+'</option>';
     		})
     		$("#poor_name").html(html);
 	    },
