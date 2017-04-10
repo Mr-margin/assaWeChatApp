@@ -200,14 +200,14 @@ public class AnController{
 	    response.setCharacterEncoding("UTF-8");
 		String phone = request.getParameter("phone");
 		String name = request.getParameter("name");
-		String sql = "SELECT AAB002,AAR008,BB.AAC001,BB.AAB001,AAB004,AAR012,AAQ002,AAC004,AAC005,AAC006,AAC007,AAC008,AAC012,NUM,V1,V3,V5,V7,V9,PIC_PATH FROM  " +
+		String sql = "SELECT * FROM (SELECT AAB002,AAR008,BB.AAC001,BB.AAB001,CC.AAR100,CC.AAR010,AAB004,AAR012,AAQ002,AAC004,AAC005,AAC006,AAC007,AAC008,AAC012,NUM,V1,V3,V5,V7,V9,PIC_PATH FROM  " +
 					"(SELECT HOUSEHOLD_NAME ,HOUSEHOLD_CARD FROM SYS_PERSONAL_HOUSEHOLD_MANY WHERE PERSONAL_PHONE ='"+phone+"' AND PERSONAL_NAME='"+name+"' GROUP BY HOUSEHOLD_NAME,HOUSEHOLD_CARD )AA "+
-					"LEFT JOIN (SELECT AAB002,AAB001,AAC001,AAB004 FROM NEIMENG0117_AB01 WHERE AAR040 ='2016')BB ON AA.HOUSEHOLD_NAME=BB.AAB002 AND AA.HOUSEHOLD_CARD=BB.AAB004 LEFT JOIN "+
-					"(SELECT AAC001,AAR008,AAR012,AAQ002,AAC004,AAC005,AAC006,AAC007,AAC008,AAC012 FROM NEIMENG0117_AC01 WHERE AAR040 ='2016') CC "+
-					"ON BB.AAC001 = CC.AAC001 LEFT JOIN (SELECT AAC001, COUNT(*) NUM FROM NEIMENG0117_AB01 WHERE AAR040='2016' GROUP BY AAC001  ) DD "+
+					"LEFT JOIN (SELECT AAB002,AAB001,AAC001,AAB004 FROM NEIMENG0117_AB01 WHERE AAR040 ='2016' and  AAB015='1')BB ON AA.HOUSEHOLD_NAME=BB.AAB002 AND AA.HOUSEHOLD_CARD=BB.AAB004 LEFT JOIN "+
+					"(SELECT AAC001,AAR008,AAR012,AAQ002,AAC004,AAC005,AAC006,AAC007,AAC008,AAC012,AAR100,AAR010 FROM NEIMENG0117_AC01 WHERE AAR040 ='2016') CC "+
+					"ON BB.AAC001 = CC.AAC001 LEFT JOIN (SELECT AAC001, COUNT(*) NUM FROM NEIMENG0117_AB01 WHERE AAR040='2016'  and  AAB015='1' GROUP BY AAC001  ) DD "+
 					"ON BB.AAC001=DD.AAC001 LEFT JOIN SYS_COM EE ON CC.AAR008=EE.v10  "+
 					"LEFT JOIN	(SELECT AAB001,HOUSEHOLD_NAME,HOUSEHOLD_CARD,PIC_PATH FROM DA_PIC_HOUSEHOLD)FF  "+
-					"ON BB.AAB002=FF.HOUSEHOLD_NAME AND BB.AAB004 =FF.HOUSEHOLD_CARD AND BB.AAB001=FF.AAB001";
+					"ON BB.AAB002=FF.HOUSEHOLD_NAME AND BB.AAB004 =FF.HOUSEHOLD_CARD AND BB.AAB001=FF.AAB001) where AAR100='1'";
 		List<Map> list = this.getBySqlMapper.findRecords(sql);
 		JSONArray json = new JSONArray ();
 		if ( list.size() > 0 ) {
@@ -231,6 +231,7 @@ public class AnController{
 				obj.put("v8", "".equals(list.get(i).get("AAB004")) || list.get(i).get("AAB004")==null ? "" : list.get(i).get("AAB004").toString());//证件号码
 				obj.put("v33", "".equals(list.get(i).get("AAC008")) || list.get(i).get("AAC008") == null ? "" : list.get(i).get("AAC008").toString());//其他致贫原因	
 				obj.put("v34", "".equals(list.get(i).get("AAC005")) || list.get(i).get("AAC005") == null ? "" : list.get(i).get("AAC005").toString());//识别标准 国家标准 市级标准	
+				obj.put("sftp", "".equals(list.get(i).get("AAR010")) || list.get(i).get("AAR010") == null ? "" : list.get(i).get("AAR010").toString());//是否脱贫标志
 				obj.put("pic_path", "".equals(list.get(i).get("PIC_PATH")) ||list.get(i).get("PIC_PATH") == null ? "" : list.get(i).get("PIC_PATH").toString());//户主头像
 				
 				json.add(obj);
@@ -254,7 +255,7 @@ public class AnController{
 		String AAC001 = request.getParameter("pkid");//贫困户编号
 		
 		String sql = "select AAB001,AAB002,AAB003, AAB004,AAB006,AAB007,AAB008,AAB009,AAB010,AAB011,AAB012,AAB017,AAB019 "+
-					"from  NEIMENG0117_AB01 where AAC001='"+AAC001+"' and AAR040='2016' ORDER BY AAB006";
+					"from  NEIMENG0117_AB01 where AAC001='"+AAC001+"' and AAR040='2016' and  AAB015='1' ORDER BY AAB006";
 		List<Map> list = this.getBySqlMapper.findRecords(sql);
 		JSONArray json = new JSONArray () ;
 		if ( list.size() > 0 ) {
