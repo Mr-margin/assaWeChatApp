@@ -23,7 +23,9 @@ function savePoor(){
 		    				'<li class="notice-list">'+
 		    				'<table width="100%" border="0" cellspacing="0" cellpadding="0">'+
 		    				'<tbody><tr><th scope="col">';
-		    		if(item.v34 == 1){
+					if (item.sftp == 1){
+						html += '<img src="img/tp.jpg" style="width:60px;">'
+					}else if(item.v34 == 1){
 		    			html += '<img src="img/country.png" style="width:60px;">'
 		    		}else{
 		    			html += '<img src="img/city.png" style="width:60px;">'
