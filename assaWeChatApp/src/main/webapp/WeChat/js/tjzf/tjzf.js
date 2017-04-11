@@ -256,10 +256,7 @@ function addzfjl() {
     setTimeout(function (){
         $('#tost').hide();
     },2000);
-    if (w_p.length < tpsl){
-        alert("请等待所有图片上传完成!");
-        return;
-    }
+
     dingewi();
 
     if (qdtype == 2) {
