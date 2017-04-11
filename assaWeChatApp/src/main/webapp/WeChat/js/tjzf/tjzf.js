@@ -37,7 +37,7 @@ $(function () {
     name = Request['name'];
     lsdate = Request['lsdate'];//如果是新增走访记录为0 如果是来至我的日志的编辑则带日期参数
     if (lsdate != 0) {
-        initData();//网页来至我的日志缓存记录的编辑携带了缓存记录的时间 根据缓存初始编辑页面的显示信息
+        //initData();//网页来至我的日志缓存记录的编辑携带了缓存记录的时间 根据缓存初始编辑页面的显示信息
     } else {
         poor_name();
     }
@@ -133,6 +133,13 @@ function photo() {
                 setTimeout(function (){
                     $('#tost').hide();
                 },2000);
+                var newstr = pp.substring(0, pp.length - 1);
+                w_p = newstr.split(",");
+                $('#tost').html("共"+w_p.length+"张图片");
+                $('#tost').show();
+                setTimeout(function (){
+                    $('#tost').hide();
+                },2000);
                 html += '<div style="width:20%;height:20%;float:left;padding-top:15px;"><img src="img/add1.png" border=0 style="width:95%;height:80%;" onclick="photo()" ></div>'
                 $("#yulan").html(html);
             }
@@ -143,7 +150,7 @@ function photo() {
         // config信息验证失败会执行error函数，如签名过期导致验证失败，具体错误信息可以打开config的debug模式查看，也可以在返回的res参数中查看，对于SPA可以在这里更新签名。
     });
 }
-
+var w_p;
 var timeout;
 function settime(val) {
     if (countdown == 0) {
@@ -257,13 +264,7 @@ function addzfjl() {
     iszztj = true;
     $("#deng").show();
     $("#tijiao").hide();
-    var newstr = pp.substring(0, pp.length - 1);
-    var w_p = newstr.split(",");
-    $('#tost').html("共"+w_p.length+"张图片");
-    $('#tost').show();
-    setTimeout(function (){
-        $('#tost').hide();
-    },2000);
+
     var household_card = $("#poor_name").val();//贫困户证件号码
 
     if (household_card == "请选择" || household_card == null || household_card == "") {
@@ -317,10 +318,10 @@ function addzfjl() {
 
 }
 
-/**
+/*/!**
  * 走访记录保存为缓存
  * @returns {boolean}
- */
+ *!/
 function savezfjl() {
     if (!window.localStorage) {
         alert("浏览器不支持缓存请直接提交！");
@@ -366,7 +367,7 @@ function savezfjl() {
             location.reload(window.location.href)
         }
     }
-}
+}*/
 /**
  * 缓存保存的对象
  * @param zftime 走访时间 年月日 时分秒
