@@ -132,9 +132,7 @@ function photo() {
                         }
                     });
                 }
-                setTimeout(function (){
-                    $('#tost').hide();
-                },2000);
+                $('#tost').hide();
                 html += '<div style="width:20%;height:20%;float:left;padding-top:15px;"><img src="img/add1.png" border=0 style="width:95%;height:80%;" onclick="photo()" ></div>'
                 $("#yulan").html(html);
             }
@@ -261,6 +259,11 @@ function addzfjl() {
     $("#tijiao").hide();
     var newstr = pp.substring(0, pp.length - 1);
     var w_p = newstr.split(",");
+    $('#tost').html("已上传"+w_p.length+"张图片");
+    $('#tost').show();
+    setTimeout(function (){
+        $('#tost').hide();
+    },2000);
     if (w_p.length < tpsl){
         alert("请等待所有图片上传完成!");
         return;
