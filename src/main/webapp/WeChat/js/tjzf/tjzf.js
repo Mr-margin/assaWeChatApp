@@ -670,13 +670,29 @@ function xzzflx(){
 }
 function formattime(datetime){
 	var date = new Date(datetime);
-	if (date == null || date == undefined){
-		date = new Date();
+	if (isNaN(date)){
+		var newdate = new Date();
+		var year = newdate.getFullYear();
+		var month = newdate.getMonth()+1;
+		var day = newdate.getDate();
+		var h = newdate.getHours();
+		var m = newdate.getMinutes();
+		return year+'-'+month+"-"+day+" "+h+":"+m+":"+"00";
+	}else {
+		var year = date.getFullYear();
+		if (isNaN(year)){
+			var ndate = new Date();
+			year = date.getFullYear();
+			var month = ndate.getMonth()+1;
+			var day = ndate.getDate();
+			var h = ndate.getHours();
+			var m = ndate.getMinutes();
+			return year+'-'+month+"-"+day+" "+h+":"+m+":"+"00";
+		}
+		var month = date.getMonth()+1;
+		var day = date.getDate();
+		var h = date.getHours();
+		var m = date.getMinutes();
+		return year+'-'+month+"-"+day+" "+h+":"+m+":"+"00";
 	}
-	var year = date.getFullYear();
-	var month = date.getMonth()+1;
-	var day = date.getDate();
-	var h = date.getHours();
-	var m = date.getMinutes();
-	return year+'-'+month+"-"+day+" "+h+":"+m+":"+"00";
 }
