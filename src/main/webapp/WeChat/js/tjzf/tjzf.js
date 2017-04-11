@@ -125,9 +125,14 @@ function photo() {
                         success: function (res) {
                             var serverId = res.serverId; // 返回图片的服务器端ID
                             pp += "http://file.api.weixin.qq.com/cgi-bin/media/get?access_token=" + token + "&media_id=" + serverId + ",";
+                            $('#tost').html("第"+i+"张图片上传成功");
+                            $('#tost').show();
                         }
                     });
                 }
+                setTimeout(function (){
+                    $('#tost').hide();
+                },2000);
                 html += '<div style="width:20%;height:20%;float:left;padding-top:15px;"><img src="img/add1.png" border=0 style="width:95%;height:80%;" onclick="photo()" ></div>'
                 $("#yulan").html(html);
             }
@@ -254,7 +259,11 @@ function addzfjl() {
     $("#tijiao").hide();
     var newstr = pp.substring(0, pp.length - 1);
     var w_p = newstr.split(",");
-
+    $('#tost').html("共"+w_p.length+"张图片");
+    $('#tost').show();
+    setTimeout(function (){
+        $('#tost').hide();
+    },2000);
     var household_card = $("#poor_name").val();//贫困户证件号码
 
     if (household_card == "请选择" || household_card == null || household_card == "") {
@@ -677,5 +686,4 @@ function formattime(datetime) {
     var h = date.getHours();
     var m = date.getMinutes();
     return year + '-' + month + "-" + day + " " + h + ":" + m + ":" + "00";
-
 }
