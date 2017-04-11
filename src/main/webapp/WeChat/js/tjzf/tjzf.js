@@ -89,6 +89,7 @@ function qm() {
     })
 }
 var pp = '';
+var tpsl = 0;
 //上传照片
 function photo() {
     wx.config({
@@ -117,6 +118,7 @@ function photo() {
                 var html = '';
                 pp = '';
                 localIds = res.localIds; //返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
+                tpsl = localIds.length;
                 for (var i = 0; i < localIds.length; i++) {
                     html += '<div style="width:20%;height:20%;float:left"><img src="' + localIds[i] + '" border=0 style="width:95%;height:80%;" ></div>'
                     wx.uploadImage({
@@ -133,13 +135,6 @@ function photo() {
                 setTimeout(function (){
                     $('#tost').hide();
                 },2000);
-                var newstr = pp.substring(0, pp.length - 1);
-                w_p = newstr.split(",");
-                $('#tost').html("共"+w_p.length+"张图片");
-                $('#tost').show();
-                setTimeout(function (){
-                    $('#tost').hide();
-                },2000);
                 html += '<div style="width:20%;height:20%;float:left;padding-top:15px;"><img src="img/add1.png" border=0 style="width:95%;height:80%;" onclick="photo()" ></div>'
                 $("#yulan").html(html);
             }
@@ -150,7 +145,7 @@ function photo() {
         // config信息验证失败会执行error函数，如签名过期导致验证失败，具体错误信息可以打开config的debug模式查看，也可以在返回的res参数中查看，对于SPA可以在这里更新签名。
     });
 }
-var w_p;
+
 var timeout;
 function settime(val) {
     if (countdown == 0) {
@@ -264,7 +259,12 @@ function addzfjl() {
     iszztj = true;
     $("#deng").show();
     $("#tijiao").hide();
-
+    var newstr = pp.substring(0, pp.length - 1);
+    var w_p = newstr.split(",");
+    if (w_p.length < tpsl){
+        alert("请等待所有图片上传完成!");
+        return;
+    }
     var household_card = $("#poor_name").val();//贫困户证件号码
 
     if (household_card == "请选择" || household_card == null || household_card == "") {
