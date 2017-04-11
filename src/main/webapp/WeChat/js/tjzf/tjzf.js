@@ -249,14 +249,6 @@ function addzfjl() {
         alert("请选择走访类型，并填写走访记录!");
         return;
     }
-    dingewi();
-
-    if (qdtype == 2) {
-        zftime = $("#AbsentEndDate").val();
-    }
-    iszztj = true;
-    $("#deng").show();
-    $("#tijiao").hide();
     var newstr = pp.substring(0, pp.length - 1);
     var w_p = newstr.split(",");
     $('#tost').html("已上传"+w_p.length+"张图片");
@@ -268,6 +260,15 @@ function addzfjl() {
         alert("请等待所有图片上传完成!");
         return;
     }
+    dingewi();
+
+    if (qdtype == 2) {
+        zftime = $("#AbsentEndDate").val();
+    }
+    iszztj = true;
+    $("#deng").show();
+    $("#tijiao").hide();
+
     var household_card = $("#poor_name").val();//贫困户证件号码
 
     if (household_card == "请选择" || household_card == null || household_card == "") {
@@ -680,6 +681,7 @@ function kstxzfjl() {
 }
 function xzzflx() {
     zftype = $('#poor_type').val();
+    $('#tost').hide();
 }
 function formattime(datetime) {
     datetime = datetime.replace(/-/g, "/");
