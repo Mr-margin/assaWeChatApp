@@ -26,6 +26,8 @@ cType = usertype;
 xzqh = username;
 xzqhname = username;
 $('#xzqh').html(username);
+var qxsl,xzsl,cunsl;
+
 /**
  * 扶贫对象变量
  */
@@ -57,16 +59,7 @@ var isrjlb = false;//正在显示日记
 /**************************************************Home(主界面操作部分)**************************************************************************************/
 //文档加载完毕执行JS
 $(document).ready(function () {
-    //设置各指标项跳转的位置
-    zpyytop = $("#zpyys").offset().top - 100;
-    nlfztop = $("#nlfzs").offset().top - 100;
-    jkzktop = $("#jkzks").offset().top - 100;
-    whcdtop = $("#whcds").offset().top - 100;
-    tdzytop = $("#tdzys").offset().top - 100;
-    scshtop = $("#scshtjs").offset().top - 100;
-    sljytop = $("#sljys").offset().top - 100;
-    pkfsltop = $("#pkfsls").offset().top - 100;
-
+    settop();
     initxzqh();//初始化要查询的地区
     initpage(option_tabbar);//初始化页面
     /**
@@ -171,6 +164,7 @@ function setqx() {
             dataType: 'json',
             data: {cType: 3, code: xzqhcode},
             success: function (data) {
+                qxsl = data.length;
                 console.log(data);
                 $("#xzqx").append("<option value='1'></option>");
                 $.each(data, function (i, item) {
@@ -238,19 +232,23 @@ function submitdq() {
         xzqh = qx + xz;
         xzqhname = xz;
         xzqhcode = $("#xzxz").val();
+        settbgd(cunsl);
     } else if (qx != "") {
         xzqh = ms + qx;
         xzqhname = qx;
         xzqhcode = $("#xzqx").val();
+        settbgd(xzsl);
     } else if (ms != "") {
         xzqhname = ms;
         xzqh = ms;
         xzqhcode = $("#xzms").val();
+        settbgd(qxsl);
     } else if (ms == "") {
         $("#xzqh").html("内蒙古自治区");
         xzqhname = "内蒙古自治区";
         xzqhcode = 150000000000;
         xzqh = "内蒙古自治区";
+        settbgd(12);
     }
     $("#xzqh").html(xzqh);
 
@@ -282,6 +280,7 @@ function setqxcode() {
             dataType: 'json',
             data: {cType: 4, code: xzqhcode},
             success: function (data) {
+                xzsl = data.length;
                 console.log(data);
                 $("#xzxz").append("<option value='1'></option>");
                 $.each(data, function (i, item) {
@@ -311,12 +310,54 @@ function setxzcode() {
         xzqhcode = $("#xzxz").val();
         xzqhname = $("#xzxz").val();
         xzqh = $("#xzqx").val() + $("#xzxz").val();
+        /*请求村列表*/
+        $.ajax({
+            url: serviceurl + 'assaWeChatApp/getXzqh.do',
+            type: 'POST',
+            async: false,
+            dataType: 'json',
+            data: {cType: 5, code: xzqhcode},
+            success: function (data) {
+                cunsl = data.length;
+            },
+            error: function (msg) {
+                $("#tooltips_div").css("display", "block");
+                $("#tooltips_div").html("请求村失败,服务器异常，错误码：" + msg.status);
+                setTimeout(function () {
+                    $("#tooltips_div").css("display", "none");
+                }, 2000);
+            }
+        });
+
     } else {//没有选择乡镇
         cType = 3;
         xzqhcode = $("#xzqx").val();
         xzqhname = $("#xzqx").val();
         xzqh = $("#xzqx").val();
     }
+}
+/**
+ * 动态修改图表高度
+ * @param datalenth
+ */
+function settbgd(datalenth){
+    if(datalenth<16){
+        $('.tbgd').height('34em');
+    }else {
+        $('.tbgd').height((datalenth*2)+'em');
+    }
+
+}
+
+function settop(){
+        zpyytop = $("#zpyys").offset().top -100;
+        nlfztop = $("#nlfzs").offset().top -100;
+        jkzktop = $("#jkzks").offset().top -100;
+        whcdtop = $("#whcds").offset().top -100;
+        tdzytop = $("#tdzys").offset().top -100;
+        scshtop = $("#scshtjs").offset().top -100;
+        sljytop = $("#sljys").offset().top -100;
+        pkfsltop = $("#pkfsls").offset().top -100;
 }
 
 /*监听可拖动的按钮（九宫格开关）*/
@@ -347,6 +388,18 @@ document.getElementById("cir").addEventListener("touchmove", function (e) {//手
     $("#cir").css("top", topval + "px");
     ismove = false;
 })
+
+
+$('.weui-mask').click(function (){
+
+    if(!$('#xzqhxz').is(":hidden")){
+        $('.weui-mask').css("opacity", "0");
+        $('#xzqhxz').css("width", "0");
+        $('.weui-mask').hide();
+        $('#xzqhxz').hide();
+    }
+});
+
 document.getElementById("cir").addEventListener("touchend", function (e) {//手指离开事件
     var _x_end = e.changedTouches[0].pageX;
     var _y_end = e.changedTouches[0].pageY;
@@ -373,6 +426,7 @@ document.getElementById("cir").addEventListener("touchend", function (e) {//手�
             $('#jgg').show();
             $('.weui-mask').animate({opacity: '1'}, 500);
             $('#jgg').animate({width: '80%'}, 500);
+
         }
     }
     ismove = true;
@@ -620,7 +674,7 @@ function initfpdx() {
         var gkdatavalue = new Array;
 
         for (var tmp in gkdata) {
-            yaxisdata.push(gkdata[tmp].V1);
+            yaxisdata.push(qwhstr(gkdata[tmp].V1));
             gkdatavalue.push(gkdata[tmp].V2)
         }
         option1 = {
@@ -629,7 +683,7 @@ function initfpdx() {
                 textStyle: {
                     color: '#6f6f6f',
                     fontFamily: '黑体',
-                    fontSize: '15px'
+                    fontSize: '17px'
                 },
                 padding: [30, 5, 5, 50]
             },
@@ -659,7 +713,7 @@ function initfpdx() {
                 axisLabel: {
                     interval: 0,
                     textStyle: {
-                        fontSize: yaxisdata.length < 16 ? 12 : 8
+                        fontSize: 14
                     }
                 }
             },
@@ -673,7 +727,7 @@ function initfpdx() {
                             show: true,
                             position: 'right',
                             textStyle:{
-                                fontSize: yaxisdata.length < 16 ? 12 : 8
+                                fontSize: 14
                             },
                             /*formatter: '{c}户'*/
                             formatter: function (data) {
@@ -681,7 +735,7 @@ function initfpdx() {
                             }
                         }
                     },
-                    barWidth: yaxisdata.length < 16 ? '16px' : '8px',
+                    barWidth: '16px',
                     data: gkdatavalue.reverse(),
                     itemStyle: {
                         normal: {
@@ -910,7 +964,7 @@ function initfpdx() {
                 axisLabel: {
                     interval: 0,
                     textStyle: {
-                        fontSize: yaxisdata.length < 16 ? 12 : 8
+                        fontSize: 14
                     }
                 }
             },
@@ -928,7 +982,7 @@ function initfpdx() {
                             show: true,
                             position: 'right',
                             textStyle: {
-                                fontSize: yaxisdata.length < 16 ? 12 : 8
+                                fontSize: 14
                             },
                             /*formatter: '{c}户'*/
                             formatter: function (data) {
@@ -936,7 +990,7 @@ function initfpdx() {
                             }
                         }
                     },
-                    barWidth: yaxisdata.length < 16 ? '16px' : '8px',
+                    barWidth: '16px',
                     data: zpyydatavalue.reverse(),
                     itemStyle: {
                         normal: {
@@ -955,7 +1009,6 @@ function initfpdx() {
             ]
         };
         myBarChart.setOption(option1);
-
     }
 
     /**
@@ -1009,7 +1062,7 @@ function initfpdx() {
                 axisLabel: {
                     interval: 0,
                     textStyle: {
-                        fontSize: yaxisdata.length < 16 ? 12 : 8
+                        fontSize: 14
                     }
                 }
             },
@@ -1023,7 +1076,7 @@ function initfpdx() {
                             show: true,
                             position: 'right',
                             textStyle: {
-                                fontSize: yaxisdata.length < 16 ? 12 : 8
+                                fontSize: 14
                             },
                             /*formatter: '{c}户'*/
                             formatter: function (data) {
@@ -1031,7 +1084,7 @@ function initfpdx() {
                             }
                         }
                     },
-                    barWidth: yaxisdata.length < 16 ? '16px' : '8px',
+                    barWidth: '16px',
                     data: nlfzdatavalue.reverse(),
                     itemStyle: {
                         normal: {
@@ -1104,7 +1157,7 @@ function initfpdx() {
                 axisLabel: {
                     interval: 0,
                     textStyle: {
-                        fontSize: yaxisdata.length < 16 ? 12 : 8
+                        fontSize: 14
                     }
                 }
             },
@@ -1118,7 +1171,7 @@ function initfpdx() {
                             show: true,
                             position: 'right',
                             textStyle: {
-                                fontSize: yaxisdata.length < 16 ? 12 : 8
+                                fontSize: 14
                             },
                             /*formatter: '{c}户'*/
                             formatter: function (data) {
@@ -1126,7 +1179,7 @@ function initfpdx() {
                             }
                         }
                     },
-                    barWidth: yaxisdata.length < 16 ? '16px' : '8px',
+                    barWidth: '16px',
                     data: jkzkdatavalue.reverse(),
                     itemStyle: {
                         normal: {
@@ -1198,7 +1251,7 @@ function initfpdx() {
                 axisLabel: {
                     interval: 0,
                     textStyle: {
-                        fontSize: yaxisdata.length < 16 ? 12 : 8
+                        fontSize: 14
                     }
                 }
             },
@@ -1212,7 +1265,7 @@ function initfpdx() {
                             show: true,
                             position: 'right',
                             textStyle: {
-                                fontSize: yaxisdata.length < 16 ? 12 : 8
+                                fontSize: 14
                             },
                             /*formatter: '{c}户'*/
                             formatter: function (data) {
@@ -1220,7 +1273,7 @@ function initfpdx() {
                             }
                         }
                     },
-                    barWidth: yaxisdata.length < 16 ? '16px' : '8px',
+                    barWidth: '16px',
                     data: whcddatavalue.reverse(),
                     itemStyle: {
                         normal: {
@@ -1293,7 +1346,7 @@ function initfpdx() {
                 axisLabel: {
                     interval: 0,
                     textStyle: {
-                        fontSize: yaxisdata.length < 16 ? 12 : 8
+                        fontSize: 14
                     }
                 }
             },
@@ -1307,7 +1360,7 @@ function initfpdx() {
                             show: true,
                             position: 'right',
                             textStyle: {
-                                fontSize: yaxisdata.length < 16 ? 12 : 8
+                                fontSize: 14
                             },
                             /*formatter: '{c}户'*/
                             formatter: function (data) {
@@ -1315,7 +1368,7 @@ function initfpdx() {
                             }
                         }
                     },
-                    barWidth: yaxisdata.length < 16 ? '16px' : '8px',
+                    barWidth: '16px',
                     data: tdzydatavalue.reverse(),
                     itemStyle: {
                         normal: {
@@ -1388,7 +1441,7 @@ function initfpdx() {
                 axisLabel: {
                     interval: 0,
                     textStyle: {
-                        fontSize: yaxisdata.length < 16 ? 12 : 8
+                        fontSize: 14
                     }
                 }
             },
@@ -1402,7 +1455,7 @@ function initfpdx() {
                             show: true,
                             position: 'right',
                             textStyle: {
-                                fontSize: yaxisdata.length < 16 ? 12 : 8
+                                fontSize: 14
                             },
                             /*formatter: '{c}户'*/
                             formatter: function (data) {
@@ -1410,7 +1463,7 @@ function initfpdx() {
                             }
                         }
                     },
-                    barWidth: yaxisdata.length < 16 ? '16px' : '8px',
+                    barWidth: '16px',
                     data: scshdatavalue.reverse(),
                     itemStyle: {
                         normal: {
@@ -1483,7 +1536,7 @@ function initfpdx() {
                 axisLabel: {
                     interval: 0,
                     textStyle: {
-                        fontSize: yaxisdata.length < 16 ? 12 : 8
+                        fontSize: 14
                     }
                 }
             },
@@ -1497,7 +1550,7 @@ function initfpdx() {
                             show: true,
                             position: 'right',
                             textStyle: {
-                                fontSize: yaxisdata.length < 16 ? 12 : 8
+                                fontSize: 14
                             },
                             /*formatter: '{c}户'*/
                             formatter: function (data) {
@@ -1505,7 +1558,7 @@ function initfpdx() {
                             }
                         }
                     },
-                    barWidth: yaxisdata.length < 16 ? '16px' : '8px',
+                    barWidth: '16px',
                     data: sljydatavalue.reverse(),
                     itemStyle: {
                         normal: {
@@ -1578,7 +1631,7 @@ function initfpdx() {
                 axisLabel: {
                     interval: 0,
                     textStyle: {
-                        fontSize: yaxisdata.length < 16 ? 12 : 8
+                        fontSize: 14
                     }
                 }
             },
@@ -1592,7 +1645,7 @@ function initfpdx() {
                             show: true,
                             position: 'right',
                             textStyle: {
-                                fontSize: yaxisdata.length < 16 ? 12 : 8
+                                fontSize: 14
                             },
                             /*formatter: '{c}户'*/
                             formatter: function (data) {
@@ -1600,7 +1653,7 @@ function initfpdx() {
                             }
                         }
                     },
-                    barWidth: yaxisdata.length < 16 ? '16px' : '8px',
+                    barWidth: '16px',
                     data: pkfsldatavalue.reverse(),
                     itemStyle: {
                         normal: {
@@ -1620,6 +1673,9 @@ function initfpdx() {
             ]
         };
         myBarChart.setOption(option1);
+        setTimeout(function (){
+            settop();
+        },500);
     }
 
 }
@@ -1865,7 +1921,7 @@ function initfpzt() {
                 axisLabel: {
                     interval: 0,
                     textStyle: {
-                        fontSize: yaxisdata.length < 16 ? 12 : 8
+                        fontSize: 14
                     }
                 }
             },
@@ -1879,7 +1935,7 @@ function initfpzt() {
                             show: true,
                             position: 'right',
                             textStyle: {
-                                fontSize: yaxisdata.length < 16 ? 12 : 8
+                                fontSize: 14
                             },
                             /*formatter: '{c}户'*/
                             formatter: function (data) {
@@ -1887,7 +1943,7 @@ function initfpzt() {
                             }
                         }
                     },
-                    barWidth: yaxisdata.length < 16 ? '16px' : '8px',
+                    barWidth: '16px',
                     data: bfgkdatavalue.reverse(),
                     itemStyle: {
                         normal: {
@@ -1962,7 +2018,7 @@ function initfpzt() {
                 axisLabel: {
                     interval: 0,
                     textStyle: {
-                        fontSize: yaxisdata.length < 16 ? 12 : 8
+                        fontSize: 14
                     }
                 }
             },
@@ -1976,7 +2032,7 @@ function initfpzt() {
                             show: true,
                             position: 'right',
                             textStyle: {
-                                fontSize: yaxisdata.length < 16 ? 12 : 8
+                                fontSize: 14
                             },
                             /*formatter: '{c}户'*/
                             formatter: function (data) {
@@ -1984,7 +2040,7 @@ function initfpzt() {
                             }
                         }
                     },
-                    barWidth: yaxisdata.length < 16 ? '16px' : '8px',
+                    barWidth: '16px',
                     data: lsqkdatavalue.reverse(),
                     itemStyle: {
                         normal: {
@@ -2056,7 +2112,7 @@ function initfpzt() {
                 axisLabel: {
                     interval: 0,
                     textStyle: {
-                        fontSize: yaxisdata.length < 16 ? 12 : 8
+                        fontSize: 14
                     }
                 }
             },
@@ -2070,7 +2126,7 @@ function initfpzt() {
                             show: true,
                             position: 'right',
                             textStyle: {
-                                fontSize: yaxisdata.length < 16 ? 12 : 8
+                                fontSize: 14
                             },
                             /*formatter: '{c}户'*/
                             formatter: function (data) {
@@ -2078,7 +2134,7 @@ function initfpzt() {
                             }
                         }
                     },
-                    barWidth: yaxisdata.length < 16 ? '16px' : '8px',
+                    barWidth: '16px',
                     data: rhbfdatavalue.reverse(),
                     itemStyle: {
                         normal: {
@@ -2645,5 +2701,29 @@ function sortByKey(array, key) {
         return ((x < y) ? -1 : ((x > y) ? 1 : 0));
     });
 }
-
+/**
+ * 去除地址所带的委会两字(村委会，村民委员会等)
+ * @param str
+ * @returns {*}
+ */
+function qwhstr(str) {
+    if ("村村民委员会" == str.substring(str.length - 6, str.length)) {
+        var newstr = str.substring(0, str.length - 5);
+        return newstr;
+    } else if ("村民委员会" == str.substring(str.length - 5, str.length)) {
+        var newstr = str.substring(0, str.length - 4);
+        return newstr;
+    } else if ("村村委会" == str.substring(str.length - 4, str.length)) {
+        var newstr = str.substring(0, str.length - 3);
+        return newstr;
+    } else if ("村委会" == str.substring(str.length - 3, str.length)) {
+        var newstr = str.substring(0, str.length - 2);
+        return newstr;
+    } else if ("委会" == str.substring(str.length - 2, str.length)) {
+        var newstr = str.substring(0, str.length - 2);
+        return newstr;
+    } else {
+        return str;
+    }
+}
 /**********************************************Utils-END****************************************************************************/
