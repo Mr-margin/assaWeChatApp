@@ -117,7 +117,6 @@ function photo() {
 //	    	var html = '<tr class="row">';
                 var html = '';
                 pp = [];
-
                 localIds = res.localIds; //返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
                 tpsl = localIds.length;
                 for (var i = 0; i < localIds.length; i++) {
@@ -129,7 +128,7 @@ function photo() {
                             var serverId = res.serverId; // 返回图片的服务器端ID
                            // pp += "http://file.api.weixin.qq.com/cgi-bin/media/get?access_token=" + token + "&media_id=" + serverId + ",";
                           pp.push("http://file.api.weixin.qq.com/cgi-bin/media/get?access_token=" + token + "&media_id=" + serverId);
-                            $('#tost').html("第"+pp.length+"张图片上传成功");
+                            $('#tost').html("第"+pp.length+"张图片上传成功,图片ID"+serverId);
                             $('#tost').show();
                         }
                     });
