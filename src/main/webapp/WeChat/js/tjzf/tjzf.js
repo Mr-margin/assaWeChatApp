@@ -127,17 +127,17 @@ function photo() {
                         success: function (res) {
                             var serverId = res.serverId; // 返回图片的服务器端ID
                             pp += "http://file.api.weixin.qq.com/cgi-bin/media/get?access_token=" + token + "&media_id=" + serverId + ",";
-                            $('#tost').html("第"+i+"张图片上传成功");
-                            $('#tost').show();
+                           /* $('#tost').html("第"+i+"张图片上传成功");
+                            $('#tost').show();*/
                         }
                     });
                 }
                 html += '<div style="width:20%;height:20%;float:left;padding-top:15px;"><img src="img/add1.png" border=0 style="width:95%;height:80%;" onclick="photo()" ></div>'
                 $("#yulan").html(html);
-                setTimeout(function (){
+                /*setTimeout(function (){
                     $('#tost').html(pp);
                     $('#tost').show();
-                },2000);
+                },2000);*/
             }
         });
     });
@@ -256,11 +256,11 @@ function addzfjl() {
     var w_p = newstr.split(",");
     /*$('#tost').html("已上传"+w_p.length+"张图片");
     $('#tost').show();*/
-    $('#tost').html("当前的pp字段"+pp+"---newstr字段"+newstr);
+    /*$('#tost').html("当前的pp字段"+pp+"---newstr字段"+newstr);
     $('#tost').show();
     setTimeout(function (){
         $('#tost').hide();
-    },2000);
+    },2000);*/
 
     dingewi();
 
