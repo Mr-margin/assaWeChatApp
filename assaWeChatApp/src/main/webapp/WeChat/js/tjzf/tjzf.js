@@ -132,8 +132,6 @@ function photo() {
                         }
                     });
                 }*/
-                ylhtml += '<div style="width:20%;height:20%;float:left;padding-top:15px;"><img src="img/add1.png" border=0 style="width:95%;height:80%;" onclick="photo()" ></div>'
-                $("#yulan").html(ylhtml);
                 /*setTimeout(function (){
                     $('#tost').html(pp);
                     $('#tost').show();
@@ -149,6 +147,8 @@ function photo() {
 
 function scwxtp(tpids,p){
     if (p == tpids.length){
+        ylhtml += '<div style="width:20%;height:20%;float:left;padding-top:15px;"><img src="img/add1.png" border=0 style="width:95%;height:80%;" onclick="photo()" ></div>'
+        $("#yulan").html(ylhtml);
         return;
     }
     ylhtml += '<div style="width:20%;height:20%;float:left"><img src="' + tpids[p] + '" border=0 style="width:95%;height:80%;" ></div>'
