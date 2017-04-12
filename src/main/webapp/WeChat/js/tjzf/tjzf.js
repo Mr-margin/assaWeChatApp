@@ -129,8 +129,8 @@ function photo() {
                             var serverId = res.serverId; // 返回图片的服务器端ID
                            // pp += "http://file.api.weixin.qq.com/cgi-bin/media/get?access_token=" + token + "&media_id=" + serverId + ",";
                           pp.push("http://file.api.weixin.qq.com/cgi-bin/media/get?access_token=" + token + "&media_id=" + serverId);
-                           /* $('#tost').html("第"+i+"张图片上传成功");
-                            $('#tost').show();*/
+                            $('#tost').html("第"+pp.length+"张图片上传成功");
+                            $('#tost').show();
                         }
                     });
                 }
@@ -256,8 +256,8 @@ function addzfjl() {
     }
    // var newstr = pp.substring(0, pp.length - 1);
     //var w_p = pp.split(",");
-    /*$('#tost').html("已上传"+w_p.length+"张图片");
-    $('#tost').show();*/
+    $('#tost').html("已上传"+pp.length+"张图片");
+    $('#tost').show();
     /*$('#tost').html("当前的pp字段"+pp+"---newstr字段"+newstr);
     $('#tost').show();
     setTimeout(function (){
