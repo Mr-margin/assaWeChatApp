@@ -89,7 +89,7 @@ function qm() {
     })
 }
 var pp = [];
-var tpsl = 0;
+var ylhtml = '';
 //上传照片
 function photo() {
     wx.config({
@@ -115,7 +115,6 @@ function photo() {
             sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
             success: function (res) {
 //	    	var html = '<tr class="row">';
-                var html = '';
                 pp = [];
                 localIds = res.localIds; //返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
                 scwxtp(localIds,0);
@@ -133,8 +132,8 @@ function photo() {
                         }
                     });
                 }*/
-                html += '<div style="width:20%;height:20%;float:left;padding-top:15px;"><img src="img/add1.png" border=0 style="width:95%;height:80%;" onclick="photo()" ></div>'
-                $("#yulan").html(html);
+                ylhtml += '<div style="width:20%;height:20%;float:left;padding-top:15px;"><img src="img/add1.png" border=0 style="width:95%;height:80%;" onclick="photo()" ></div>'
+                $("#yulan").html(ylhtml);
                 /*setTimeout(function (){
                     $('#tost').html(pp);
                     $('#tost').show();
@@ -152,7 +151,7 @@ function scwxtp(tpids,p){
     if (p == tpids.length){
         return;
     }
-    html += '<div style="width:20%;height:20%;float:left"><img src="' + tpid + '" border=0 style="width:95%;height:80%;" ></div>'
+    ylhtml += '<div style="width:20%;height:20%;float:left"><img src="' + tpids[p] + '" border=0 style="width:95%;height:80%;" ></div>'
     wx.uploadImage({
         localId: tpids[p], // 需要上传的图片的本地ID，由chooseImage接口获得
         isShowProgressTips: 1, // 默认为1，显示进度提示
