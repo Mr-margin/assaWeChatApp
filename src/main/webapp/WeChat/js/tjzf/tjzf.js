@@ -284,7 +284,7 @@ function addzfjl() {
         data: {
             personal_name: name,
             personal_phone: phone,
-            household_name: household_name.substring(0,household_name.indexOf("(")),
+            household_name: household_name.substring(0,household_name.indexOf("（")),
             household_card: household_card,
             zfjl: zfjlwz.replace(/'/g, "’"),
             "photo": w_p,
