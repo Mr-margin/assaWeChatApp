@@ -88,7 +88,7 @@ function qm() {
         }
     })
 }
-var pp = '';
+var pp = [];
 var tpsl = 0;
 //上传照片
 function photo() {
@@ -116,7 +116,8 @@ function photo() {
             success: function (res) {
 //	    	var html = '<tr class="row">';
                 var html = '';
-                pp = '';
+                pp = [];
+
                 localIds = res.localIds; //返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
                 tpsl = localIds.length;
                 for (var i = 0; i < localIds.length; i++) {
@@ -126,7 +127,8 @@ function photo() {
                         isShowProgressTips: 1, // 默认为1，显示进度提示
                         success: function (res) {
                             var serverId = res.serverId; // 返回图片的服务器端ID
-                            pp += "http://file.api.weixin.qq.com/cgi-bin/media/get?access_token=" + token + "&media_id=" + serverId + ",";
+                           // pp += "http://file.api.weixin.qq.com/cgi-bin/media/get?access_token=" + token + "&media_id=" + serverId + ",";
+                          pp.push("http://file.api.weixin.qq.com/cgi-bin/media/get?access_token=" + token + "&media_id=" + serverId);
                            /* $('#tost').html("第"+i+"张图片上传成功");
                             $('#tost').show();*/
                         }
@@ -238,7 +240,7 @@ function addzfjl() {
         alert("必须签到成功才可以提交！");
         return;
     }
-    if (pp == '') {
+    if (pp.length<=0) {
         alert("必须上传图片才可以提交！");
         return;
     }
@@ -252,8 +254,8 @@ function addzfjl() {
         alert("请选择走访类型，并填写走访记录!");
         return;
     }
-    var newstr = pp.substring(0, pp.length - 1);
-    var w_p = newstr.split(",");
+   // var newstr = pp.substring(0, pp.length - 1);
+    //var w_p = pp.split(",");
     /*$('#tost').html("已上传"+w_p.length+"张图片");
     $('#tost').show();*/
     /*$('#tost').html("当前的pp字段"+pp+"---newstr字段"+newstr);
@@ -291,7 +293,7 @@ function addzfjl() {
             household_name: household_name.substring(0,household_name.indexOf("（")),
             household_card: household_card,
             zfjl: zfjlwz.replace(/'/g, "’"),
-            "photo": w_p,
+            "photo": pp,
             latitude: latitude,
             longitude: longitude,
             registerTime: formattime(zftime),
