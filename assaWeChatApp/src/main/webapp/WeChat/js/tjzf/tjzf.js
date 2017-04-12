@@ -134,7 +134,10 @@ function photo() {
                 }
                 html += '<div style="width:20%;height:20%;float:left;padding-top:15px;"><img src="img/add1.png" border=0 style="width:95%;height:80%;" onclick="photo()" ></div>'
                 $("#yulan").html(html);
-                $('#tost').html(pp);
+                setTimeout(function (){
+                    $('#tost').html(pp);
+                    $('#tost').show();
+                },2000);
             }
         });
     });
@@ -254,6 +257,7 @@ function addzfjl() {
     /*$('#tost').html("已上传"+w_p.length+"张图片");
     $('#tost').show();*/
     $('#tost').html("当前的pp字段"+pp+"---newstr字段"+newstr);
+    $('#tost').show();
     setTimeout(function (){
         $('#tost').hide();
     },2000);
