@@ -118,8 +118,8 @@ function photo() {
                 var html = '';
                 pp = [];
                 localIds = res.localIds; //返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
-                tpsl = localIds.length;
-                for (var i = 0; i < localIds.length; i++) {
+                scwxtp(localIds,0);
+                /*for (var i = 0; i < localIds.length; i++) {
                     html += '<div style="width:20%;height:20%;float:left"><img src="' + localIds[i] + '" border=0 style="width:95%;height:80%;" ></div>'
                     wx.uploadImage({
                         localId: localIds[i], // 需要上传的图片的本地ID，由chooseImage接口获得
@@ -132,7 +132,7 @@ function photo() {
                             $('#tost').show();
                         }
                     });
-                }
+                }*/
                 html += '<div style="width:20%;height:20%;float:left;padding-top:15px;"><img src="img/add1.png" border=0 style="width:95%;height:80%;" onclick="photo()" ></div>'
                 $("#yulan").html(html);
                 /*setTimeout(function (){
@@ -148,6 +148,25 @@ function photo() {
     });
 }
 
+function scwxtp(tpids,p){
+    if (p == tpids.length){
+        return;
+    }
+    html += '<div style="width:20%;height:20%;float:left"><img src="' + tpid + '" border=0 style="width:95%;height:80%;" ></div>'
+    wx.uploadImage({
+        localId: tpids[p], // 需要上传的图片的本地ID，由chooseImage接口获得
+        isShowProgressTips: 1, // 默认为1，显示进度提示
+        success: function (res) {
+            p++;
+            var serverId = res.serverId; // 返回图片的服务器端ID
+            // pp += "http://file.api.weixin.qq.com/cgi-bin/media/get?access_token=" + token + "&media_id=" + serverId + ",";
+            pp.push("http://file.api.weixin.qq.com/cgi-bin/media/get?access_token=" + token + "&media_id=" + serverId);
+            $('#tost').html("第"+p+"张图片上传成功,图片ID"+serverId);
+            $('#tost').show();
+            scwxtp(tpids,p);
+        }
+    });
+}
 var timeout;
 function settime(val) {
     if (countdown == 0) {
