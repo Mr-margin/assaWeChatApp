@@ -118,24 +118,7 @@ function photo() {
                 pp = [];
                 localIds = res.localIds; //返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
                 scwxtp(localIds,0);
-                /*for (var i = 0; i < localIds.length; i++) {
-                    html += '<div style="width:20%;height:20%;float:left"><img src="' + localIds[i] + '" border=0 style="width:95%;height:80%;" ></div>'
-                    wx.uploadImage({
-                        localId: localIds[i], // 需要上传的图片的本地ID，由chooseImage接口获得
-                        isShowProgressTips: 1, // 默认为1，显示进度提示
-                        success: function (res) {
-                            var serverId = res.serverId; // 返回图片的服务器端ID
-                           // pp += "http://file.api.weixin.qq.com/cgi-bin/media/get?access_token=" + token + "&media_id=" + serverId + ",";
-                          pp.push("http://file.api.weixin.qq.com/cgi-bin/media/get?access_token=" + token + "&media_id=" + serverId);
-                            $('#tost').html("第"+pp.length+"张图片上传成功,图片ID"+serverId);
-                            $('#tost').show();
-                        }
-                    });
-                }*/
-                /*setTimeout(function (){
-                    $('#tost').html(pp);
-                    $('#tost').show();
-                },2000);*/
+
             }
         });
     });
@@ -160,8 +143,7 @@ function scwxtp(tpids,p){
             var serverId = res.serverId; // 返回图片的服务器端ID
             // pp += "http://file.api.weixin.qq.com/cgi-bin/media/get?access_token=" + token + "&media_id=" + serverId + ",";
             pp.push("http://file.api.weixin.qq.com/cgi-bin/media/get?access_token=" + token + "&media_id=" + serverId);
-            $('#tost').html("第"+p+"张图片上传成功,图片ID"+serverId);
-            $('#tost').show();
+
             scwxtp(tpids,p);
         }
     });
@@ -271,15 +253,6 @@ function addzfjl() {
         alert("请选择走访类型，并填写走访记录!");
         return;
     }
-   // var newstr = pp.substring(0, pp.length - 1);
-    //var w_p = pp.split(",");
-    $('#tost').html("已上传"+pp.length+"张图片");
-    $('#tost').show();
-    /*$('#tost').html("当前的pp字段"+pp+"---newstr字段"+newstr);
-    $('#tost').show();
-    setTimeout(function (){
-        $('#tost').hide();
-    },2000);*/
 
     dingewi();
 
@@ -702,7 +675,6 @@ function kstxzfjl() {
 }
 function xzzflx() {
     zftype = $('#poor_type').val();
-    $('#tost').hide();
 }
 function formattime(datetime) {
     datetime = datetime.replace(/-/g, "/");
