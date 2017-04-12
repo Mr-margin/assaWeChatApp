@@ -37,10 +37,10 @@ function login() {
         return;
     }*/
 
-    if($("#username").val() != 13365477270){
+   /* if($("#username").val() != 13365477270){
         alert('服务器维护中，暂时无法登录。维护结束时间请看QQ技术支持群内通知（群号码：590575437），给您带来不便敬请谅解');
         return;
-    }
+    }*/
 
     $.ajax({
         url: '/assaWeChatApp/getAnLoginController.do',
