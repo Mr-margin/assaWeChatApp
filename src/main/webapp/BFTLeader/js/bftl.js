@@ -192,8 +192,8 @@ function setqx() {
  * 弹出地区选择器
  */
 function xzdq() {
-    $('.weui-mask').show();
     $('#xzqhxz').show();
+    $('.weui-mask').show();
     $('.weui-mask').animate({opacity: '1'}, 500);
     $('#xzqhxz').animate({width: '80%'}, 500);
 }
@@ -561,6 +561,8 @@ function initfpdx() {
         data: {name: xzqhname},
         success: function (data) {
             $('#loadingToast').fadeOut(400);
+            $('.weui-mask').show();
+            $('.weui-mask').animate({opacity: '1'}, 500);
             if (data == 0) {
                 $("#tooltips_div").css("display", "block");
                 $("#tooltips_div").html(xzqhname + "没有贫困数据，请重新选择地区！");
@@ -924,7 +926,7 @@ function initfpdx() {
         var yaxisdata = new Array();
         var zpyydatavalue = new Array;
         for (var tmp in zpyydata) {
-            yaxisdata.push(zpyydata[tmp].V0);
+            yaxisdata.push(qwhstr(zpyydata[tmp].V0));
             zpyydatavalue.push(zpyydata[tmp].V1)
 
         }
@@ -1022,7 +1024,7 @@ function initfpdx() {
         var nlfzdatavalue = new Array;
 
         for (var tmp in nlfzdata) {
-            yaxisdata.push(nlfzdata[tmp].V0);
+            yaxisdata.push(qwhstr(nlfzdata[tmp].V0));
             nlfzdatavalue.push(nlfzdata[tmp].V1)
 
         }
@@ -1117,7 +1119,7 @@ function initfpdx() {
         var jkzkdatavalue = new Array;
 
         for (var tmp in jkzkdata) {
-            yaxisdata.push(jkzkdata[tmp].V0);
+            yaxisdata.push(qwhstr(jkzkdata[tmp].V0));
             jkzkdatavalue.push(jkzkdata[tmp].V1)
 
         }
@@ -1212,7 +1214,7 @@ function initfpdx() {
         var whcddatavalue = new Array;
 
         for (var tmp in whcddata) {
-            yaxisdata.push(whcddata[tmp].V0);
+            yaxisdata.push(qwhstr(whcddata[tmp].V0));
             whcddatavalue.push(whcddata[tmp].V1);
         }
         option1 = {
@@ -1306,7 +1308,7 @@ function initfpdx() {
         var tdzydatavalue = new Array;
 
         for (var tmp in tdzydata) {
-            yaxisdata.push(tdzydata[tmp].V0);
+            yaxisdata.push(qwhstr(tdzydata[tmp].V0));
             tdzydatavalue.push(tdzydata[tmp].V1)
 
         }
@@ -1401,7 +1403,7 @@ function initfpdx() {
         var scshdatavalue = new Array;
 
         for (var tmp in scshdata) {
-            yaxisdata.push(scshdata[tmp].V0);
+            yaxisdata.push(qwhstr(scshdata[tmp].V0));
             scshdatavalue.push(scshdata[tmp].V1)
 
         }
@@ -1496,7 +1498,7 @@ function initfpdx() {
         var sljydatavalue = new Array;
 
         for (var tmp in sljydata) {
-            yaxisdata.push(sljydata[tmp].V0);
+            yaxisdata.push(qwhstr(sljydata[tmp].V0));
             sljydatavalue.push(sljydata[tmp].V1)
 
         }
@@ -1591,7 +1593,7 @@ function initfpdx() {
         var pkfsldatavalue = new Array;
 
         for (var tmp in pkfsldata) {
-            yaxisdata.push(pkfsldata[tmp].V0);
+            yaxisdata.push(qwhstr(pkfsldata[tmp].V0));
             pkfsldatavalue.push(pkfsldata[tmp].V1)
 
         }
@@ -1673,8 +1675,10 @@ function initfpdx() {
             ]
         };
         myBarChart.setOption(option1);
+        $('.weui-mask').animate({opacity: '0'}, 500);
         setTimeout(function (){
             settop();
+            $('.weui-mask').hide();
         },500);
     }
 
@@ -1882,7 +1886,7 @@ function initfpzt() {
         var bfgkdatavalue = new Array;
 
         for (var tmp in bfgkdata) {
-            yaxisdata.push(bfgkdata[tmp].V0);
+            yaxisdata.push(qwhstr(bfgkdata[tmp].V0));
             bfgkdatavalue.push(bfgkdata[tmp].V1)
         }
         option1 = {
@@ -1979,7 +1983,7 @@ function initfpzt() {
         var lsqkdatavalue = new Array;
 
         for (var tmp in lsqkdata) {
-            yaxisdata.push(lsqkdata[tmp].V0);
+            yaxisdata.push(qwhstr(lsqkdata[tmp].V0));
             lsqkdatavalue.push(lsqkdata[tmp].V1)
         }
         option1 = {
@@ -2073,7 +2077,7 @@ function initfpzt() {
         var rhbfdatavalue = new Array;
 
         for (var tmp in rhbfdata) {
-            yaxisdata.push(rhbfdata[tmp].V0);
+            yaxisdata.push(qwhstr(rhbfdata[tmp].V0));
             rhbfdatavalue.push(rhbfdata[tmp].V1)
         }
         option1 = {
