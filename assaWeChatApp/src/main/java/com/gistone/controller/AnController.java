@@ -1074,11 +1074,11 @@ public class AnController{
 			}
 			if(Integer.valueOf(listPkr.get(0).get("COM_LEVEL").toString())-1==1){//静态获取全区统计数据
 		    	jb.put("pkc", 2834);
-				jb.put("pkh", 249506);
-				jb.put("pkr", 555563);
-				jb.put("ybpkh", 147081);
-				jb.put("dbpkh", 92930);
-				jb.put("wbpkh", 5684);
+				jb.put("pkh", 249838);//249506
+				jb.put("pkr", 555844);//555563
+				jb.put("ybpkh", 141441);//147081
+				jb.put("dbpkh", 102589);//92930
+				jb.put("wbpkh", 5808);//5684
 		    }else{//动态查询
 		    	for (int i = 0; i < listPkh.size(); i++) {
 		    		pkh+=(listPkh.get(i).get("Z_HU")!=null)&&(listPkh.get(i).get("Z_HU")!="")?Integer.valueOf(listPkh.get(i).get("Z_HU").toString()):0;
@@ -1560,8 +1560,8 @@ public class AnController{
 					+ ")) a2 LEFT JOIN (select * from PKC_1_1_0 where V9=0 ) a1 ON a1.V10=A2.COM_CODE ";
 	    	List<Map> listPkr = this.getBySqlMapper.findRecords(sqlPkr);
 	    	if(Integer.valueOf(listPkr.get(0).get("COM_LEVEL").toString())-1==1){//静态获取全区统计数据
-	    		jb.put("fslZhsTotal", 249506);
-		    	jb.put("fslZrsTotal", 555563);
+	    		jb.put("fslZhsTotal", 249838);
+		    	jb.put("fslZrsTotal", 555844);
 	    	}else{
 	    		jb.put("fslZhsTotal", fslZhs);
 		    	jb.put("fslZrsTotal", fslZrs);
@@ -1602,7 +1602,7 @@ public class AnController{
 	    int zcgzd = 3159;
 	    int zcgzgb = 14134;
 	    int lsbfzrr = 152041;
-	    int bfhs = 249506;
+	    int bfhs = 249838;
 	    
 	    
 	    String dw_sql="";
@@ -1734,8 +1734,8 @@ public class AnController{
 	    String code = request.getParameter("code");
 	    String name = request.getParameter("name");//行政区划名称
 	    String level = request.getParameter("level");//2省 3市 4 县 5乡 6村
-	    double Zhs=249506;//总户数
-	    double lsHs=249506;//帮扶责任人落实户数
+	    double Zhs=249838;//总户数
+	    double lsHs=249838;//帮扶责任人落实户数
 	    int lsBl=1;//落实帮扶比例
 	    JSONArray chartJson = new JSONArray();
 	    JSONArray tjJson = new JSONArray();
@@ -1860,7 +1860,7 @@ public class AnController{
 	    		pkh+=(listPkh.get(i).get("Z_HU")!=null)&&(listPkh.get(i).get("Z_HU")!="")?Integer.valueOf(listPkh.get(i).get("Z_HU").toString()):0;
 	    	}
 	    }else{
-	    	pkh=249506;
+	    	pkh=249838;
 	    }
 	    List<Map> listx1 = this.getBySqlMapper.findRecords(sqlx1);
 	    if(listx1.size()>0){
@@ -1905,8 +1905,8 @@ public class AnController{
 			
 			drzf+=(listAll.get(a).get("THE_DAY")!=null)&&(listAll.get(a).get("THE_DAY")!="")?Integer.valueOf(listAll.get(a).get("THE_DAY").toString()):0;
 		    bzzf+=(listAll.get(a).get("THE_ONE_WEEK")!=null)&&(listAll.get(a).get("THE_ONE_WEEK")!="")?Integer.valueOf(listAll.get(a).get("THE_ONE_WEEK").toString()):0;
-		    byzf+=(listAll.get(a).get("THE_TWO_WEEK")!=null)&&(listAll.get(a).get("THE_TWO_WEEK")!="")?Integer.valueOf(listAll.get(a).get("THE_TWO_WEEK").toString()):0;
-		    jsyzf+=(listAll.get(a).get("THE_ONE_MONTH")!=null)&&(listAll.get(a).get("THE_ONE_MONTH")!="")?Integer.valueOf(listAll.get(a).get("THE_ONE_MONTH").toString()):0;
+		    byzf+=(listAll.get(a).get("THE_ONE_MONTH")!=null)&&(listAll.get(a).get("THE_ONE_MONTH")!="")?Integer.valueOf(listAll.get(a).get("THE_ONE_MONTH").toString()):0;
+		    jsyzf+=(listAll.get(a).get("THE_THREE_MONTH")!=null)&&(listAll.get(a).get("THE_THREE_MONTH")!="")?Integer.valueOf(listAll.get(a).get("THE_THREE_MONTH").toString()):0;
 		    zfAll+=(listAll.get(a).get("THE_ALL")!=null)&&(listAll.get(a).get("THE_ALL")!="")?Integer.valueOf(listAll.get(a).get("THE_ALL").toString()):0;
 		    
 		    chartJson.add(obj);
