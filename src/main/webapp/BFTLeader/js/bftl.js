@@ -1827,6 +1827,8 @@ function initfpzt() {
         data: {name: xzqhname, code: xzqhcode, level: cType},
         success: function (data) {
             $('#loadingToast').fadeOut(400);
+            $('.weui-mask').show();
+            $('.weui-mask').animate({opacity: '1'}, 500);
             if (data == 0) {
                 $("#tooltips_div").css("display", "block");
                 $("#tooltips_div").html(xzqhname + "没有贫困数据，请重新选择地区！");
@@ -2158,6 +2160,11 @@ function initfpzt() {
             ]
         };
         myBarChart.setOption(option1);
+        $('.weui-mask').animate({opacity: '0'}, 500);
+        setTimeout(function (){
+            settop();
+            $('.weui-mask').hide();
+        },500);
     }
 
     function getdataobfzt() {
@@ -2427,9 +2434,9 @@ function lookdetail() {
         if (zflx != undefined) {
             detailhtml += "<div class='weui-cell'><div class='detailtext' >走访类型：" + zflx + "</div></div>";
         }
-        detailhtml += "<div class='weui-cell'><div class='detailtext' style='_height:200px; min-height:200px;padding-left: 10px' >走访记录：" + zfjl + "</div> </div></div>";
+        detailhtml += "<div class='weui-cell'><div class='detailtext' style='min-height:"+(zfjl.length)*3+"px;padding-left: 10px' >走访记录：" + zfjl + "</div> </div></div>";
 
-        detailhtml += "<div style='height: 100px'></div>"
+        detailhtml += "<div style='height: 160px'></div>"
         $("#zfdetail").html(detailhtml);
         $("#zfdetail").css("display", "block");
         $("div.left_black").click(function () {
