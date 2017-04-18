@@ -693,6 +693,9 @@ function initfpdx() {
                 trigger: 'axis',
                 axisPointer: {
                     type: 'shadow'
+                },
+                textStyle:{
+                    fontSize:18
                 }
             },
             legend: {
@@ -944,6 +947,9 @@ function initfpdx() {
                 trigger: 'axis',
                 axisPointer: {
                     type: 'shadow'
+                },
+                textStyle:{
+                    fontSize:18
                 }
             },
             legend: {
@@ -1042,6 +1048,9 @@ function initfpdx() {
                 trigger: 'axis',
                 axisPointer: {
                     type: 'shadow'
+                },
+                textStyle:{
+                    fontSize:18
                 }
             },
             legend: {
@@ -1137,6 +1146,9 @@ function initfpdx() {
                 trigger: 'axis',
                 axisPointer: {
                     type: 'shadow'
+                },
+                textStyle:{
+                    fontSize:18
                 }
             },
             legend: {
@@ -1231,6 +1243,9 @@ function initfpdx() {
                 trigger: 'axis',
                 axisPointer: {
                     type: 'shadow'
+                },
+                textStyle:{
+                    fontSize:18
                 }
             },
             legend: {
@@ -1326,6 +1341,9 @@ function initfpdx() {
                 trigger: 'axis',
                 axisPointer: {
                     type: 'shadow'
+                },
+                textStyle:{
+                    fontSize:18
                 }
             },
             legend: {
@@ -1421,6 +1439,9 @@ function initfpdx() {
                 trigger: 'axis',
                 axisPointer: {
                     type: 'shadow'
+                },
+                textStyle:{
+                    fontSize:18
                 }
             },
             legend: {
@@ -1516,6 +1537,9 @@ function initfpdx() {
                 trigger: 'axis',
                 axisPointer: {
                     type: 'shadow'
+                },
+                textStyle:{
+                    fontSize:18
                 }
             },
             legend: {
@@ -1611,6 +1635,9 @@ function initfpdx() {
                 trigger: 'axis',
                 axisPointer: {
                     type: 'shadow'
+                },
+                textStyle:{
+                    fontSize:18
                 }
             },
             legend: {
@@ -1905,6 +1932,9 @@ function initfpzt() {
                 trigger: 'axis',
                 axisPointer: {
                     type: 'shadow'
+                },
+                textStyle:{
+                    fontSize:18
                 }
             },
             legend: {
@@ -2002,6 +2032,9 @@ function initfpzt() {
                 trigger: 'axis',
                 axisPointer: {
                     type: 'shadow'
+                },
+                textStyle:{
+                    fontSize:18
                 }
             },
             legend: {
@@ -2096,6 +2129,9 @@ function initfpzt() {
                 trigger: 'axis',
                 axisPointer: {
                     type: 'shadow'
+                },
+                textStyle:{
+                    fontSize:18
                 }
             },
             legend: {
