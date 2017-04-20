@@ -673,7 +673,7 @@ function initfpdx() {
         var myBarChart = echarts.init(document.getElementById('gk_bar'));
         var gkdata = sortByKey(data.chartData, 'V2');
         var yaxisdata = new Array();
-        var gkdatavalue = new Array;
+        var gkdatavalue = new Array();
 
         for (var tmp in gkdata) {
             yaxisdata.push(qwhstr(gkdata[tmp].V1));
@@ -927,7 +927,7 @@ function initfpdx() {
         zpyydata = sortByKey(zpyydata, 'V1')
         var myBarChart = echarts.init(document.getElementById('cause_bar'));
         var yaxisdata = new Array();
-        var zpyydatavalue = new Array;
+        var zpyydatavalue = new Array();
         for (var tmp in zpyydata) {
             yaxisdata.push(qwhstr(zpyydata[tmp].V0));
             zpyydatavalue.push(zpyydata[tmp].V1)
@@ -1027,12 +1027,11 @@ function initfpdx() {
         var myBarChart = echarts.init(document.getElementById('nlfz_bar'));
         var nlfzdata = sortByKey(data.chartData, 'V1');
         var yaxisdata = new Array();
-        var nlfzdatavalue = new Array;
+        var nlfzdatavalue = new Array();
 
         for (var tmp in nlfzdata) {
             yaxisdata.push(qwhstr(nlfzdata[tmp].V0));
-            nlfzdatavalue.push(nlfzdata[tmp].V1)
-
+            nlfzdatavalue.push(nlfzdata[tmp].V1);
         }
         option1 = {
             title: {
@@ -1125,7 +1124,7 @@ function initfpdx() {
         var myBarChart = echarts.init(document.getElementById('cqmxb_bar'));
         var jkzkdata = sortByKey(data.chartData, 'V1');
         var yaxisdata = new Array();
-        var jkzkdatavalue = new Array;
+        var jkzkdatavalue = new Array();
 
         for (var tmp in jkzkdata) {
             yaxisdata.push(qwhstr(jkzkdata[tmp].V0));
@@ -1223,7 +1222,7 @@ function initfpdx() {
         var myBarChart = echarts.init(document.getElementById('wmrs_bar'));
         var whcddata = sortByKey(data.chartData, 'V1');
         var yaxisdata = new Array();
-        var whcddatavalue = new Array;
+        var whcddatavalue = new Array();
 
         for (var tmp in whcddata) {
             yaxisdata.push(qwhstr(whcddata[tmp].V0));
@@ -1320,7 +1319,7 @@ function initfpdx() {
         var myBarChart = echarts.init(document.getElementById('tdzy_bar'));
         var tdzydata = sortByKey(data.chartData, 'V1');
         var yaxisdata = new Array();
-        var tdzydatavalue = new Array;
+        var tdzydatavalue = new Array();
 
         for (var tmp in tdzydata) {
             yaxisdata.push(qwhstr(tdzydata[tmp].V0));
@@ -1418,7 +1417,7 @@ function initfpdx() {
         var myBarChart = echarts.init(document.getElementById('rjzf_bar'));
         var scshdata = sortByKey(data.chartData, 'V1');
         var yaxisdata = new Array();
-        var scshdatavalue = new Array;
+        var scshdatavalue = new Array();
 
         for (var tmp in scshdata) {
             yaxisdata.push(qwhstr(scshdata[tmp].V0));
@@ -1516,7 +1515,7 @@ function initfpdx() {
         var myBarChart = echarts.init(document.getElementById('sljy_bar'));
         var sljydata = sortByKey(data.chartData, 'V1');
         var yaxisdata = new Array();
-        var sljydatavalue = new Array;
+        var sljydatavalue = new Array();
 
         for (var tmp in sljydata) {
             yaxisdata.push(qwhstr(sljydata[tmp].V0));
@@ -1605,22 +1604,142 @@ function initfpdx() {
         };
         myBarChart.setOption(option1);
     }
+    var fslArray = {
+        "呼和浩特市" : 0.72,
+        "包头市" : 1.02,
+        "呼伦贝尔市" : 4.16,
+        "兴安盟" : 7.54,
+        "通辽市" : 4.50,
+        "赤峰市" : 5.23,
+        "锡林郭勒盟" : 3.33,
+        "乌兰察布市" : 5.52,
+        "鄂尔多斯市" : 0.13,
+        "巴彦淖尔市" : 1.81,
+        "乌海市" : 0.25,
+        "阿拉善盟" : 0.07,
 
+
+        "土默特左旗" : 0.8,
+        "托克托县" : 0.1,
+        "和林格尔县" : 1.6,
+        "清水河县" : 2.2,
+        "武川县" : 0.9,
+
+        "土默特右旗" : 0.7,
+        "达尔罕茂明安联合旗" : 2.6,
+        "固阳县" : 2.3,
+
+        "鄂伦春自治旗" : 14.4,
+        "扎兰屯市" : 4.7,
+        "阿荣旗" : 1.1,
+        "鄂温克族自治旗" : 5,
+        "额尔古纳市" : 0.4,
+        "新巴尔虎左旗" : 0.8,
+        "新巴尔虎右旗" : 0.3,
+        "莫力达瓦达斡尔族自治旗" : 5.2,
+
+        "科尔沁右翼中旗" : 7.5,
+        "科尔沁右翼前旗" : 8.2,
+        "突泉县" : 8.9,
+        "扎赉特旗" : 7.2,
+        "阿尔山市" : 2.8,
+        "乌兰浩特市" : 0.3,
+
+        "科尔沁左翼后旗" : 5.9,
+        "库伦旗" : 9.1,
+        "奈曼旗" : 8.7,
+        "开鲁县" : 2.7,
+        "扎鲁特旗" : 3.1,
+        "科尔沁左翼中旗" : 4.7,
+        "科尔沁区" : 0.4,
+
+        "宁城县" : 5.4,
+        "敖汉旗" : 5.9,
+        "喀喇沁旗" : 5.8,
+        "克什克腾旗" : 3,
+        "松山区" : 3,
+        "元宝山区" : 1.7,
+        "翁牛特旗" : 5.9,
+        "阿鲁科尔沁旗" : 6.4,
+        "林西县" : 4.2,
+        "红山区" : 0.3,
+        "巴林左旗" : 10,
+        "巴林右旗" : 5.5,
+
+        "苏尼特左旗" : 0.6,
+        "正蓝旗" : 0.7,
+        "太仆寺旗" : 5.8,
+        "阿巴嘎旗" : 0.8,
+        "多伦县" : 0.9,
+        "镶黄旗" : 0.7,
+        "正镶白旗" : 5.5,
+        "苏尼特右旗" : 11.2,
+
+        "察哈尔右翼中旗" : 8.2,
+        "卓资县" : 4.8,
+        "凉城县" : 2.3,
+        "丰镇市" : 2.3,
+        "四子王旗" : 6.6,
+        "察哈尔右翼前旗" : 8.6,
+        "化德县" : 7.9,
+        "兴和县" : 6.1,
+        "察哈尔右翼后旗" : 4.3,
+        "商都县" : 6.9,
+
+        "准格尔旗" : 0.3,
+        "杭锦旗" : 0.2,
+        "鄂托克旗" : 0.2,
+        "乌审旗" : 0.2,
+        "伊金霍洛旗" : 0.1,
+        "达拉特旗" : 0.2,
+
+        "乌拉特前旗" : 4.7,
+        "五原县" : 0.3,
+        "临河区" : 0.8,
+        "磴口县" : 1.2,
+        "杭锦后旗" : 2,
+        "乌拉特中旗" : 1.3,
+        "乌拉特后旗" : 1.7,
+
+        "海南区" : 0.4,
+
+        "阿拉善右旗" : 0.5
+
+    };
     /**
      * 设置贫困发生率柱状图
      */
     function setpkfslbar(data) {
-        //行政区划贫困人口数统计****************************************
+        //行政区划贫困发生率统计****************************************
         var myBarChart = echarts.init(document.getElementById('pkfsl_bar'));
         var pkfsldata = sortByKey(data.chartData, 'V1');
         var yaxisdata = new Array();
-        var pkfsldatavalue = new Array;
-
+        var pkfsldatavalue = new Array();
+        var isxypx= false;
         for (var tmp in pkfsldata) {
-            yaxisdata.push(qwhstr(pkfsldata[tmp].V0));
-            pkfsldatavalue.push(pkfsldata[tmp].V1)
-
+            var dqm = pkfsldata[tmp].V0;
+            yaxisdata.push(qwhstr(dqm));
+            if(fslArray[dqm]){
+                pkfsldatavalue.push(fslArray[dqm]);
+                isxypx =true;
+            }else{
+                pkfsldatavalue.push(pkfsldata[tmp].V1 < 100 ? pkfsldata[tmp].V1:100);
+            }
         }
+        if (isxypx == true){
+            var tempdata = [];
+            for (var i = 0;i<yaxisdata.length;i++){
+                tempdata.push({'dqm':yaxisdata[i],'fsl':pkfsldatavalue[i]});
+            }
+            tempdata = sortByKey(tempdata,'fsl');
+            yaxisdata = new Array();
+            pkfsldatavalue = new Array();
+            for (var tmp in tempdata) {
+                yaxisdata.push(qwhstr(tempdata[tmp].dqm));
+                pkfsldatavalue.push(tempdata[tmp].fsl)
+            }
+        }
+
         option1 = {
             title: {
                 text: '贫困发生率(%)',
@@ -1708,7 +1827,6 @@ function initfpdx() {
             $('.weui-mask').hide();
         },500);
     }
-
 }
 
 function tzpkgk() {
@@ -1912,7 +2030,7 @@ function initfpzt() {
         var myBarChart = echarts.init(document.getElementById('bfgk_bar'));
         var bfgkdata = sortByKey(data.chartData, 'V1');
         var yaxisdata = new Array();
-        var bfgkdatavalue = new Array;
+        var bfgkdatavalue = new Array();
 
         for (var tmp in bfgkdata) {
             yaxisdata.push(qwhstr(bfgkdata[tmp].V0));
@@ -2012,7 +2130,7 @@ function initfpzt() {
         var myBarChart = echarts.init(document.getElementById('lsqk_bar'));
         var lsqkdata = sortByKey(data.chartData, 'V1');
         var yaxisdata = new Array();
-        var lsqkdatavalue = new Array;
+        var lsqkdatavalue = new Array();
 
         for (var tmp in lsqkdata) {
             yaxisdata.push(qwhstr(lsqkdata[tmp].V0));
@@ -2109,11 +2227,11 @@ function initfpzt() {
         var myBarChart = echarts.init(document.getElementById('rhbf_bar'));
         var rhbfdata = sortByKey(data.chartData, 'V1');
         var yaxisdata = new Array();
-        var rhbfdatavalue = new Array;
-
+        var rhbfdatavalue = new Array();
         for (var tmp in rhbfdata) {
-            yaxisdata.push(qwhstr(rhbfdata[tmp].V0));
-            rhbfdatavalue.push(rhbfdata[tmp].V1)
+            var dqm = rhbfdata[tmp].V0;
+            yaxisdata.push(qwhstr(dqm));
+            rhbfdatavalue.push(rhbfdata[tmp].V1);
         }
         option1 = {
             title: {
@@ -2628,13 +2746,13 @@ function start_search() {
 function initbfcs() {
     $('#loadingToast').fadeOut(600);
 }
-/**************************************BFCS-END(扶贫主体结束)***********************************************/
+/**************************************BFCS-END(扶贫措施结束)***********************************************/
 
 /**************************************BFCX(帮扶成效部分)***********************************************/
 function initbfcx() {
     $('#loadingToast').fadeOut(600);
 }
-/**************************************BFCX-END(扶贫主体结束)***********************************************/
+/**************************************BFCX-END(扶贫成效结束)***********************************************/
 
 /**************************************Utils(通用工具部分)***********************************************/
 /**
