@@ -295,6 +295,7 @@ function addzfjl() {
         success: function (data) {
             if (data == "5") {
                 alert('添加成功');
+                location.replace(location);
                 window.location.href = "bfrj.html?phone=" + phone + "&name=" + name;
                 if (lsdate != 0) {
                     dellsdata(lsdate);
