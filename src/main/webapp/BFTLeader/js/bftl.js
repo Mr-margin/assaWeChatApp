@@ -26,7 +26,7 @@ cType = usertype;
 xzqh = username;
 xzqhname = username;
 $('#xzqh').html(username);
-var qxsl,xzsl,cunsl;
+var qxsl, xzsl, cunsl;
 
 /**
  * 扶贫对象变量
@@ -39,6 +39,7 @@ var zpyytop, nlfztop, jkzktop, whcdtop, tdzytop, scshtop, sljytop, pkfsltop;//�
 var fpztdata = new Array();//扶贫主体页面数据
 var isEnd = false;//是否结束(日记翻页)
 var counter = 1;//请求页码
+var lsqktop, rhzftop;
 /*页数计数器*/
 var rjoption = 0;//日记条数计数器
 var isxsxq = false;//正在显示详情
@@ -49,12 +50,12 @@ var isrjlb = false;//正在显示日记
 /**
  * 帮扶措施变量
  */
-
+var jyfctop, stbctop, ydbqtop, shddtop;
 
 /**
  * 帮扶成效变量
  */
-
+var bndtop, cndtop;
 
 /**************************************************Home(主界面操作部分)**************************************************************************************/
 //文档加载完毕执行JS
@@ -233,22 +234,26 @@ function submitdq() {
         xzqhname = xz;
         xzqhcode = $("#xzxz").val();
         settbgd(cunsl);
+        cType = 4;
     } else if (qx != "") {
         xzqh = ms + qx;
         xzqhname = qx;
         xzqhcode = $("#xzqx").val();
         settbgd(xzsl);
+        cType = 3;
     } else if (ms != "") {
         xzqhname = ms;
         xzqh = ms;
         xzqhcode = $("#xzms").val();
         settbgd(qxsl);
+        cType = 2;
     } else if (ms == "") {
         $("#xzqh").html("内蒙古自治区");
         xzqhname = "内蒙古自治区";
         xzqhcode = 150000000000;
         xzqh = "内蒙古自治区";
         settbgd(12);
+        cType = 1;
     }
     $("#xzqh").html(xzqh);
 
@@ -340,24 +345,32 @@ function setxzcode() {
  * 动态修改图表高度
  * @param datalenth
  */
-function settbgd(datalenth){
-    if(datalenth<16){
+function settbgd(datalenth) {
+    if (datalenth < 16) {
         $('.tbgd').height('34em');
-    }else {
-        $('.tbgd').height((datalenth*2)+'em');
+    } else {
+        $('.tbgd').height((datalenth * 2) + 'em');
     }
-
 }
 
-function settop(){
-        zpyytop = $("#zpyys").offset().top -100;
-        nlfztop = $("#nlfzs").offset().top -100;
-        jkzktop = $("#jkzks").offset().top -100;
-        whcdtop = $("#whcds").offset().top -100;
-        tdzytop = $("#tdzys").offset().top -100;
-        scshtop = $("#scshtjs").offset().top -100;
-        sljytop = $("#sljys").offset().top -100;
-        pkfsltop = $("#pkfsls").offset().top -100;
+function settop() {
+    zpyytop = $("#zpyys").offset().top - 100;
+    nlfztop = $("#nlfzs").offset().top - 100;
+    jkzktop = $("#jkzks").offset().top - 100;
+    whcdtop = $("#whcds").offset().top - 100;
+    tdzytop = $("#tdzys").offset().top - 100;
+    scshtop = $("#scshtjs").offset().top - 100;
+    sljytop = $("#sljys").offset().top - 100;
+    pkfsltop = $("#pkfsls").offset().top - 100;
+    lsqktop = $('#lsqks').offset().top - 100;
+    rhbftop = $('#rhbfs').offset().top - 100;
+    jyfctop = $('#jyfcs').offset().top - 100;
+    stbctop = $('#stbcs').offset().top - 100;
+    ydbqtop = $('#ydbqs').offset().top - 100;
+    shddtop = $('#shdds').offset().top - 100;
+    bndtop = $('#btps').offset().top - 100;
+    cndtop = $('#ctps').offset().top - 100;
+
 }
 
 /*监听可拖动的按钮（九宫格开关）*/
@@ -376,13 +389,13 @@ document.getElementById("cir").addEventListener("touchmove", function (e) {//手
     var topval = parseFloat(_y_move) - parseFloat(_y_start) + parseFloat(top_start);
     if (leftval < 0) {
         leftval = 0;
-    } else if (leftval > document.body.clientWidth-40) {
-        leftval = document.body.clientWidth-40;
+    } else if (leftval > document.body.clientWidth - 40) {
+        leftval = document.body.clientWidth - 40;
     }
     if (topval < 0) {
         topval = 0;
-    } else if (topval > document.body.clientHeight-110) {
-        topval = document.body.clientHeight-110;
+    } else if (topval > document.body.clientHeight - 110) {
+        topval = document.body.clientHeight - 110;
     }
     $("#cir").css("left", leftval + "px");
     $("#cir").css("top", topval + "px");
@@ -390,9 +403,9 @@ document.getElementById("cir").addEventListener("touchmove", function (e) {//手
 })
 
 
-$('.weui-mask').click(function (){
+$('.weui-mask').click(function () {
 
-    if(!$('#xzqhxz').is(":hidden")){
+    if (!$('#xzqhxz').is(":hidden")) {
         $('.weui-mask').css("opacity", "0");
         $('#xzqhxz').css("width", "0");
         $('.weui-mask').hide();
@@ -437,7 +450,7 @@ document.getElementById("cir").addEventListener("touchend", function (e) {//手�
  */
 function initpage(option) {
     $('#loadingToast').fadeIn(100);
-    $(".mytab").animate({scrollTop: 0}, 1000);
+    $(".mytab").animate({scrollTop: 0}, 500);
     setTimeout(function () {
         if (option == 0) {
             $('#page_title').html("扶贫对象")
@@ -530,17 +543,71 @@ function initjgg(option) {
             '</div>' +
             ' <p class="weui-grid__label">帮扶概况</p>' +
             '</a>' +
-            '<a href="javascript:tzzpyy();" class="weui-grid">' +
+            '<a href="javascript:tzlsqk();" class="weui-grid">' +
             '<div class="weui-grid__icon">' +
             ' <img src="./images/g2.png" alt="">' +
             '</div>' +
             '<p class="weui-grid__label">落实情况</p>' +
             '</a>' +
-            '<a href="javascript:tznlfz();" class="weui-grid">' +
+            '<a href="javascript:tzrhbf();" class="weui-grid">' +
             '<div class="weui-grid__icon">' +
             '<img src="./images/g3.png" alt="">' +
             '</div>' +
             '<p class="weui-grid__label">入户帮扶</p>' +
+            '</a>' +
+            '</div>';
+    } else if (option == 2) {
+        jgghtml = '<div id="bfdxcd" class="weui-grids">' +
+            '<a href="javascript:tzpkgk();" class="weui-grid">' +
+            ' <div class="weui-grid__icon">' +
+            '<img src="./images/g1.png" alt="">' +
+            '</div>' +
+            ' <p class="weui-grid__label">产业扶持</p>' +
+            '</a>' +
+            '<a href="javascript:tzjyfc();" class="weui-grid">' +
+            '<div class="weui-grid__icon">' +
+            ' <img src="./images/g2.png" alt="">' +
+            '</div>' +
+            '<p class="weui-grid__label">教育扶持</p>' +
+            '</a>' +
+            '<a href="javascript:tzstbc();" class="weui-grid">' +
+            '<div class="weui-grid__icon">' +
+            '<img src="./images/g3.png" alt="">' +
+            '</div>' +
+            '<p class="weui-grid__label">生态补偿</p>' +
+            '</a>' +
+            '<a href="javascript:tzydbq();" class="weui-grid">' +
+            ' <div class="weui-grid__icon">' +
+            '<img src="./images/g1.png" alt="">' +
+            '</div>' +
+            ' <p class="weui-grid__label">易地搬迁</p>' +
+            '</a>' +
+            '<a href="javascript:tzshdd();" class="weui-grid">' +
+            ' <div class="weui-grid__icon">' +
+            '<img src="./images/g1.png" alt="">' +
+            '</div>' +
+            ' <p class="weui-grid__label">社会兜底</p>' +
+            '</a>' +
+            '</div>';
+    }else {
+        jgghtml = '<div id="bfdxcd" class="weui-grids">' +
+            '<a href="javascript:tzpkgk();" class="weui-grid">' +
+            ' <div class="weui-grid__icon">' +
+            '<img src="./images/g1.png" alt="">' +
+            '</div>' +
+            ' <p class="weui-grid__label">2014年</p>' +
+            '</a>' +
+            '<a href="javascript:tzbnd();" class="weui-grid">' +
+            '<div class="weui-grid__icon">' +
+            ' <img src="./images/g1.png" alt="">' +
+            '</div>' +
+            '<p class="weui-grid__label">2015年</p>' +
+            '</a>' +
+            '<a href="javascript:tzcnd();" class="weui-grid">' +
+            '<div class="weui-grid__icon">' +
+            '<img src="./images/g1.png" alt="">' +
+            '</div>' +
+            '<p class="weui-grid__label">2016年</p>' +
             '</a>' +
             '</div>';
     }
@@ -673,7 +740,7 @@ function initfpdx() {
         var myBarChart = echarts.init(document.getElementById('gk_bar'));
         var gkdata = sortByKey(data.chartData, 'V2');
         var yaxisdata = new Array();
-        var gkdatavalue = new Array();
+        var gkdatavalue = new Array;
 
         for (var tmp in gkdata) {
             yaxisdata.push(qwhstr(gkdata[tmp].V1));
@@ -694,8 +761,8 @@ function initfpdx() {
                 axisPointer: {
                     type: 'shadow'
                 },
-                textStyle:{
-                    fontSize:18
+                textStyle: {
+                    fontSize: 18
                 }
             },
             legend: {
@@ -731,7 +798,7 @@ function initfpdx() {
                         normal: {
                             show: true,
                             position: 'right',
-                            textStyle:{
+                            textStyle: {
                                 fontSize: 14
                             },
                             /*formatter: '{c}户'*/
@@ -927,7 +994,7 @@ function initfpdx() {
         zpyydata = sortByKey(zpyydata, 'V1')
         var myBarChart = echarts.init(document.getElementById('cause_bar'));
         var yaxisdata = new Array();
-        var zpyydatavalue = new Array();
+        var zpyydatavalue = new Array;
         for (var tmp in zpyydata) {
             yaxisdata.push(qwhstr(zpyydata[tmp].V0));
             zpyydatavalue.push(zpyydata[tmp].V1)
@@ -948,8 +1015,8 @@ function initfpdx() {
                 axisPointer: {
                     type: 'shadow'
                 },
-                textStyle:{
-                    fontSize:18
+                textStyle: {
+                    fontSize: 18
                 }
             },
             legend: {
@@ -1027,11 +1094,12 @@ function initfpdx() {
         var myBarChart = echarts.init(document.getElementById('nlfz_bar'));
         var nlfzdata = sortByKey(data.chartData, 'V1');
         var yaxisdata = new Array();
-        var nlfzdatavalue = new Array();
+        var nlfzdatavalue = new Array;
 
         for (var tmp in nlfzdata) {
             yaxisdata.push(qwhstr(nlfzdata[tmp].V0));
-            nlfzdatavalue.push(nlfzdata[tmp].V1);
+            nlfzdatavalue.push(nlfzdata[tmp].V1)
+
         }
         option1 = {
             title: {
@@ -1048,8 +1116,8 @@ function initfpdx() {
                 axisPointer: {
                     type: 'shadow'
                 },
-                textStyle:{
-                    fontSize:18
+                textStyle: {
+                    fontSize: 18
                 }
             },
             legend: {
@@ -1124,7 +1192,7 @@ function initfpdx() {
         var myBarChart = echarts.init(document.getElementById('cqmxb_bar'));
         var jkzkdata = sortByKey(data.chartData, 'V1');
         var yaxisdata = new Array();
-        var jkzkdatavalue = new Array();
+        var jkzkdatavalue = new Array;
 
         for (var tmp in jkzkdata) {
             yaxisdata.push(qwhstr(jkzkdata[tmp].V0));
@@ -1146,8 +1214,8 @@ function initfpdx() {
                 axisPointer: {
                     type: 'shadow'
                 },
-                textStyle:{
-                    fontSize:18
+                textStyle: {
+                    fontSize: 18
                 }
             },
             legend: {
@@ -1222,7 +1290,7 @@ function initfpdx() {
         var myBarChart = echarts.init(document.getElementById('wmrs_bar'));
         var whcddata = sortByKey(data.chartData, 'V1');
         var yaxisdata = new Array();
-        var whcddatavalue = new Array();
+        var whcddatavalue = new Array;
 
         for (var tmp in whcddata) {
             yaxisdata.push(qwhstr(whcddata[tmp].V0));
@@ -1243,8 +1311,8 @@ function initfpdx() {
                 axisPointer: {
                     type: 'shadow'
                 },
-                textStyle:{
-                    fontSize:18
+                textStyle: {
+                    fontSize: 18
                 }
             },
             legend: {
@@ -1319,7 +1387,7 @@ function initfpdx() {
         var myBarChart = echarts.init(document.getElementById('tdzy_bar'));
         var tdzydata = sortByKey(data.chartData, 'V1');
         var yaxisdata = new Array();
-        var tdzydatavalue = new Array();
+        var tdzydatavalue = new Array;
 
         for (var tmp in tdzydata) {
             yaxisdata.push(qwhstr(tdzydata[tmp].V0));
@@ -1341,8 +1409,8 @@ function initfpdx() {
                 axisPointer: {
                     type: 'shadow'
                 },
-                textStyle:{
-                    fontSize:18
+                textStyle: {
+                    fontSize: 18
                 }
             },
             legend: {
@@ -1417,7 +1485,7 @@ function initfpdx() {
         var myBarChart = echarts.init(document.getElementById('rjzf_bar'));
         var scshdata = sortByKey(data.chartData, 'V1');
         var yaxisdata = new Array();
-        var scshdatavalue = new Array();
+        var scshdatavalue = new Array;
 
         for (var tmp in scshdata) {
             yaxisdata.push(qwhstr(scshdata[tmp].V0));
@@ -1439,8 +1507,8 @@ function initfpdx() {
                 axisPointer: {
                     type: 'shadow'
                 },
-                textStyle:{
-                    fontSize:18
+                textStyle: {
+                    fontSize: 18
                 }
             },
             legend: {
@@ -1515,7 +1583,7 @@ function initfpdx() {
         var myBarChart = echarts.init(document.getElementById('sljy_bar'));
         var sljydata = sortByKey(data.chartData, 'V1');
         var yaxisdata = new Array();
-        var sljydatavalue = new Array();
+        var sljydatavalue = new Array;
 
         for (var tmp in sljydata) {
             yaxisdata.push(qwhstr(sljydata[tmp].V0));
@@ -1537,8 +1605,8 @@ function initfpdx() {
                 axisPointer: {
                     type: 'shadow'
                 },
-                textStyle:{
-                    fontSize:18
+                textStyle: {
+                    fontSize: 18
                 }
             },
             legend: {
@@ -2030,7 +2098,7 @@ function initfpzt() {
         var myBarChart = echarts.init(document.getElementById('bfgk_bar'));
         var bfgkdata = sortByKey(data.chartData, 'V1');
         var yaxisdata = new Array();
-        var bfgkdatavalue = new Array();
+        var bfgkdatavalue = new Array;
 
         for (var tmp in bfgkdata) {
             yaxisdata.push(qwhstr(bfgkdata[tmp].V0));
@@ -2051,8 +2119,8 @@ function initfpzt() {
                 axisPointer: {
                     type: 'shadow'
                 },
-                textStyle:{
-                    fontSize:18
+                textStyle: {
+                    fontSize: 18
                 }
             },
             legend: {
@@ -2130,7 +2198,7 @@ function initfpzt() {
         var myBarChart = echarts.init(document.getElementById('lsqk_bar'));
         var lsqkdata = sortByKey(data.chartData, 'V1');
         var yaxisdata = new Array();
-        var lsqkdatavalue = new Array();
+        var lsqkdatavalue = new Array;
 
         for (var tmp in lsqkdata) {
             yaxisdata.push(qwhstr(lsqkdata[tmp].V0));
@@ -2151,8 +2219,8 @@ function initfpzt() {
                 axisPointer: {
                     type: 'shadow'
                 },
-                textStyle:{
-                    fontSize:18
+                textStyle: {
+                    fontSize: 18
                 }
             },
             legend: {
@@ -2227,11 +2295,11 @@ function initfpzt() {
         var myBarChart = echarts.init(document.getElementById('rhbf_bar'));
         var rhbfdata = sortByKey(data.chartData, 'V1');
         var yaxisdata = new Array();
-        var rhbfdatavalue = new Array();
+        var rhbfdatavalue = new Array;
+
         for (var tmp in rhbfdata) {
-            var dqm = rhbfdata[tmp].V0;
-            yaxisdata.push(qwhstr(dqm));
-            rhbfdatavalue.push(rhbfdata[tmp].V1);
+            yaxisdata.push(qwhstr(rhbfdata[tmp].V0));
+            rhbfdatavalue.push(rhbfdata[tmp].V1)
         }
         option1 = {
             title: {
@@ -2248,8 +2316,8 @@ function initfpzt() {
                 axisPointer: {
                     type: 'shadow'
                 },
-                textStyle:{
-                    fontSize:18
+                textStyle: {
+                    fontSize: 18
                 }
             },
             legend: {
@@ -2315,10 +2383,10 @@ function initfpzt() {
         };
         myBarChart.setOption(option1);
         $('.weui-mask').animate({opacity: '0'}, 500);
-        setTimeout(function (){
+        setTimeout(function () {
             settop();
             $('.weui-mask').hide();
-        },500);
+        }, 500);
     }
 
     function getdataobfzt() {
@@ -2360,7 +2428,33 @@ function initfpzt() {
         });
     }
 }
+function tzlsqk() {
+    $(".mytab").animate({scrollTop: lsqktop}, 1000);
+    $('#anzk').removeClass('andhgb');
+    $('#anzk').removeClass('andhzk');
+    $('#anzk').addClass('andhgb');
+    $('.weui-mask').animate({opacity: '0'}, 500);
+    $('#jgg').animate({width: '0'}, 500);
+    setTimeout(function () {
+        $('.weui-mask').hide();
+        $('#jgg').hide();
+    }, 500);
+    iszk = false;
+}
 
+function tzrhbf() {
+    $(".mytab").animate({scrollTop: rhbftop}, 1000);
+    $('#anzk').removeClass('andhgb');
+    $('#anzk').removeClass('andhzk');
+    $('#anzk').addClass('andhgb');
+    $('.weui-mask').animate({opacity: '0'}, 500);
+    $('#jgg').animate({width: '0'}, 500);
+    setTimeout(function () {
+        $('.weui-mask').hide();
+        $('#jgg').hide();
+    }, 500);
+    iszk = false;
+}
 /**
  * 显示今日日记
  */
@@ -2588,7 +2682,7 @@ function lookdetail() {
         if (zflx != undefined) {
             detailhtml += "<div class='weui-cell'><div class='detailtext' >走访类型：" + zflx + "</div></div>";
         }
-        detailhtml += "<div class='weui-cell'><div class='detailtext' style='min-height:"+(zfjl.length)*3+"px;padding-left: 10px' >走访记录：" + zfjl + "</div> </div></div>";
+        detailhtml += "<div class='weui-cell'><div class='detailtext' style='min-height:" + (zfjl.length) * 3 + "px;padding-left: 10px' >走访记录：" + zfjl + "</div> </div></div>";
 
         detailhtml += "<div style='height: 160px'></div>"
         $("#zfdetail").html(detailhtml);
@@ -2744,13 +2838,406 @@ function start_search() {
 
 /**************************************BFCS(帮扶措施部分)***********************************************/
 function initbfcs() {
-    $('#loadingToast').fadeOut(600);
+    if (cType > 2) {
+        $("#tooltips_div").css("display", "block");
+        $("#tooltips_div").html("帮扶措施数据目前仅统计到旗县");
+        $('#loadingToast').fadeOut(600);
+        setTimeout(function () {
+            $("#tooltips_div").css("display", "none");
+        }, 3000);
+        return;
+    }
+    $.ajax({
+        type: "GET",
+        //json文件位置
+        url: "res/bfcs.json",
+        //返回数据格式为json
+        dataType: "json",
+        //请求成功完成后要执行的方法
+        success: function (data) {
+            $('.weui-mask').show();
+            $('.weui-mask').animate({opacity: '1'}, 500);
+            var bfcsdata = [];
+            var bjhzdata = [];
+            $.each(data, function (i, item) {
+                if (item.sjxzqh == xzqhcode) {
+                    bfcsdata.push(item);
+                }
+                if (item.bjxzqh == xzqhcode) {
+                    bjhzdata.push(item);
+                }
+            })
+            setbfcsdata(bfcsdata, bjhzdata);
+        },
+        error: function (msg) {
+            console.log(msg);
+        }
+    })
+
+    function setbfcsdata(bfcsdata, bjhzdata) {
+        $('#pkzrk__sum').html(formatNum(bjhzdata[0].zrs));
+        $('#cyfc__sum').html(formatNum(bjhzdata[0].cyfc));
+        $('#jyfc__sum').html(formatNum(bjhzdata[0].jyfc));
+        $('#stbc_sum').html(formatNum(bjhzdata[0].stbc));
+        $('#ydbq_sum').html(formatNum(bjhzdata[0].ydbq));
+        $('#shdd_sum').html(formatNum(bjhzdata[0].shdd));
+        setbfcsbar('cyfc_bar', 'cyfc', 1, bfcsdata, '产业扶持人数', '扶持人数');
+        setbfcsbar('jyfc_bar', 'jyfc', 2, bfcsdata, '教育扶持人数', '扶持人数');
+        setbfcsbar('stbc_bar', 'stbc', 3, bfcsdata, '生态补偿人数', '补偿人数');
+        setbfcsbar('ydbq_bar', 'ydbq', 4, bfcsdata, '易地搬迁人数', '搬迁人数');
+        setbfcsbar('shdd_bar', 'shdd', 5, bfcsdata, '社会兜底人数', '兜底人数');
+
+        //各地帮扶措施统计****************************************
+        function setbfcsbar(barid, datazd, soption, bfcsdata, stitle, sname) {
+            var barChart = echarts.init(document.getElementById(barid));
+            var bardata = sortByKey(bfcsdata, datazd);
+            var yaxisdata = new Array();
+            var datavalue = new Array;
+
+            for (var tmp in bardata) {
+                yaxisdata.push(bardata[tmp].qqhj);
+                if (soption == 1) {
+                    datavalue.push(bardata[tmp].cyfc);
+                } else if (soption == 2) {
+                    datavalue.push(bardata[tmp].jyfc);
+                } else if (soption == 3) {
+                    datavalue.push(bardata[tmp].stbc);
+                } else if (soption == 4) {
+                    datavalue.push(bardata[tmp].ydbq);
+                } else if (soption == 5) {
+                    datavalue.push(bardata[tmp].shdd);
+                }
+            }
+            var option = {
+                title: {
+                    text: stitle,
+                    textStyle: {
+                        color: '#6f6f6f',
+                        fontFamily: '黑体',
+                        fontSize: '17px'
+                    },
+                    padding: [30, 5, 5, 50]
+                },
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {
+                        type: 'shadow'
+                    },
+                    textStyle: {
+                        fontSize: 18
+                    }
+                },
+                legend: {
+                    show: false
+                },
+                grid: {
+                    left: '3%',
+                    right: '20%',
+                    bottom: '3%',
+                    containLabel: true
+                },
+                xAxis: {
+                    show: false,
+                    type: 'value',
+                    boundaryGap: [0, 0.01]
+                },
+                yAxis: {
+                    type: 'category',
+                    data: yaxisdata.reverse(),
+                    axisLabel: {
+                        interval: 0,
+                        textStyle: {
+                            fontSize: 14
+                        }
+                    }
+                },
+
+                series: [
+                    {
+                        name: sname,
+                        type: 'bar',
+                        label: {
+                            normal: {
+                                show: true,
+                                position: 'right',
+                                textStyle: {
+                                    fontSize: 14
+                                },
+                                /*formatter: '{c}户'*/
+                                formatter: function (data) {
+                                    return formatNum(data.value) + "人";
+                                }
+                            }
+                        },
+                        barWidth: '16px',
+                        data: datavalue.reverse(),
+                        itemStyle: {
+                            normal: {
+                                color: function (params) {
+                                    var ls = 'rgb(19,139,249)';
+                                    var hs = 'rgb(249,25,46)';
+                                    if (params.dataIndex == datavalue.length - 1) {
+                                        return hs;
+                                    } else {
+                                        return ls;
+                                    }
+                                }
+                            }
+                        }
+
+                    }
+                ]
+            };
+            barChart.setOption(option);
+            $('.weui-mask').animate({opacity: '0'}, 500);
+            setTimeout(function () {
+                settop();
+                $('.weui-mask').hide();
+            }, 500);
+        }
+        $('#loadingToast').fadeOut(600);
+        //*********************帮扶措施图表结束************************************************
+    }
+
 }
+function tzjyfc() {
+    $(".mytab").animate({scrollTop: jyfctop}, 1000);
+    $('#anzk').removeClass('andhgb');
+    $('#anzk').removeClass('andhzk');
+    $('#anzk').addClass('andhgb');
+    $('.weui-mask').animate({opacity: '0'}, 500);
+    $('#jgg').animate({width: '0'}, 500);
+    setTimeout(function () {
+        $('.weui-mask').hide();
+        $('#jgg').hide();
+    }, 500);
+    iszk = false;
+}
+function tzstbc() {
+    $(".mytab").animate({scrollTop: stbctop}, 1000);
+    $('#anzk').removeClass('andhgb');
+    $('#anzk').removeClass('andhzk');
+    $('#anzk').addClass('andhgb');
+    $('.weui-mask').animate({opacity: '0'}, 500);
+    $('#jgg').animate({width: '0'}, 500);
+    setTimeout(function () {
+        $('.weui-mask').hide();
+        $('#jgg').hide();
+    }, 500);
+    iszk = false;
+}
+function tzydbq() {
+    $(".mytab").animate({scrollTop: ydbqtop}, 1000);
+    $('#anzk').removeClass('andhgb');
+    $('#anzk').removeClass('andhzk');
+    $('#anzk').addClass('andhgb');
+    $('.weui-mask').animate({opacity: '0'}, 500);
+    $('#jgg').animate({width: '0'}, 500);
+    setTimeout(function () {
+        $('.weui-mask').hide();
+        $('#jgg').hide();
+    }, 500);
+    iszk = false;
+}
+function tzshdd() {
+    $(".mytab").animate({scrollTop: shddtop}, 1000);
+    $('#anzk').removeClass('andhgb');
+    $('#anzk').removeClass('andhzk');
+    $('#anzk').addClass('andhgb');
+    $('.weui-mask').animate({opacity: '0'}, 500);
+    $('#jgg').animate({width: '0'}, 500);
+    setTimeout(function () {
+        $('.weui-mask').hide();
+        $('#jgg').hide();
+    }, 500);
+    iszk = false;
+}
+
 /**************************************BFCS-END(扶贫措施结束)***********************************************/
 
 /**************************************BFCX(帮扶成效部分)***********************************************/
 function initbfcx() {
+    if (cType > 1) {
+        $("#tooltips_div").css("display", "block");
+        $("#tooltips_div").html("帮扶措施数据目前仅统计到盟市");
+        $('#loadingToast').fadeOut(600);
+        setTimeout(function () {
+            $("#tooltips_div").css("display", "none");
+        }, 3000);
+        return;
+    }
+    $.ajax({
+        type: "GET",
+        //json文件位置
+        url: "res/ndtp.json",
+        //返回数据格式为json
+        dataType: "json",
+        //请求成功完成后要执行的方法
+        success: function (data) {
+            $('.weui-mask').show();
+            $('.weui-mask').animate({opacity: '1'}, 500);
+            setbfcxdata(data);
+        },
+        error: function (msg) {
+            console.log(msg);
+        }
+    })
+    function setbfcxdata(data){
+        $('#atphs__sum').html(formatNum(data.a[0].tphs));
+        $('#atprs__sum').html(formatNum(data.a[0].tprs));
+        $('#btphs__sum').html(formatNum(data.b[0].tphs));
+        $('#btprs__sum').html(formatNum(data.b[0].tprs));
+        $('#ctphs__sum').html(formatNum(data.c[0].tphs));
+        $('#ctprs__sum').html(formatNum(data.c[0].tprs));
+
+        setbfcxbar('atph_bar','tphs',1,data.a,"2014年度脱贫户数","脱贫户数");
+        setbfcxbar('atpr_bar','tprs',2,data.a,"2014年度脱贫人数","脱贫户数");
+        setbfcxbar('btph_bar','tphs',1,data.b,"2015年度脱贫户数","脱贫户数");
+        setbfcxbar('btpr_bar','tprs',2,data.b,"2015年度脱贫人数","脱贫户数");
+        setbfcxbar('ctph_bar','tphs',1,data.c,"2016年度脱贫户数","脱贫户数");
+        setbfcxbar('ctpr_bar','tprs',2,data.c,"2016年度脱贫人数","脱贫户数");
+
+        //各地帮扶成效统计****************************************
+        function setbfcxbar(barid, datazd, soption, bfcxdata, stitle, sname) {
+            var barChart = echarts.init(document.getElementById(barid));
+            var bardata = sortByKey(bfcxdata, datazd);
+            var yaxisdata = new Array();
+            var datavalue = new Array;
+            var danwei = "户";
+            for (var tmp in bardata) {
+                if (tmp != 0){
+                    yaxisdata.push(bardata[tmp].dqmc);
+                    if (soption == 1) {
+                        datavalue.push(bardata[tmp].tphs);
+                        danwei = "户";
+                    } else if (soption == 2) {
+                        datavalue.push(bardata[tmp].tprs);
+                        danwei = "人";
+                    }
+                }
+
+            }
+            var option = {
+                title: {
+                    text: stitle,
+                    textStyle: {
+                        color: '#6f6f6f',
+                        fontFamily: '黑体',
+                        fontSize: '17px'
+                    },
+                    padding: [30, 5, 5, 50]
+                },
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {
+                        type: 'shadow'
+                    },
+                    textStyle: {
+                        fontSize: 18
+                    }
+                },
+                legend: {
+                    show: false
+                },
+                grid: {
+                    left: '3%',
+                    right: '20%',
+                    bottom: '3%',
+                    containLabel: true
+                },
+                xAxis: {
+                    show: false,
+                    type: 'value',
+                    boundaryGap: [0, 0.01]
+                },
+                yAxis: {
+                    type: 'category',
+                    data: yaxisdata.reverse(),
+                    axisLabel: {
+                        interval: 0,
+                        textStyle: {
+                            fontSize: 14
+                        }
+                    }
+                },
+
+                series: [
+                    {
+                        name: sname,
+                        type: 'bar',
+                        label: {
+                            normal: {
+                                show: true,
+                                position: 'right',
+                                textStyle: {
+                                    fontSize: 14
+                                },
+                                /*formatter: '{c}户'*/
+                                formatter: function (data) {
+                                    return formatNum(data.value) + danwei;
+                                }
+                            }
+                        },
+                        barWidth: '16px',
+                        data: datavalue.reverse(),
+                        itemStyle: {
+                            normal: {
+                                color: function (params) {
+                                    var ls = 'rgb(19,139,249)';
+                                    var hs = 'rgb(249,25,46)';
+                                    if (params.dataIndex == datavalue.length - 1) {
+                                        return hs;
+                                    } else {
+                                        return ls;
+                                    }
+                                }
+                            }
+                        }
+
+                    }
+                ]
+            };
+            barChart.setOption(option);
+            $('.weui-mask').animate({opacity: '0'}, 500);
+            setTimeout(function () {
+                settop();
+                $('.weui-mask').hide();
+            }, 500);
+        }
+    }
+    $('.weui-mask').animate({opacity: '0'}, 500);
+    setTimeout(function () {
+        settop();
+        $('.weui-mask').hide();
+    }, 500);
     $('#loadingToast').fadeOut(600);
+}
+
+function tzbnd() {
+    $(".mytab").animate({scrollTop: bndtop}, 1000);
+    $('#anzk').removeClass('andhgb');
+    $('#anzk').removeClass('andhzk');
+    $('#anzk').addClass('andhgb');
+    $('.weui-mask').animate({opacity: '0'}, 500);
+    $('#jgg').animate({width: '0'}, 500);
+    setTimeout(function () {
+        $('.weui-mask').hide();
+        $('#jgg').hide();
+    }, 500);
+    iszk = false;
+}
+function tzcnd() {
+    $(".mytab").animate({scrollTop: cndtop}, 1000);
+    $('#anzk').removeClass('andhgb');
+    $('#anzk').removeClass('andhzk');
+    $('#anzk').addClass('andhgb');
+    $('.weui-mask').animate({opacity: '0'}, 500);
+    $('#jgg').animate({width: '0'}, 500);
+    setTimeout(function () {
+        $('.weui-mask').hide();
+        $('#jgg').hide();
+    }, 500);
+    iszk = false;
 }
 /**************************************BFCX-END(扶贫成效结束)***********************************************/
 
