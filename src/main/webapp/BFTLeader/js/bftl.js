@@ -68,6 +68,7 @@ $(document).ready(function () {
      */
     $(".weui-tabbar__item").click(function () {
         $('#zfdetail').hide();
+        $('#sjlds').hide();
         $('#cir').show();
         isrjlb = false;
         if (!$(this).is(".weui-bar__item_on")) {//点击的按钮非正在选择状态
@@ -2020,6 +2021,50 @@ function tzpkfsl() {
  * 初始化扶贫主体
  */
 function initfpzt() {
+    if (usertype == 1){
+        $('#sjld').click(
+            function(){
+                $('#sjlds').show();
+                $('#cir').hide();
+                var sjhtml = '';
+                sjhtml = "<div class='weui-flex' style='position: fixed;width: 100%;background: #efefef;z-index: 500;'><div class='left_black'><img src='images/black.png' style='text-align: center' height='100%'></div>";
+                sjhtml += "<div class='weui-flex__item subhead' style='padding-top: 0;height: 2.3em;line-height: 2.5em;background: transparent;color: #6f6f6f'>省级领导干部联系贫困旗县一览表</div>";
+                sjhtml += "<div style='width: 60px'></div></div>"
+                $.ajax({
+                    type: "GET",
+                    //json文件位置
+                    url: "res/sjld.json",
+                    //返回数据格式为json
+                    dataType: "json",
+                    //请求成功完成后要执行的方法
+                    success: function (data) {
+                        sjhtml += "<div style='top: 1em' class='weui-cells'>";
+                        sjhtml += "<div class='weui-cell'> <div class='weui-cell__bd'> <div class='weui-flex'>";
+                        sjhtml += "<div style='text-align: center;width: 80px;color: #3f3f3f;font-family: 黑体'>姓名</div>"
+                        sjhtml += "<div class='weui-flex__item' style='margin-left: 15px;color: #3f3f3f;font-family: 黑体'>联系旗县";
+                        sjhtml += "</div><div class='weui-cell__ft' style='color: #3f3f3f;font-family: 黑体'>2016年末贫困人口数</div></div></div></div>"
+                        $.each(data, function (i, item) {
+                            sjhtml += "<div class='weui-cell'> <div class='weui-cell__bd'> <div class='weui-flex'>";
+                            sjhtml += "<div style='text-align: center;width: 80px;color: #6f6f6f;font-family: 黑体'>"+item.name+"</div>"
+                            sjhtml += "<div class='weui-flex__item' style='margin-left: 15px;color: #6f6f6f;font-family: 黑体'>"+item.dq;
+                            sjhtml += "</div><div class='weui-cell__ft' style='color: #6f6f6f;font-family: 黑体'>"+formatNum(item.rs)+"人</div></div></div></div>"
+                        });
+                        sjhtml += "</div>";
+                        sjhtml += "<div style='height: 200px'></div>";
+                        $('#sjlds').html(sjhtml);
+                        $("div.left_black").click(function () {
+                            $("#sjlds").hide();
+                            $('#cir').show();
+                        });
+                    },
+                    error: function (msg) {
+                        console.log(msg);
+                    }
+                })
+
+            }
+        );
+    }
     $('#gdrj').click(function () {
         $('#loadingToast').fadeIn(20);
         $('#cir').hide();
