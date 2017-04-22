@@ -2028,7 +2028,7 @@ function initfpzt() {
                 $('#cir').hide();
                 var sjhtml = '';
                 sjhtml = "<div class='weui-flex' style='position: fixed;width: 100%;background: #efefef;z-index: 500;'><div class='left_black'><img src='images/black.png' style='text-align: center' height='100%'></div>";
-                sjhtml += "<div class='weui-flex__item subhead' style='padding-top: 0;height: 2.3em;line-height: 2.5em;background: transparent;color: #6f6f6f'>省级领导干部联系贫困旗县一览表</div>";
+                sjhtml += "<div class='weui-flex__item subhead' style='padding-top: 0;height: 2.3em;line-height: 2.5em;background: transparent;color: #6f6f6f'>领导干部联系贫困旗县表</div>";
                 sjhtml += "<div style='width: 60px'></div></div>"
                 $.ajax({
                     type: "GET",
@@ -2042,7 +2042,7 @@ function initfpzt() {
                         sjhtml += "<div class='weui-cell'> <div class='weui-cell__bd'> <div class='weui-flex'>";
                         sjhtml += "<div style='text-align: center;width: 80px;color: #3f3f3f;font-family: 黑体'>姓名</div>"
                         sjhtml += "<div class='weui-flex__item' style='margin-left: 15px;color: #3f3f3f;font-family: 黑体'>联系旗县";
-                        sjhtml += "</div><div class='weui-cell__ft' style='color: #3f3f3f;font-family: 黑体'>2016年末贫困人口数</div></div></div></div>"
+                        sjhtml += "</div><div class='weui-cell__ft' style='color: #3f3f3f;font-family: 黑体'>2016年末贫<br>困人口数</div></div></div></div>"
                         $.each(data, function (i, item) {
                             sjhtml += "<div class='weui-cell'> <div class='weui-cell__bd'> <div class='weui-flex'>";
                             sjhtml += "<div style='text-align: center;width: 80px;color: #6f6f6f;font-family: 黑体'>"+item.name+"</div>"
