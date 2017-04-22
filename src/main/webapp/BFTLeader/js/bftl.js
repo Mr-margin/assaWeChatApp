@@ -2040,8 +2040,8 @@ function initfpzt() {
                     success: function (data) {
                         sjhtml += "<div style='top: 1em' class='weui-cells'>";
                         sjhtml += "<div class='weui-cell'> <div class='weui-cell__bd'> <div class='weui-flex'>";
-                        sjhtml += "<div style='text-align: center;width: 80px;color: #3f3f3f;font-family: 黑体'>姓名</div>"
-                        sjhtml += "<div class='weui-flex__item' style='margin-left: 15px;color: #3f3f3f;font-family: 黑体'>联系旗县";
+                        sjhtml += "<div style='text-align: center;width: 80px;margin-top:12px;color: #3f3f3f;font-family: 黑体'>姓名</div>"
+                        sjhtml += "<div class='weui-flex__item' style='margin-left: 15px;margin-top:12px;color: #3f3f3f;font-family: 黑体'>联系旗县";
                         sjhtml += "</div><div class='weui-cell__ft' style='color: #3f3f3f;font-family: 黑体'>2016年末贫<br>困人口数</div></div></div></div>"
                         $.each(data, function (i, item) {
                             sjhtml += "<div class='weui-cell'> <div class='weui-cell__bd'> <div class='weui-flex'>";
