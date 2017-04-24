@@ -70,6 +70,7 @@ $(document).ready(function () {
         $('#zfdetail').hide();
         $('#sjlds').hide();
         $('#cir').show();
+        $('.xzqhdm').show();
         isrjlb = false;
         if (!$(this).is(".weui-bar__item_on")) {//点击的按钮非正在选择状态
             $(".weui-tabbar__item").removeClass("weui-bar__item_on")//清除所有选择状态的按钮
@@ -111,7 +112,6 @@ $(document).ready(function () {
                         $("#xzxz").append("<option value='" + item.code + "'>" + item.name + "</option>"); //为Select追加一个Option(下拉项)
                     });
                 }
-
             },
             error: function (msg) {
                 $("#tooltips_div").css("display", "block");
@@ -2040,6 +2040,7 @@ function initfpzt() {
             function(){
                 $('#sjlds').show();
                 $('#cir').hide();
+                $('.xzqhdm').hide();
                 var sjhtml = '';
                 sjhtml = "<div class='weui-flex' style='position: fixed;width: 100%;background: #efefef;z-index: 500;'><div class='left_black'><img src='images/black.png' style='text-align: center' height='100%'></div>";
                 sjhtml += "<div class='weui-flex__item subhead' style='padding-top: 0;height: 2.3em;line-height: 2.5em;background: transparent;color: #6f6f6f'>领导干部联系贫困旗县表</div>";
@@ -2069,6 +2070,7 @@ function initfpzt() {
                         $("div.left_black").click(function () {
                             $("#sjlds").hide();
                             $('#cir').show();
+                            $('.xzqhdm').show();
                         });
                     },
                     error: function (msg) {
