@@ -1780,6 +1780,20 @@ function initfpdx() {
      */
     function setpkfslbar(data) {
         //行政区划贫困发生率统计****************************************
+        if (cType > 2) {
+            $("#tooltips_div").css("display", "block");
+            $("#tooltips_div").html("贫困发生率数据目前仅统计到旗县");
+            $('#loadingToast').fadeOut(600);
+            $('.weui-mask').animate({opacity: '0'}, 500);
+            var zwsj = '<div style="height: 100%;width: 100%;text-align: center;padding-top: 10em;font-family: 黑体;color: #6f6f6f">暂无数据</div>';
+            $('#pkfsl_bar').html(zwsj);
+            setTimeout(function () {
+                settop();
+                $("#tooltips_div").css("display", "none");
+                $('.weui-mask').hide();
+            }, 3000);
+            return;
+        }
         var myBarChart = echarts.init(document.getElementById('pkfsl_bar'));
         var pkfsldata = sortByKey(data.chartData, 'V1');
         var yaxisdata = new Array();
