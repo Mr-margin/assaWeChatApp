@@ -200,7 +200,6 @@ function add_touxiang(){
 			    sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
 			    success: function (res) {
 			    	localIds = res.localIds; //返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
-					alert(localIds[0]);
 			    	$("#jt_tx").attr('src',localIds[0]);
 		        	wx.uploadImage({
 			    	    localId: localIds[0], // 需要上传的图片的本地ID，由chooseImage接口获得
@@ -208,6 +207,7 @@ function add_touxiang(){
 			    	    success: function (res) {
 			    	        var serverId = res.serverId; // 返回图片的服务器端ID
 			    	        photo = "http://file.api.weixin.qq.com/cgi-bin/media/get?access_token="+token+"&media_id="+serverId;
+							alert("上传到微信服务器"+photo);
 			    	        add_jtcy();
 			    	    }
 			    	});
@@ -221,6 +221,7 @@ function add_touxiang(){
 //上传头像到本地
 function add_jtcy(){
 	var html = '';
+	alert("准备本地上传"+photo);
 	$.ajax({  		       
 	    url: '/assaWeChatApp/getAdd_jttx.do',
 	    type: "POST",
@@ -228,12 +229,13 @@ function add_jtcy(){
 	    dataType: 'json',
 	    data: {AAB001:card,photo:photo,type:type,household_name:v6,household_card:zjhm},
 	    success: function (data) {
+			alert("本地上传"+data);
 	    	if(data == '5'){
 	    		alert('上传成功');
 	    	}
 	    },
-	    error: function (data) { 
-	    	
+	    error: function (data) {
+			alert("本地上传"+data.status);
 	    }  
 	});
 }
