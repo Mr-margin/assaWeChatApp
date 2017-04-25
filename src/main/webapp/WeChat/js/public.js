@@ -25,7 +25,5 @@ function float(phone,name){
 					'<p>个人中心</p>'+
 			'</a></li>'+
 		'</ul>';
-	
-	
 	$("#footer").html(html)
 }
