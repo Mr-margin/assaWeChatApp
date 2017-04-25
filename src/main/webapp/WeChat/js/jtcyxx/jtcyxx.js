@@ -69,7 +69,7 @@ function jtcyxx(){
 	
 	var title_html = '<div>';
 	if (pic_path == "" || pic_path == null || pic_path == undefined){
-		title_html += '<img src="img/no-person.png" style="width:130px;height:140px;padding-left:5px;padding-top:10px;border-radius:10%;" onclick="add_touxiang()">'+
+		title_html += '<img id="jt_tx" src="img/no-person.png" style="width:130px;height:140px;padding-left:5px;padding-top:10px;border-radius:10%;" onclick="add_touxiang()">'+
 						'<span style="padding-left: 17px;padding-top:20px;position: absolute;">'+v6+'（'+hzgx_sz[v10-1]+'）</span><div style="padding-left: 155px;margin-top: -100px;color: #666666; font-size:15px;"><p>性别：'+xb_sz[xb-1]+'</p><p>民族：'+minzu_sz[mz-1]+'</p><p>'+zjhm+'</p></div>';
 	}else{
 		title_html += '<img src="'+pic_path+'" style="width:130px;height:140px;padding-left:5px;padding-top:10px;border-radius:10%;" onclick="add_touxiang()">'+
@@ -200,7 +200,8 @@ function add_touxiang(){
 			    sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
 			    success: function (res) {
 			    	localIds = res.localIds; //返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
-			    	$("#jt_tx").html('<img src="'+localIds+'">')
+					alert(localIds[0]);
+			    	$("#jt_tx").attr('src',localIds[0]);
 		        	wx.uploadImage({
 			    	    localId: localIds[0], // 需要上传的图片的本地ID，由chooseImage接口获得
 			    	    isShowProgressTips: 0, // 默认为1，显示进度提示
@@ -230,7 +231,6 @@ function add_jtcy(){
 	    	if(data == '5'){
 	    		alert('上传成功');
 	    	}
-	    	
 	    },
 	    error: function (data) { 
 	    	
