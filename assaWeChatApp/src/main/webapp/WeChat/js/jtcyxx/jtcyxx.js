@@ -226,7 +226,7 @@ function add_jtcy(){
 	    url: '/assaWeChatApp/getAdd_jttx.do',
 	    type: "POST",
 	    async:false,
-	    dataType: 'json',
+	    dataType: 'text',
 	    data: {AAB001:card,photo:photo,type:type,household_name:v6,household_card:zjhm},
 	    success: function (data) {
 			alert("本地上传"+data);
