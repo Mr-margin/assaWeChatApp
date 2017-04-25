@@ -207,7 +207,6 @@ function add_touxiang(){
 			    	    success: function (res) {
 			    	        var serverId = res.serverId; // 返回图片的服务器端ID
 			    	        photo = "http://file.api.weixin.qq.com/cgi-bin/media/get?access_token="+token+"&media_id="+serverId;
-							alert("上传到微信服务器"+photo);
 			    	        add_jtcy();
 			    	    }
 			    	});
@@ -220,8 +219,6 @@ function add_touxiang(){
 }
 //上传头像到本地
 function add_jtcy(){
-	var html = '';
-	alert("准备本地上传"+photo);
 	$.ajax({  		       
 	    url: '/assaWeChatApp/getAdd_jttx.do',
 	    type: "POST",
@@ -229,7 +226,7 @@ function add_jtcy(){
 	    dataType: 'text',
 	    data: {AAB001:card,photo:photo,type:type,household_name:v6,household_card:zjhm},
 	    success: function (data) {
-			alert("本地上传"+data);
+			alert("上传到AAB001:"+card+"type:"+type+"household_name:"+v6+"household_card"+zjhm);
 	    	if(data == '5'){
 	    		alert('上传成功');
 	    	}
