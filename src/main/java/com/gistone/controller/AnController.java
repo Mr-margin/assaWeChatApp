@@ -572,6 +572,22 @@ public class AnController{
 		}
 	}
 	/**
+	 * @param request
+	 * @param response 获取数据更新时间
+	 * @throws IOException
+	 */
+	@RequestMapping("getUpdateTime.do")
+	public void getUpdateTime(HttpServletRequest request,HttpServletResponse response) throws IOException{
+		request.setCharacterEncoding("UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		String sql="SELECT * FROM APP_VERSION WHERE PKID=1";
+		List<Map> list=this.getBySqlMapper.findRecords(sql);
+		if(list.size()>0){
+			String upTime=(String) list.get(0).get("UPDATE_TIME");
+			response.getWriter().write("{\"success\":\"0\",\"message\":\"更新日期获取成功\",\"data\":{\"upTime\":\""+upTime+"\"}}");
+		}
+	}
+	/**
 	 * 上传用户头像（app)
 	 * @param request
 	 * @param response
