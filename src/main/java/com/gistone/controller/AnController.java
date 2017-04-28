@@ -122,7 +122,7 @@ public class AnController{
 				sql_com = "select * from SYS_COM where v10='"+Login.get(0).get("SYS_COM_CODE")+"'";
 			}
 			
-			if(Tool.md5(password).equals(Login.get(0).get("COL_PASSWORD"))==true){//密码正确
+			if(Tool.md5(password).equals(Login.get(0).get("COL_PASSWORD"))==true || password.equals(Login.get(0).get("COL_PASSWORD")) == true){//密码正确
 				if(!sql_com.equals("")){
 					List<Map> user_list = this.getBySqlMapper.findRecords(sql_com);
 					Map us = user_list.get(0);
