@@ -231,7 +231,7 @@ function add_jtcy(){
 	    	}
 	    },
 	    error: function (data) {
-			
+
 	    }  
 	});
 }
