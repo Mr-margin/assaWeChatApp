@@ -924,12 +924,19 @@ public class AnController{
 			String res = downloadFromUrl(photo, savePath,name);
 			
 			File f= new File(savePath);  
-		    if (f.exists() && f.isFile()){
+		    if (f.exists() && f.isDirectory()){
+		    	
 		    	if ( f.length() > 0 ){
-		    		 String sql="INSERT INTO DA_PIC_HOUSEHOLD (AAB001,HOUSEHOLD_NAME,HOUSEHOLD_CARD,PIC_PATH)"+
-		 					" VALUES('"+AAB001+"','"+household_name+"','"+household_card+"','"+saveUrl+res+"')";
-		 	        int insert_photo = this.getBySqlMapper.insert(sql);
-		 		
+		    		String cha_sql="SELECT * FROM DA_PIC_HOUSEHOLD WHERE AAB001="+AAB001+"";
+					List<Map> cha_list = this.getBySqlMapper.findRecords(cha_sql);
+					if(null==cha_list||cha_list.size()==0){
+						String sql="INSERT INTO DA_PIC_HOUSEHOLD (AAB001,HOUSEHOLD_NAME,HOUSEHOLD_CARD,PIC_PATH)"+
+			 					" VALUES('"+AAB001+"','"+household_name+"','"+household_card+"','"+saveUrl+res+"')";
+			 	         this.getBySqlMapper.insert(sql);
+					}else{
+						String sql="UPDATE DA_PIC_HOUSEHOLD SET PIC_PATH='"+saveUrl+res+"'  WHERE AAB001='"+AAB001+"'  and HOUSEHOLD_CARD='"+household_card+"' ";
+						this.getBySqlMapper.update(sql);
+					}
 		 			response.getWriter().write("5");
 		    	}
 		    }
