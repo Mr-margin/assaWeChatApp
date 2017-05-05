@@ -86,28 +86,28 @@ function jtcyxx(){
 					'<img src="img/icon_account.png">'+
 				'</span>'+
 			   ' <span class="stu-name">文化程度</span></span>'+
-		        '<span class="info-middle">'+wenhua_sz[whcd-1]+'</span> '+ 
+		        '<span class="info-middle">'+wenhua_sz[whcd-1]==undefined?"未填写":wenhua_sz[whcd-1]+'</span> '+
 			'</li>'+
 			'<li>'+
 				'<span class="book-tit"><span class="heade-img" style="height:15px; width:15px;">'+
 					'<img src="img/standard.png">'+
 				'</span>'+
 			   ' <span class="stu-name">在校生情况</span></span>'+
-		       ' <span class="info-middle">'+zxszk_sz[zxs-1]+'</span>  '+
+		       ' <span class="info-middle">'+zxszk_sz[zxs-1]==undefined?"未填写":zxszk_sz[zxs-1]+'</span>  '+
 			'</li>'+
 			'<li>'+
 				'<span class="book-tit"><span class="heade-img" style="height:15px; width:15px;">'+
 					'<img src="img/property.png">'+
 				'</span>'+
 			   ' <span class="stu-name">健康状况</span></span>'+
-		       ' <span class="info-middle">'+jkzk_sz[jkzk-1]+'</span>  '+
+		       ' <span class="info-middle">'+jkzk_sz[jkzk-1]==undefined?"未填写":jkzk_sz[jkzk-1]+'</span>  '+
 			'</li>'+
 			'<li>'+
 				'<span class="book-tit"><span class="heade-img" style="height:15px; width:15px;">'+
 					'<img src="img/icon_army.png">'+
 				'</span>'+
 			   ' <span class="stu-name">劳动技能</span></span>'+
-		        '<span class="info-middle">'+ldjn_sz[ldjn-1]+'</span>  '+
+		        '<span class="info-middle">'+ldjn_sz[ldjn-1]==undefined?"未填写":ldjn_sz[ldjn-1]+'</span>  '+
 			'</li>'+
             
            ' <li>'+
@@ -118,7 +118,7 @@ function jtcyxx(){
 				if(wgqk==99){
 					html+='<span class="info-middle">其他</span>  ';
 				}else{
-					html+='<span class="info-middle">'+wgzk_sz[wgqk-1]+'</span>  ';
+					html+='<span class="info-middle">'+wgzk_sz[wgqk-1]==undefined?"未填写":wgzk_sz[wgqk-1]+'</span>  ';
 				}
 			html+='</li>'+
             '<li>'+
@@ -126,14 +126,14 @@ function jtcyxx(){
 					'<img src="img/reason.png">'+
 				'</span>'+
 			   ' <span class="stu-name">其务工时间（月）</span></span>'+
-		        '<span class="info-middle">'+sj+'</span>  '+
+		        '<span class="info-middle">'+sj==undefined?"未填写":sj+'</span>  '+
 			'</li>'+
           '  <li>'+
 			'	<span class="book-tit"><span class="heade-img" style="height:15px; width:15px;">'+
 			'		<img src="img/before.png">'+
 			'	</span>'+
 			'    <span class="stu-name">是否现役军人</span></span>'+
-		    '    <span class="info-middle">'+xyjr_sz[junr]+'</span>  '+
+		    '    <span class="info-middle">'+xyjr_sz[junr]==undefined?"未填写":xyjr_sz[junr]+'</span>  '+
 			'</li>'+
 //             '<li>'+
 //				'<span class="book-tit"><span class="heade-img" style="height:15px; width:15px;">'+
