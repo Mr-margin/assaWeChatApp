@@ -1,4 +1,5 @@
 $(function(){
+
 	$("#wen1").click(function(){
 		document.getElementById('da1').scrollIntoView();
 	});
