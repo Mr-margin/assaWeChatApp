@@ -2797,7 +2797,7 @@ function start_search() {
                 type: 'POST',
                 async: false,
                 dataType: 'json',
-                data: {cType: 1, code: 150000000000, pageNum: counter, phone: search_text, type: 1},
+                data: {cType: 1, code: 150000000000, pageNum: counter, phone: search_text, type: 0},
                 success: function (data) {
                     if (data == null || data.length <= 0 || data == "") {
                         $("#jzgd").hide();
@@ -2815,6 +2815,7 @@ function start_search() {
                         $("#weuitips").html("没有更多了");
                         isEnd = true;
                     } else {
+
                         $("#jzgd").show();
                         $("#weuitips").html("点击加载更多");
                         isEnd = false;
@@ -2828,9 +2829,10 @@ function start_search() {
                     } else {
                         zfdata = zfdata.concat(data);
                     }
-                    initRJcells(data);
+                    iscxbfr = true;
                     iscxdx = true;
                     isEnd = false;
+                    initRJcells(data);
                 },
                 error: function (msg) {
                     $("#tooltips_div").css("display", "block");
