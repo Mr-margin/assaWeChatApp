@@ -43,7 +43,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.gistone.WeChatApp;
+import com.gistone.SpringBootSampleApplication;
 import com.gistone.MyBatis.config.GetBySqlMapper;
 import com.gistone.util.DateFormatUtil;
 import com.gistone.util.MapUtil;
@@ -90,7 +90,10 @@ public class AnController{
 		List<Map> list;
 		String phone = request.getParameter("phone");//电话13904794720
 		String password = request.getParameter("password");//密码
-		
+		/*if(!phone.endsWith("18211108363")){
+			response.getWriter().write("{\"success\":1,\"message\":\"密码错误\",\"data\":\"\"}");
+			return;
+		}*/
 		
 		//SYS_PERSONAL_LD表废弃
 		//String sqlLd = "select * from SYS_PERSONAL_LD where PERSONAL_PHONE ='"+phone+"'";
@@ -728,14 +731,14 @@ public class AnController{
 		
 		
 		//1、获取AccessToken  
-	   String  accessToken = WeChatApp.tokenn;  
+	   String  accessToken = SpringBootSampleApplication.tokenn;  
 	      
 	    //2、获取Ticket  
-	   String  jsapi_ticket = WeChatApp.ticket;  
+	   String  jsapi_ticket = SpringBootSampleApplication.ticket;  
 	      
 	    //3、时间戳和随机字符串  
-	    String noncestr = WeChatApp.f_noncestr;//随机字符串  
-	    String timestamp = WeChatApp.f_timestamp;//时间戳  
+	    String noncestr = SpringBootSampleApplication.f_noncestr;//随机字符串  
+	    String timestamp = SpringBootSampleApplication.f_timestamp;//时间戳  
 	      
 //	    System.out.println("accessToken:"+accessToken+"\njsapi_ticket:"+jsapi_ticket+"\n时间戳："+timestamp+"\n随机字符串："+noncestr);  
 	    //4、获取url  

@@ -28,10 +28,10 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @SpringBootApplication
-@EnableScheduling
 @ServletComponentScan
+@EnableScheduling
 @MapperScan("com.gistone.MyBatis.config")
-public class WeChatApp extends SpringBootServletInitializer {
+public class SpringBootSampleApplication extends SpringBootServletInitializer {
 	public static String tokenn;
 	public static String ticket;
 	public static String f_noncestr;
@@ -50,7 +50,7 @@ public class WeChatApp extends SpringBootServletInitializer {
 	
 	@Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-        return application.sources(WeChatApp.class);
+        return application.sources(SpringBootSampleApplication.class);
     }
 	
 	/**
@@ -88,7 +88,7 @@ public class WeChatApp extends SpringBootServletInitializer {
 	}
 	
     public static void main(String[] args) {
-        SpringApplication.run(WeChatApp.class, args);
+        SpringApplication.run(SpringBootSampleApplication.class, args);
     }
 	/**
 	 * 请求参数
