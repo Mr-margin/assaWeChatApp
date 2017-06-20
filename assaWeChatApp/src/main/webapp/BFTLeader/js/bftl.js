@@ -99,6 +99,7 @@ $(document).ready(function () {
                     $.each(data, function (i, item) {
                         $("#xzms").append("<option value='" + item.code + "'>" + item.name + "</option>"); //为Select追加一个Option(下拉项)
                     });
+                    $('#sjld').show();
                 } else if (usertype == 2) {
                     $("#xzms").html("<option value='" + usercode + "'>" + xzqhname + "</option>")
                     $("#xzqx").append("<option value='1'></option>");
